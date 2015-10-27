@@ -65,9 +65,9 @@ namespace minobrlabs
 	var gaugeOpts = {
 	  lines: 12,
 	  angle: 0.15,
-	  lineWidth: 0.2,
+	  lineWidth: 0.15,
 	  pointer: {
-	    length: 0.9,
+	    length: 0.7,
 	    strokeWidth: 0.024,
 	    color: '#000000'
 	  },
@@ -82,6 +82,7 @@ namespace minobrlabs
 	temperatureGauge.setTextField(document.getElementById('temperature-value'));
 	temperatureGauge.maxValue = 3000;
 	temperatureGauge.animationSpeed = 100;
+	temperatureGauge.set(0);
 
 	function setTemperature(v) {
 	  temperatureGauge.set(parseInt(v));
