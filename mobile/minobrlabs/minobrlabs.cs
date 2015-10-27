@@ -19,18 +19,74 @@ namespace minobrlabs
 <head>
 	<meta charset=utf-8>
 	<title>Xamarin Forms</title>
-
-<script>
-function appendHtml(str) {
-  var div = document.createElement('div');
-  div.innerHTML = str;
-  document.body.appendChild(div);
-}
-</script>
 </head>
 <body>
-	<h1>Xamrin.Forms</h1>
-	<p>This is an iOS web page.</p>
+	<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+
+	body {
+		background: #fff;
+		color: #333;
+		font-family: sans-serif;
+		font-size: 14px;
+		line-height: 22px;
+	}
+	
+	.gauge-wrapper {
+		position: relative;
+		width: 200px;
+	}
+	.gauge {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+	.gauge-value {
+		position: absolute;
+		width: 200px;
+		bottom: -14px;
+		left: 0;
+		text-align: center;	
+		color: #333;
+		line-height: 14px;	
+	}
+	</style>
+
+	<div class='gauge-wrapper'>
+		<canvas class='gauge' id='temperature'></canvas>
+		<div class='gauge-value' id='temperature-value'></div>
+    </div>
+
+	<script src='gauge.min.js'></script>
+	<script>
+	var gaugeOpts = {
+	  lines: 12,
+	  angle: 0.15,
+	  lineWidth: 0.2,
+	  pointer: {
+	    length: 0.9,
+	    strokeWidth: 0.024,
+	    color: '#000000'
+	  },
+	  limitMax: 'false',
+	  colorStart: '#6FADCF',
+	  colorStop: '#8FC0DA',
+	  strokeColor: '#E0E0E0',
+	  generateGradient: true
+	};
+
+	var temperatureGauge = new Gauge(document.getElementById('temperature')).setOptions(gaugeOpts);
+	temperatureGauge.setTextField(document.getElementById('temperature-value'));
+	temperatureGauge.maxValue = 3000;
+	temperatureGauge.animationSpeed = 100;
+
+	function setTemperature(v) {
+	  temperatureGauge.set(parseInt(v));
+	}
+	</script>
 </body>
 </html>";
 	
@@ -40,7 +96,7 @@ function appendHtml(str) {
 			};
 
 			webView.Navigated += (sender, e) => {
-				Print(webView);
+				PassData(webView);
 			};
 				
 			MainPage = new ContentPage {
@@ -53,10 +109,10 @@ function appendHtml(str) {
 			};
 		}
 
-		protected async void Print (WebView webView)
+		protected async void PassData (WebView webView)
 		{
-			for (int i = 1; i <= 100; i++) { 
-				webView.Eval (String.Format("appendHtml('{0}');", i.ToString()));
+			for (int i = 0; i <= 3000; i += 100) { 
+				webView.Eval (String.Format("setTemperature('{0}');", i.ToString()));
 				await Task.Delay (1000);
 			}
 		}
