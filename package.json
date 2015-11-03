@@ -1,0 +1,39 @@
+{
+  "name": "minobrlabs",
+  "version": "0.1.0",
+  "description": "Portable scientific lab",
+  "homepage": "https://github.com/geakstr/minobrlabs#readme",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/geakstr/minobrlabs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/geakstr/minobrlabs/issues"
+  },
+  "keywords": [
+    "android",
+    "ios",
+    "windows",
+    "osx",
+    "lab",
+    "science"
+  ],
+  "contributors": [
+    {
+      "name": "Dmitry Kharitonov",
+      "email": "geakstr@me.com"
+    },
+    {
+      "name": "Nikolay Zaychenko",
+      "email": "ucorpor@gmail.com"
+    }
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  }
+}
