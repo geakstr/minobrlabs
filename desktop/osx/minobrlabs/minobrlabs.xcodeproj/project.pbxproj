@@ -1,0 +1,287 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C033790E1BE9037D0042A254 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C033790D1BE9037D0042A254 /* AppDelegate.swift */; };
+		C03379101BE9037D0042A254 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C033790F1BE9037D0042A254 /* ViewController.swift */; };
+		C03379121BE9037D0042A254 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C03379111BE9037D0042A254 /* Assets.xcassets */; };
+		C03379151BE9037D0042A254 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C03379131BE9037D0042A254 /* Main.storyboard */; };
+		C03379221BE9157D0042A254 /* web in Resources */ = {isa = PBXBuildFile; fileRef = C03379211BE9157D0042A254 /* web */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		C033790A1BE9037C0042A254 /* minobrlabs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minobrlabs.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C033790D1BE9037D0042A254 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C033790F1BE9037D0042A254 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C03379111BE9037D0042A254 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C03379141BE9037D0042A254 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C03379161BE9037D0042A254 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C03379211BE9157D0042A254 /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C03379071BE9037C0042A254 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C03379011BE9037C0042A254 = {
+			isa = PBXGroup;
+			children = (
+				C033790C1BE9037C0042A254 /* minobrlabs */,
+				C033790B1BE9037C0042A254 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C033790B1BE9037C0042A254 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C033790A1BE9037C0042A254 /* minobrlabs.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C033790C1BE9037C0042A254 /* minobrlabs */ = {
+			isa = PBXGroup;
+			children = (
+				C033790D1BE9037D0042A254 /* AppDelegate.swift */,
+				C03379211BE9157D0042A254 /* web */,
+				C033790F1BE9037D0042A254 /* ViewController.swift */,
+				C03379111BE9037D0042A254 /* Assets.xcassets */,
+				C03379131BE9037D0042A254 /* Main.storyboard */,
+				C03379161BE9037D0042A254 /* Info.plist */,
+			);
+			path = minobrlabs;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C03379091BE9037C0042A254 /* minobrlabs */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C03379191BE9037D0042A254 /* Build configuration list for PBXNativeTarget "minobrlabs" */;
+			buildPhases = (
+				C03379061BE9037C0042A254 /* Sources */,
+				C03379071BE9037C0042A254 /* Frameworks */,
+				C03379081BE9037C0042A254 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = minobrlabs;
+			productName = minobrlabs;
+			productReference = C033790A1BE9037C0042A254 /* minobrlabs.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C03379021BE9037C0042A254 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "Astrakhan State University";
+				TargetAttributes = {
+					C03379091BE9037C0042A254 = {
+						CreatedOnToolsVersion = 7.1;
+					};
+				};
+			};
+			buildConfigurationList = C03379051BE9037C0042A254 /* Build configuration list for PBXProject "minobrlabs" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C03379011BE9037C0042A254;
+			productRefGroup = C033790B1BE9037C0042A254 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C03379091BE9037C0042A254 /* minobrlabs */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C03379081BE9037C0042A254 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C03379221BE9157D0042A254 /* web in Resources */,
+				C03379121BE9037D0042A254 /* Assets.xcassets in Resources */,
+				C03379151BE9037D0042A254 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C03379061BE9037C0042A254 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C03379101BE9037D0042A254 /* ViewController.swift in Sources */,
+				C033790E1BE9037D0042A254 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		C03379131BE9037D0042A254 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C03379141BE9037D0042A254 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C03379171BE9037D0042A254 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C03379181BE9037D0042A254 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C033791A1BE9037D0042A254 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = minobrlabs/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.edu.asu.minobrlabs;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C033791B1BE9037D0042A254 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = minobrlabs/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.edu.asu.minobrlabs;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C03379051BE9037C0042A254 /* Build configuration list for PBXProject "minobrlabs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C03379171BE9037D0042A254 /* Debug */,
+				C03379181BE9037D0042A254 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C03379191BE9037D0042A254 /* Build configuration list for PBXNativeTarget "minobrlabs" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C033791A1BE9037D0042A254 /* Debug */,
+				C033791B1BE9037D0042A254 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C03379021BE9037C0042A254 /* Project object */;
+}
