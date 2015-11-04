@@ -28,7 +28,7 @@ class ViewController: NSViewController, WebFrameLoadDelegate {
     }
     
     func webView(sender: WebView!, didFinishLoadForFrame frame: WebFrame!) {
-        webView.stringByEvaluatingJavaScriptFromString("setTemperature('500');")
+        webView.stringByEvaluatingJavaScriptFromString("setTemperature('35');")
     }
 
     override var representedObject: AnyObject? {

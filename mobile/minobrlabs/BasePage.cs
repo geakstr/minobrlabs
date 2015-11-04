@@ -1,8 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using System.Reflection;
-using System.IO;
 
 namespace minobrlabs
 {
@@ -14,7 +14,7 @@ namespace minobrlabs
 			htmlSource.BaseUrl = DependencyService.Get<IBaseUrl> ().Get ();
 
 			var assembly = typeof(BasePage).GetTypeInfo ().Assembly;
-			Stream stream = assembly.GetManifestResourceStream("minobrlabs.index.html");
+			Stream stream = assembly.GetManifestResourceStream ("minobrlabs.index.html");
 
 			using (var reader = new System.IO.StreamReader (stream)) {
 				htmlSource.Html = reader.ReadToEnd ();
@@ -26,8 +26,8 @@ namespace minobrlabs
 			};
 
 			webView.Navigated += (sender, e) => {
-				PassTemperature(webView);
-				PassHumidity(webView);
+				SetTemperature (webView);
+				SetHumidity (webView);
 			};
 
 			Content = new StackLayout {
@@ -38,18 +38,18 @@ namespace minobrlabs
 			};
 		}
 
-		protected async void PassTemperature (WebView webView)
+		protected async void SetTemperature (WebView webView)
 		{
 			for (int i = -50; i <= 60; i += 1) { 
-				webView.Eval (String.Format("setTemperature('{0}');", i.ToString()));
+				webView.Eval (String.Format ("setTemperature('{0}');", i.ToString ()));
 				await Task.Delay (100);
 			}
 		}
 
-		protected async void PassHumidity (WebView webView)
+		protected async void SetHumidity (WebView webView)
 		{
 			for (int i = 0; i <= 100; i += 1) { 
-				webView.Eval (String.Format("setHumidity('{0}');", i.ToString()));
+				webView.Eval (String.Format ("setHumidity('{0}');", i.ToString ()));
 				await Task.Delay (100);
 			}
 		}
