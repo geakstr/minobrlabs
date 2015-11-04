@@ -8,10 +8,23 @@
 </head>
 <body>
 
-<div class="chart-wrapper">
-    <div class="chart-title">Температура</div>
-    <div class="chart" id="temperature"></div>
-</div>
+<table class="charts-table">
+    <tr>
+        <td>
+            <div class="chart-wrapper">                
+                <svg class="chart temperature"></svg>
+                <div class="chart-title">Температура</div>
+            </div>
+        </td>
+        <td>
+            <div class="chart-wrapper">                
+                <svg class="chart humidity"></svg>
+                <div class="chart-title">Влажность</div>
+            </div>
+        </td>
+        <td>Hello</td>
+    </tr>
+</table>
 
 <script src="web/vendor/d3.min.js"></script>
 <script src="web/vendor/c3.min.js"></script>

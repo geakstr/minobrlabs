@@ -26,7 +26,8 @@ namespace minobrlabs
 			};
 
 			webView.Navigated += (sender, e) => {
-				PassData(webView);
+				PassTemperature(webView);
+				PassHumidity(webView);
 			};
 
 			Content = new StackLayout {
@@ -37,11 +38,19 @@ namespace minobrlabs
 			};
 		}
 
-		protected async void PassData (WebView webView)
+		protected async void PassTemperature (WebView webView)
 		{
-			for (int i = 0; i <= 3000; i += 100) { 
+			for (int i = -50; i <= 60; i += 1) { 
 				webView.Eval (String.Format("setTemperature('{0}');", i.ToString()));
-				await Task.Delay (1000);
+				await Task.Delay (100);
+			}
+		}
+
+		protected async void PassHumidity (WebView webView)
+		{
+			for (int i = 0; i <= 100; i += 1) { 
+				webView.Eval (String.Format("setHumidity('{0}');", i.ToString()));
+				await Task.Delay (100);
 			}
 		}
 	}

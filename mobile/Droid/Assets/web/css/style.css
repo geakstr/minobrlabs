@@ -11,8 +11,15 @@ body {
     line-height: 22px;
 }
 
+.charts-table {
+    width: 100%;
+}
+
+.charts-table td {
+    width: 33%;
+}
+
 .chart-wrapper {
-    display: inline-block;
     position: relative;
     vertical-align: top;
 }
@@ -20,13 +27,13 @@ body {
 .chart-title {
     text-align: center;
     color: #666;
+    font-size: 14px;
     line-height: 14px;
+    font-weight: 700;
 }
 
 .chart {
-    width: 200px;
-    height: 180px;
-    margin: 0;
-    padding: 0;
-    vertical-align: top;
+  max-height: 180px;
+  width: 100%;
+  vertical-align: top;
 }
