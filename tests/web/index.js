@@ -8,10 +8,10 @@ var app = express();
 
 var assets = path.join(__dirname, '/../../common/web');
 
-app.use('/web', express.static(assets));
+app.use('/', express.static(assets));
 
 app.get('/', function(req, res) {
-  fs.readFile(path.join(assets, '/html/index.html'), 'utf8', function(err, text) {
+  fs.readFile(path.join(assets, '/index.html'), 'utf8', function(err, text) {
     res.send(text);
   });
 });
