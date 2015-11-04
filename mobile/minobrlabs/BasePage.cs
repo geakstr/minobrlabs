@@ -20,8 +20,6 @@ namespace minobrlabs
 				htmlSource.Html = reader.ReadToEnd ();
 			}
 
-			System.Diagnostics.Debug.WriteLine (htmlSource.Html);
-
 			var webView = new WebView {
 				Source = htmlSource,
 				VerticalOptions = LayoutOptions.FillAndExpand

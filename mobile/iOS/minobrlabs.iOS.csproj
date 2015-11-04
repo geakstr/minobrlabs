@@ -100,7 +100,11 @@
     <BundleResource Include="Resources\Icon-Small-40.png" />
     <BundleResource Include="Resources\Icon-Small-40%402x.png" />
     <BundleResource Include="Resources\Icon-Small-40%403x.png" />
-    <BundleResource Include="Resources\gauge.min.js" />
+    <BundleResource Include="Resources\web\css\style.css" />
+    <BundleResource Include="Resources\web\js\app.js" />
+    <BundleResource Include="Resources\web\vendor\c3.min.css" />
+    <BundleResource Include="Resources\web\vendor\c3.min.js" />
+    <BundleResource Include="Resources\web\vendor\d3.min.js" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -121,4 +125,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.1.3.3.6323\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.1.3.3.6323\build\portable-win+net45+wp80+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
+  <ItemGroup>
+    <Folder Include="Resources\web\" />
+  </ItemGroup>
 </Project>
