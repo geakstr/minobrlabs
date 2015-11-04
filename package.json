@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test-web": "node tests/web/index.js"
+    "browser-webview": "node bin/browser-webview.js"
   },
   "repository": {
     "type": "git",
