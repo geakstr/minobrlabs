@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MinobrLabs</string>
+    <string name="detectors_sleep_time_exception">Время должно быть в пределах от %%s до %%s сек.</string>
 </resources>
