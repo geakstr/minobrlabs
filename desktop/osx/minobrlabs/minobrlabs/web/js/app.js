@@ -1,7 +1,7 @@
 var charts = {};
 
-charts.temperature = c3.generate({
-  bindto: '.temperature',
+charts.airTemperature = c3.generate({
+  bindto: '.chart-air-temperature',
   data: {
     type: 'gauge',
     columns: [['data', 30]],   
@@ -9,16 +9,17 @@ charts.temperature = c3.generate({
   gauge: {
     label: {
       format: function(value, ratio) {
-        return value + ' °C';
+        return (value > 0 ? '+' : '-') + value + ' °C';
       },
     },
-    min: -50,
-    max: 60
+    min: 25,
+    max: 70,
+    width: 25
   },
   color: {
-    pattern: ['#0000FF', '#00FF00', '#FFFF00', '#FFA500', '#FF0000'],
+    pattern: ['#00FF00', '#FFFF00', '#FFA500', '#FF0000'],
     threshold: {
-      values: [1, 19, 30, 40]
+      values: [35, 42, 49, 56]
     }
   },
   interaction: {
@@ -30,7 +31,7 @@ charts.temperature = c3.generate({
 });
 
 charts.humidity = c3.generate({
-  bindto: '.humidity',
+  bindto: '.chart-humidity',
   data: {
     type: 'gauge',
     columns: [['data', 91.4]],   
@@ -42,7 +43,170 @@ charts.humidity = c3.generate({
       },
     },
     min: 0,
-    max: 100
+    max: 100,
+    width: 25
+  },
+  color: {
+    pattern: ['#0000FF']
+  },
+  interaction: {
+    enabled: false
+  },
+  transition: {
+    duration: null
+  }
+});
+
+charts.atmoPressure = c3.generate({
+  bindto: '.chart-atmo-pressure',
+  data: {
+    type: 'gauge',
+    columns: [['data', 91.4]],   
+  },
+  gauge: {
+    label: {
+      format: function(value, ratio) {
+        return value + ' кПа';
+      },
+    },
+    min: 0,
+    max: 300,
+    width: 25
+  },
+  color: {
+    pattern: ['#0000FF']
+  },
+  interaction: {
+    enabled: false
+  },
+  transition: {
+    duration: null
+  }
+});
+
+charts.light = c3.generate({
+  bindto: '.chart-light',
+  data: {
+    type: 'gauge',
+    columns: [['data', 91.4]],   
+  },
+  gauge: {
+    label: {
+      format: function(value, ratio) {
+        return value + ' лм';
+      },
+    },
+    min: 1,
+    max: 10000,
+    width: 25
+  },
+  color: {
+    pattern: ['#0000FF']
+  },
+  interaction: {
+    enabled: false
+  },
+  transition: {
+    duration: null
+  }
+});
+
+charts.soluteTemperature = c3.generate({
+  bindto: '.chart-solute-temperature',
+  data: {
+    type: 'gauge',
+    columns: [['data', 91.4]],   
+  },
+  gauge: {
+    label: {
+      format: function(value, ratio) {
+        return (value > 0 ? '+' : '-') + value + ' °C';
+      },
+    },
+    min: -50,
+    max: 1500,
+    width: 25
+  },
+  color: {
+    pattern: ['#0000FF']
+  },
+  interaction: {
+    enabled: false
+  },
+  transition: {
+    duration: null
+  }
+});
+
+charts.voltage = c3.generate({
+  bindto: '.chart-voltage',
+  data: {
+    type: 'gauge',
+    columns: [['data', 91.4]],   
+  },
+  gauge: {
+    label: {
+      format: function(value, ratio) {
+        return value + '  В';
+      },
+    },
+    min: -30,
+    max: 30,
+    width: 25
+  },
+  color: {
+    pattern: ['#0000FF']
+  },
+  interaction: {
+    enabled: false
+  },
+  transition: {
+    duration: null
+  }
+});
+
+charts.amperage = c3.generate({
+  bindto: '.chart-amperage',
+  data: {
+    type: 'gauge',
+    columns: [['data', 91.4]],   
+  },
+  gauge: {
+    label: {
+      format: function(value, ratio) {
+        return value + ' А';
+      },
+    },
+    min: -1,
+    max: 1,
+    width: 25
+  },
+  color: {
+    pattern: ['#0000FF']
+  },
+  interaction: {
+    enabled: false
+  },
+  transition: {
+    duration: null
+  }
+});
+
+charts.ph = c3.generate({
+  bindto: '.chart-ph',
+  data: {
+    type: 'gauge',
+    columns: [['data', 91.4]],   
+  },
+  gauge: {
+    label: {
+      format: function(value, ratio) {
+        return value + ' pH';
+      },
+    },
+    min: 0,
+    max: 14,
+    width: 25
   },
   color: {
     pattern: ['#0000FF']
@@ -56,7 +220,7 @@ charts.humidity = c3.generate({
 });
 
 function setTemperature(v) {
-  charts.temperature.load({
+  charts.airTemperature.load({
     columns: [['data', parseFloat(v)]]
   });
 }

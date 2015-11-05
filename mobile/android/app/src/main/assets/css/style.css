@@ -3,7 +3,13 @@
     padding: 0;
 }
 
+html,
 body {
+    height: 100%;    
+}
+
+body {
+    min-height: 100%;
     background: #fff;
     color: #333;
     font-family: sans-serif;
@@ -11,29 +17,58 @@ body {
     line-height: 22px;
 }
 
-.charts-table {
+.main-page {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+.main-page .charts-table-wrapper {
+    position: absolute;
+    top: -39px;
+    left: 0;
     width: 100%;
+    height: 100%;
 }
 
-.charts-table td {
-    width: 33%;
+.main-page .charts-table {
+    width: 100%;
+    vertical-align: middle;
 }
 
-.chart-wrapper {
+.main-page .charts-table td {
+    width: 25%;
+    padding: 0 11px;
+}
+
+.main-page .charts-table tr:first-child td {
+    padding-bottom: 39px;
+}
+
+.main-page .chart-wrapper {
     position: relative;
     vertical-align: top;
 }
 
-.chart-title {
-    text-align: center;
-    color: #666;
-    font-size: 14px;
-    line-height: 14px;
-    font-weight: 700;
-}
-
-.chart {
+.main-page .chart {
   max-height: 180px;
   width: 100%;
   vertical-align: top;
+}
+
+.main-page .chart-title {
+    position: absolute;
+    left: 0;
+    bottom: -28px;
+    width: 100%;
+    height: 28px;
+    vertical-align: top;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+    line-height: 14px;
 }
