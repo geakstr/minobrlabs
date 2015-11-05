@@ -1,5 +1,6 @@
 package ru.edu.asu.minobrlabs.webview;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.webkit.WebView;
@@ -13,9 +14,19 @@ public class WebViewHandler extends Handler {
 
     @Override
     public void handleMessage(final Message msg) {
-        final String cmd = msg.getData().getString("cmd");
-        if (null != cmd) {
-            webView.loadUrl(cmd);
+        final String js = msg.getData().getString("js");
+        if (null != js) {
+            webView.loadUrl(js);
         }
+    }
+
+    public void eval(final String js) {
+        final Message msg = obtainMessage();
+        final Bundle bundle = new Bundle();
+
+        bundle.putString("js", String.format("javascript:%s", js));
+
+        msg.setData(bundle);
+        sendMessage(msg);
     }
 }

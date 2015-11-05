@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         mainWebView.getSettings().setJavaScriptEnabled(true);
 
+        mainWebViewThread = new MainWebViewThread(mainWebView);
         mainWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
@@ -33,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mainWebViewThread = new MainWebViewThread(mainWebView);
         mainWebView.loadUrl(mainWebViewHTML);
     }
 }

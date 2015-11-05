@@ -1,7 +1,5 @@
 package ru.edu.asu.minobrlabs.webview;
 
-import android.os.Bundle;
-import android.os.Message;
 import android.webkit.WebView;
 
 public class MainWebViewThread extends AbstractWebViewThread {
@@ -11,15 +9,10 @@ public class MainWebViewThread extends AbstractWebViewThread {
 
     @Override
     public void run() {
+        // TODO: Get data from detectors and put it here
+
         for (int i = 0; i <= 100; i += 1) {
-            final Message msg = handler.obtainMessage();
-            final Bundle bundle = new Bundle();
-
-            // TODO: Get data from detectors and put it here
-            bundle.putString("cmd", String.format("javascript:setHumidity('%s');", i));
-
-            msg.setData(bundle);
-            handler.sendMessage(msg);
+            handler.eval(String.format("setHumidity('%s');", i));
 
             try {
                 sleep(100L);
