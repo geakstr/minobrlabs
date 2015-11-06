@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H0T-LY-5pZ">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                                <rect key="frame" x="0.0" y="20" width="600" height="531"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
                             </webView>
@@ -28,7 +28,7 @@
                         <constraints>
                             <constraint firstItem="H0T-LY-5pZ" firstAttribute="bottom" secondItem="4ug-Mw-9AY" secondAttribute="top" id="5Mw-Ct-BmJ"/>
                             <constraint firstAttribute="trailing" secondItem="H0T-LY-5pZ" secondAttribute="trailing" id="AF2-do-aYk"/>
-                            <constraint firstItem="H0T-LY-5pZ" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" id="Hua-52-usG"/>
+                            <constraint firstItem="H0T-LY-5pZ" firstAttribute="top" secondItem="tsR-hK-woN" secondAttribute="top" constant="20" id="Hua-52-usG"/>
                             <constraint firstItem="H0T-LY-5pZ" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="kqe-S1-Hca"/>
                         </constraints>
                     </view>
@@ -52,10 +52,26 @@
                     <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uRf-gI-rZo">
+                                <rect key="frame" x="0.0" y="20" width="600" height="531"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                            </webView>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="uRf-gI-rZo" secondAttribute="trailing" id="Lsm-Kc-Jbu"/>
+                            <constraint firstItem="uRf-gI-rZo" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="NNg-yS-ngJ"/>
+                            <constraint firstItem="uRf-gI-rZo" firstAttribute="top" secondItem="QS5-Rx-YEW" secondAttribute="top" constant="20" id="Q7k-od-frd"/>
+                            <constraint firstItem="uRf-gI-rZo" firstAttribute="bottom" secondItem="Djb-ko-YwX" secondAttribute="top" id="Xai-oa-Qv4"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Статистика" image="second" id="cPa-gy-q4n"/>
+                    <connections>
+                        <outlet property="webView" destination="uRf-gI-rZo" id="wFe-u0-cNZ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
             </objects>

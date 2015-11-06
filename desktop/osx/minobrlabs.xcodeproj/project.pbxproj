@@ -8,20 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		C033790E1BE9037D0042A254 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C033790D1BE9037D0042A254 /* AppDelegate.swift */; };
-		C03379101BE9037D0042A254 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C033790F1BE9037D0042A254 /* ViewController.swift */; };
+		C03379101BE9037D0042A254 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C033790F1BE9037D0042A254 /* MainViewController.swift */; };
 		C03379121BE9037D0042A254 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C03379111BE9037D0042A254 /* Assets.xcassets */; };
 		C03379151BE9037D0042A254 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C03379131BE9037D0042A254 /* Main.storyboard */; };
 		C03379221BE9157D0042A254 /* web in Resources */ = {isa = PBXBuildFile; fileRef = C03379211BE9157D0042A254 /* web */; };
+		C082AA571BECE8ED00476B71 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082AA561BECE8ED00476B71 /* WindowController.swift */; };
+		C082AA591BECEB9300476B71 /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C082AA581BECEB9300476B71 /* StatsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C033790A1BE9037C0042A254 /* minobrlabs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minobrlabs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C033790D1BE9037D0042A254 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C033790F1BE9037D0042A254 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C033790F1BE9037D0042A254 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		C03379111BE9037D0042A254 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C03379141BE9037D0042A254 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C03379161BE9037D0042A254 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C03379211BE9157D0042A254 /* web */ = {isa = PBXFileReference; lastKnownFileType = folder; path = web; sourceTree = "<group>"; };
+		C082AA561BECE8ED00476B71 /* WindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		C082AA581BECEB9300476B71 /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,10 +60,12 @@
 			children = (
 				C033790D1BE9037D0042A254 /* AppDelegate.swift */,
 				C03379211BE9157D0042A254 /* web */,
-				C033790F1BE9037D0042A254 /* ViewController.swift */,
+				C033790F1BE9037D0042A254 /* MainViewController.swift */,
+				C082AA581BECEB9300476B71 /* StatsViewController.swift */,
 				C03379111BE9037D0042A254 /* Assets.xcassets */,
 				C03379131BE9037D0042A254 /* Main.storyboard */,
 				C03379161BE9037D0042A254 /* Info.plist */,
+				C082AA561BECE8ED00476B71 /* WindowController.swift */,
 			);
 			path = minobrlabs;
 			sourceTree = "<group>";
@@ -135,7 +141,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C03379101BE9037D0042A254 /* ViewController.swift in Sources */,
+				C082AA571BECE8ED00476B71 /* WindowController.swift in Sources */,
+				C03379101BE9037D0042A254 /* MainViewController.swift in Sources */,
+				C082AA591BECEB9300476B71 /* StatsViewController.swift in Sources */,
 				C033790E1BE9037D0042A254 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

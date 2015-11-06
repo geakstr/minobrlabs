@@ -10,10 +10,18 @@ var assets = path.join(__dirname, '/../common/web');
 
 app.use('/', express.static(assets));
 
-app.get('/', function(req, res) {
-  fs.readFile(path.join(assets, '/index.html'), 'utf8', function(err, text) {
+function loadPage(file, res) {
+  fs.readFile(path.join(assets, file), 'utf8', function(err, text) {
     res.send(text);
   });
+}
+
+app.get('/', function(req, res) {
+  loadPage('/index.html', res);
+});
+
+app.get('/stats', function(req, res) {
+  loadPage('/stats.html', res);
 });
 
 var server = app.listen(8000, function() {

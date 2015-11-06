@@ -1,15 +1,7 @@
-//
-//  ViewController.swift
-//  minobrlabs
-//
-//  Created by Dmitry Kharitonov on 03/11/15.
-//  Copyright © 2015 Astrakhan State University. All rights reserved.
-//
-
 import Cocoa
 import WebKit
 
-class ViewController: NSViewController, WebFrameLoadDelegate {
+class MainViewController: NSViewController, WebFrameLoadDelegate {
     @IBOutlet weak var webView: WebView!
     
     override func viewDidLoad() {
