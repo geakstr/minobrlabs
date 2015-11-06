@@ -1,18 +1,20 @@
 package ru.edu.asu.minobrlabs;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 
 import ru.edu.asu.minobrlabs.detectors.DetectorsReceiver;
 
-public class MainActivity extends AbstractWebViewActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class StatsActivity extends AbstractWebViewActivity {
+    private static final String TAG = StatsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_stats);
 
-        this.webViewURL = "file:///android_asset/web/index.html";
+        this.webViewURL = "file:///android_asset/web/stats.html";
         this.webViewCallback = new DetectorsReceiver.Callback() {
             @Override
             public void onReceiveResult(final int status, final Bundle data) {
@@ -28,11 +30,8 @@ public class MainActivity extends AbstractWebViewActivity {
 
                 String action = "";
                 boolean wasAction = false;
-                if ("humidity".equalsIgnoreCase(param)) {
-                    action = "setHumidity";
-                    wasAction = true;
-                } else if ("temperature".equalsIgnoreCase(param)) {
-                    action = "setTemperature";
+                if ("temperature".equalsIgnoreCase(param)) {
+                    action = "addTemperature";
                     wasAction = true;
                 }
 
@@ -41,6 +40,13 @@ public class MainActivity extends AbstractWebViewActivity {
                 }
             }
         };
-        this.initWebView(R.id.mainWebView);
+        this.initWebView(R.id.statsWebView);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.findItem(R.id.action_to_stats).setVisible(false);
+        return true;
     }
 }
