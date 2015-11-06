@@ -10,7 +10,7 @@ import ru.edu.asu.minobrlabs.detectors.DetectorsThread;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final String mainWebViewHTML = "file:///android_asset/index.html";
+    private static final String mainWebViewHTML = "file:///android_asset/web/index.html";
 
     private DetectorsThread detectorsThread;
 

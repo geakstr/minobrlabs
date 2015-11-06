@@ -9,5 +9,6 @@ gulp.task('watch', function() {
 gulp.task('move-common-web', function() {
   gulp.src('common/web/**')
       .pipe(gulp.dest('desktop/osx/minobrlabs/web/'))
-      .pipe(gulp.dest('mobile/android/app/src/main/assets/'));
+      .pipe(gulp.dest('mobile/ios/minobrlabs/web/'))
+      .pipe(gulp.dest('mobile/android/app/src/main/assets/web'));
 });
