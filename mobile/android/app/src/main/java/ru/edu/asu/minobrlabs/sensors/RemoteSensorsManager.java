@@ -7,15 +7,15 @@ import android.util.Log;
 
 import ru.edu.asu.minobrlabs.R;
 
-public class RemoteSensorsThread extends Thread {
-    private static final String TAG = RemoteSensorsThread.class.getSimpleName();
+public class RemoteSensorsManager extends Thread {
+    private static final String TAG = RemoteSensorsManager.class.getSimpleName();
 
     private final Context context;
     private final RemoteSensorsReceiver receiver;
 
     private Long sleepTime;
 
-    public RemoteSensorsThread(final Context context) {
+    public RemoteSensorsManager(final Context context) {
         this.context = context;
         this.receiver = new RemoteSensorsReceiver(new Handler());
         this.sleepTime = 300L;
@@ -44,7 +44,7 @@ public class RemoteSensorsThread extends Thread {
         }
     }
 
-    public void start(final RemoteSensorsReceiver.Callback callback) {
+    public void start(final WebViewSensorCallback callback) {
         receiver.setReceiver(callback);
 
         super.start();

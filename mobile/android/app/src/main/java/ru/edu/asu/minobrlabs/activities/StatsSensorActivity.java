@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import ru.edu.asu.minobrlabs.R;
-import ru.edu.asu.minobrlabs.sensors.RemoteSensorsReceiver;
 
 public class StatsSensorActivity extends AbstractSensorActivity {
     private static final String TAG = StatsSensorActivity.class.getSimpleName();
@@ -14,33 +13,7 @@ public class StatsSensorActivity extends AbstractSensorActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
 
-        this.webViewURL = "file:///android_asset/web/stats.html";
-        this.webViewCallback = new RemoteSensorsReceiver.Callback() {
-            @Override
-            public void onReceiveResult(final int status, final Bundle data) {
-                if (status != RESULT_OK) {
-                    return;
-                }
-
-                final String param = data.getString("param");
-                final Double val = data.getDouble("val");
-                if (null == param) {
-                    return;
-                }
-
-                String action = "";
-                boolean wasAction = false;
-                if ("temperature".equalsIgnoreCase(param)) {
-                    action = "addTemperature";
-                    wasAction = true;
-                }
-
-                if (wasAction) {
-                    webView.loadUrl(String.format("javascript:%s('%s')", action, val));
-                }
-            }
-        };
-        this.initWebView(R.id.statsWebView);
+        this.initWebView("file:///android_asset/web/stats.html", R.id.statsWebView);
     }
 
     @Override

@@ -225,21 +225,21 @@ var labels = {
   accel : document.querySelector('.label-accel')
 }
 
-function setTemperature(v) {
+function airTemperature(v) {
   charts.airTemperature.load({
-    columns: [['data', parseFloat(v)]]
+    columns: [['data', v]]
   });
 }
 
-function setHumidity(v) {
+function humidity(v) {
   charts.humidity.load({
-    columns: [['data', parseFloat(v)]]
+    columns: [['data', v]]
   });
 }
 
-function setLight(v) {
+function light(v) {
   charts.light.load({
-    columns: [['data', parseFloat(v)]]
+    columns: [['data', v]]
   });
 }
 
@@ -248,10 +248,10 @@ function format3DAxises(axises) {
   return 'x : ' + axises[0].toFixed(2) + '; y : ' + axises[1].toFixed(2) + '; z : ' + axises[2].toFixed(2);
 }
 
-function setGyro(axises) {
+function gyro(axises) {
   labels.gyro.textContent = format3DAxises(axises);
 }
 
-function setAccel(axises) {
+function accel(axises) {
   labels.accel.textContent = format3DAxises(axises);
 }

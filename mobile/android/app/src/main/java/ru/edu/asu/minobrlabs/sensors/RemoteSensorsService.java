@@ -12,7 +12,7 @@ public class RemoteSensorsService extends IntentService {
     final Random rnd = new Random();
 
     public RemoteSensorsService() {
-        super("detectors-service");
+        super("remote-sensors-service");
     }
 
     @Override
@@ -20,8 +20,8 @@ public class RemoteSensorsService extends IntentService {
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
         final Bundle bundle = new Bundle();
 
-        bundle.putString("param", rnd.nextBoolean() ? "humidity" : "temperature");
-        bundle.putDouble("val", rnd.nextInt(100));
+        bundle.putInt("type", rnd.nextBoolean() ? SensorTypes.HUMIDITY : SensorTypes.AIR_TEMPERATURE);
+        bundle.putFloatArray("values", new float[] { rnd.nextInt(100) });
 
         receiver.send(Activity.RESULT_OK, bundle);
     }
