@@ -93,7 +93,7 @@ charts.light = c3.generate({
   gauge: {
     label: {
       format: function(value, ratio) {
-        return value + ' лм';
+        return value + ' лк';
       },
     },
     min: 1,
@@ -227,6 +227,12 @@ function setTemperature(v) {
 
 function setHumidity(v) {
   charts.humidity.load({
+    columns: [['data', parseFloat(v)]]
+  });
+}
+
+function setLight(v) {
+  charts.light.load({
     columns: [['data', parseFloat(v)]]
   });
 }

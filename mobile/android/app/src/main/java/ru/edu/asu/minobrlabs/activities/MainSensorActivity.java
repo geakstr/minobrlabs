@@ -1,11 +1,12 @@
-package ru.edu.asu.minobrlabs;
+package ru.edu.asu.minobrlabs.activities;
 
 import android.os.Bundle;
 
-import ru.edu.asu.minobrlabs.detectors.DetectorsReceiver;
+import ru.edu.asu.minobrlabs.R;
+import ru.edu.asu.minobrlabs.sensors.RemoteSensorsReceiver;
 
-public class MainActivity extends AbstractWebViewActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class MainSensorActivity extends AbstractSensorActivity {
+    private static final String TAG = MainSensorActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -13,7 +14,7 @@ public class MainActivity extends AbstractWebViewActivity {
         setContentView(R.layout.activity_main);
 
         this.webViewURL = "file:///android_asset/web/index.html";
-        this.webViewCallback = new DetectorsReceiver.Callback() {
+        this.webViewCallback = new RemoteSensorsReceiver.Callback() {
             @Override
             public void onReceiveResult(final int status, final Bundle data) {
                 if (status != RESULT_OK) {

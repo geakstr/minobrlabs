@@ -1,13 +1,13 @@
-package ru.edu.asu.minobrlabs.detectors;
+package ru.edu.asu.minobrlabs.sensors;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 
-public class DetectorsReceiver extends ResultReceiver {
+public class RemoteSensorsReceiver extends ResultReceiver {
     private Callback receiver;
 
-    public DetectorsReceiver(final Handler handler) {
+    public RemoteSensorsReceiver(final Handler handler) {
         super(handler);
     }
 

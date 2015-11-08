@@ -1,4 +1,4 @@
-package ru.edu.asu.minobrlabs.detectors;
+package ru.edu.asu.minobrlabs.sensors;
 
 import android.app.Activity;
 import android.app.IntentService;
@@ -8,10 +8,10 @@ import android.os.ResultReceiver;
 
 import java.util.Random;
 
-public class DetectorsService extends IntentService {
+public class RemoteSensorsService extends IntentService {
     final Random rnd = new Random();
 
-    public DetectorsService() {
+    public RemoteSensorsService() {
         super("detectors-service");
     }
 

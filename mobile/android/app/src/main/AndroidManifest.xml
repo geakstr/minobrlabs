@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainSensorActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,11 +18,11 @@
         </activity>
 
         <activity
-            android:name=".StatsActivity"
+            android:name=".activities.StatsSensorActivity"
             android:screenOrientation="landscape" />
 
         <service
-            android:name=".detectors.DetectorsService"
+            android:name=".sensors.RemoteSensorsService"
             android:exported="false" />
     </application>
 

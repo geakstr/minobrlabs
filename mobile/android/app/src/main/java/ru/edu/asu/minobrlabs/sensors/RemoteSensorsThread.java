@@ -1,4 +1,4 @@
-package ru.edu.asu.minobrlabs.detectors;
+package ru.edu.asu.minobrlabs.sensors;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,17 +7,17 @@ import android.util.Log;
 
 import ru.edu.asu.minobrlabs.R;
 
-public class DetectorsThread extends Thread {
-    private static final String TAG = DetectorsThread.class.getSimpleName();
+public class RemoteSensorsThread extends Thread {
+    private static final String TAG = RemoteSensorsThread.class.getSimpleName();
 
     private final Context context;
-    private final DetectorsReceiver receiver;
+    private final RemoteSensorsReceiver receiver;
 
     private Long sleepTime;
 
-    public DetectorsThread(final Context context) {
+    public RemoteSensorsThread(final Context context) {
         this.context = context;
-        this.receiver = new DetectorsReceiver(new Handler());
+        this.receiver = new RemoteSensorsReceiver(new Handler());
         this.sleepTime = 300L;
     }
 
@@ -32,7 +32,7 @@ public class DetectorsThread extends Thread {
     @Override
     public void run() {
         while (true) {
-            final Intent i = new Intent(context, DetectorsService.class);
+            final Intent i = new Intent(context, RemoteSensorsService.class);
             i.putExtra("receiver", receiver);
             context.startService(i);
 
@@ -44,7 +44,7 @@ public class DetectorsThread extends Thread {
         }
     }
 
-    public void start(final DetectorsReceiver.Callback callback) {
+    public void start(final RemoteSensorsReceiver.Callback callback) {
         receiver.setReceiver(callback);
 
         super.start();
