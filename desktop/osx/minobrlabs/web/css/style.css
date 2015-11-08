@@ -52,8 +52,12 @@ body {
     padding: 0 11px;
 }
 
-.main-page .charts-table tr:first-child td {
+.main-page .charts-table tr td {
     padding-bottom: 50px;
+}
+
+.main-page .charts-table tr:last-child td {
+    padding-bottom: 0px;
 }
 
 .main-page .chart-wrapper {

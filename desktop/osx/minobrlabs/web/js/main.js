@@ -101,7 +101,7 @@ charts.light = c3.generate({
     width: 25
   },
   color: {
-    pattern: ['#0000FF']
+    pattern: ['#FFC107']
   },
   interaction: {
     enabled: false
@@ -219,6 +219,12 @@ charts.ph = c3.generate({
   }
 });
 
+
+var labels = {
+  gyro : document.querySelector('.label-gyro'),
+  accel : document.querySelector('.label-accel')
+}
+
 function setTemperature(v) {
   charts.airTemperature.load({
     columns: [['data', parseFloat(v)]]
@@ -235,4 +241,17 @@ function setLight(v) {
   charts.light.load({
     columns: [['data', parseFloat(v)]]
   });
+}
+
+
+function format3DAxises(axises) {
+  return 'x : ' + axises[0].toFixed(2) + '; y : ' + axises[1].toFixed(2) + '; z : ' + axises[2].toFixed(2);
+}
+
+function setGyro(axises) {
+  labels.gyro.textContent = format3DAxises(axises);
+}
+
+function setAccel(axises) {
+  labels.accel.textContent = format3DAxises(axises);
 }

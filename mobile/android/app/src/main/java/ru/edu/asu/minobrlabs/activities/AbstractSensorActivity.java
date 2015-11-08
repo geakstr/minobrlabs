@@ -8,10 +8,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import java.util.Arrays;
 
 import ru.edu.asu.minobrlabs.R;
 import ru.edu.asu.minobrlabs.sensors.RemoteSensorsReceiver;
@@ -26,10 +29,15 @@ public abstract class AbstractSensorActivity extends AppCompatActivity implement
     protected RemoteSensorsThread remoteSensorsThread;
     protected RemoteSensorsReceiver.Callback webViewCallback;
 
-    protected SensorManager localSensorsManager;
-    protected Sensor localSensorLight;
-    protected Sensor localSensorGyro;
-    protected Sensor localSensorAccel;
+    private SensorManager localSensorsManager;
+    private Sensor localSensorLight;
+    private Sensor localSensorGyro;
+    private Sensor localSensorAccel;
+
+    private static final float ALPHA = 0.025f;
+
+    // Store prev accelerometer value for low pass filter
+    private float[] accelValues;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -88,25 +96,40 @@ public abstract class AbstractSensorActivity extends AppCompatActivity implement
 
     @Override
     public final void onSensorChanged(final SensorEvent event) {
-        final int sensorType = event.sensor.getType();
+        if (!webViewLoaded) {
+            return;
+        }
 
+        final int sensorType = event.sensor.getType();
         if (sensorType == Sensor.TYPE_LIGHT) {
             float lux = event.values[0];
             lux = lux < 1.0f ? 1.0f : lux;
 
-            if (webViewLoaded) {
-                webView.loadUrl(String.format("javascript:setLight('%s')", lux));
-            }
-        } else if (sensorType == Sensor.TYPE_GYROSCOPE || sensorType == Sensor.TYPE_ACCELEROMETER) {
-            final float x = event.values[0];
-            final float y = event.values[1];
-            final float z = event.values[2];
+            webView.loadUrl(String.format("javascript:setLight('%s')", lux));
+        } else if (sensorType == Sensor.TYPE_GYROSCOPE) {
+            webView.loadUrl(String.format("javascript:setGyro([%s, %s, %s])", event.values[0], event.values[1], event.values[2]));
+        } else if (sensorType == Sensor.TYPE_ACCELEROMETER) {
+            accelValues = lowPass(event.values.clone(), accelValues);
+            webView.loadUrl(String.format("javascript:setAccel([%s, %s, %s])", accelValues[0], accelValues[1], accelValues[2]));
         }
     }
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
 
+    }
+
+    /**
+     * Smooth sensor values
+     */
+    private float[] lowPass(final float[] input, final float[] output) {
+        if (output == null) {
+            return input;
+        }
+        for (int i = 0; i < input.length; i++) {
+            output[i] = output[i] + ALPHA * (input[i] - output[i]);
+        }
+        return output;
     }
 
     protected void initWebView(final int viewId) {
