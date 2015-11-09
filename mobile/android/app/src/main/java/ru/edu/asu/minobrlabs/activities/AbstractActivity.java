@@ -69,8 +69,11 @@ public abstract class AbstractActivity extends AppCompatActivity {
             public void onPageFinished(final WebView view, final String url) {
                 final ISensorCallback webViewCallback = new WebViewCallback(webView);
 
-                localSensorsManager.start(webViewCallback);
-                remoteSensorsManager.start(webViewCallback);
+                localSensorsManager.setCallback(webViewCallback);
+                remoteSensorsManager.setCallback(webViewCallback);
+
+                localSensorsManager.setRunning(true);
+                remoteSensorsManager.setRunning(true);
             }
         });
         webView.loadUrl(webViewURL);

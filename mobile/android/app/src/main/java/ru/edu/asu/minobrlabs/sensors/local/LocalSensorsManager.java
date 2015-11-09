@@ -21,7 +21,7 @@ public class LocalSensorsManager implements SensorEventListener {
     private Sensor sensorGyro;
     private Sensor sensorAccel;
 
-    private MicrophoneSensorThread microphoneSensorThread;
+    private MicrophoneSensorManager microphoneSensorManager;
 
     public LocalSensorsManager(final Context context) {
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
@@ -29,7 +29,7 @@ public class LocalSensorsManager implements SensorEventListener {
         sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        microphoneSensorThread = new MicrophoneSensorThread();
+        microphoneSensorManager = new MicrophoneSensorManager(context);
     }
 
     public void registerListeners() {
@@ -89,15 +89,17 @@ public class LocalSensorsManager implements SensorEventListener {
 
     }
 
-    public void start(final ISensorCallback callback) {
+    public void setCallback(final ISensorCallback callback) {
         this.callback = callback;
+        microphoneSensorManager.setCallback(callback);
 
-        microphoneSensorThread.setCallback(callback);
-        microphoneSensorThread.setRunning(true);
-        microphoneSensorThread.start();
+    }
+
+    public void setRunning(final boolean running) {
+        microphoneSensorManager.setRunning(running);
     }
 
     public void stop() {
-        microphoneSensorThread.setRunning(false);
+        microphoneSensorManager.setRunning(false);
     }
 }
