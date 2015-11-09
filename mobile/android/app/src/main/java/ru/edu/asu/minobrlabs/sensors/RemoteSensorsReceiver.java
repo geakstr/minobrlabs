@@ -5,13 +5,13 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 
 public class RemoteSensorsReceiver extends ResultReceiver {
-    private WebViewSensorCallback receiver;
+    private ISensorCallback receiver;
 
     public RemoteSensorsReceiver(final Handler handler) {
         super(handler);
     }
 
-    public void setReceiver(final WebViewSensorCallback receiver) {
+    public void setReceiver(final ISensorCallback receiver) {
         this.receiver = receiver;
     }
 

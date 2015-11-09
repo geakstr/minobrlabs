@@ -6,39 +6,49 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.util.Log;
 
 public class LocalSensorsManager implements SensorEventListener {
-    private WebViewSensorCallback callback;
+    private static final String TAG = LocalSensorsManager.class.getSimpleName();
 
-    private SensorManager localSensorManager;
-    private Sensor localSensorLight;
-    private Sensor localSensorGyro;
-    private Sensor localSensorAccel;
+    private ISensorCallback callback;
+
+    private SensorManager sensorManager;
+    private Sensor sensorLight;
+    private Sensor sensorGyro;
+    private Sensor sensorAccel;
+
+    private AudioRecordThread audioRecordThread;
 
     public LocalSensorsManager(final Context context) {
-        this.localSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        this.localSensorLight = localSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        this.localSensorGyro = localSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        this.localSensorAccel = localSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        this.sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        this.sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        this.sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        this.sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        this.audioRecordThread = new AudioRecordThread();
     }
 
     public void registerListeners() {
-        if (null != localSensorLight) {
-            localSensorManager.registerListener(this, localSensorLight, SensorManager.SENSOR_DELAY_NORMAL);
+        if (null != sensorLight) {
+            sensorManager.registerListener(this, sensorLight, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        if (null != localSensorGyro) {
-            localSensorManager.registerListener(this, localSensorGyro, SensorManager.SENSOR_DELAY_NORMAL);
+        if (null != sensorGyro) {
+            sensorManager.registerListener(this, sensorGyro, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        if (null != localSensorAccel) {
-            localSensorManager.registerListener(this, localSensorAccel, SensorManager.SENSOR_DELAY_NORMAL);
+        if (null != sensorAccel) {
+            sensorManager.registerListener(this, sensorAccel, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
     public void unregisterListeners() {
-        localSensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(this);
     }
 
     @Override
@@ -68,8 +78,10 @@ public class LocalSensorsManager implements SensorEventListener {
         }
 
         final Bundle bundle = new Bundle();
+
         bundle.putInt("type", type);
         bundle.putFloatArray("values", vals);
+
         callback.onReceiveResult(Activity.RESULT_OK, bundle);
     }
 
@@ -78,7 +90,15 @@ public class LocalSensorsManager implements SensorEventListener {
 
     }
 
-    public void start(final WebViewSensorCallback callback) {
+    public void start(final ISensorCallback callback) {
         this.callback = callback;
+
+        this.audioRecordThread.setCallback(callback);
+        this.audioRecordThread.setRunning(true);
+        this.audioRecordThread.start();
+    }
+
+    public void stop() {
+        this.audioRecordThread.setRunning(false);
     }
 }

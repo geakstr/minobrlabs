@@ -222,7 +222,8 @@ charts.ph = c3.generate({
 
 var labels = {
   gyro : document.querySelector('.label-gyro'),
-  accel : document.querySelector('.label-accel')
+  accel : document.querySelector('.label-accel'),
+  microphone : document.querySelector('.label-microphone')
 }
 
 function airTemperature(v) {
@@ -241,6 +242,10 @@ function light(v) {
   charts.light.load({
     columns: [['data', v]]
   });
+}
+
+function microphone(v) {
+  label.microphone.textContent = v + ' db';
 }
 
 

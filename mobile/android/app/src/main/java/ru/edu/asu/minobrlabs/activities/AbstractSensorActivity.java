@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import ru.edu.asu.minobrlabs.R;
+import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.LocalSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.RemoteSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.WebViewSensorCallback;
@@ -67,7 +68,7 @@ public abstract class AbstractSensorActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
-                final WebViewSensorCallback webViewCallback = new WebViewSensorCallback(webView);
+                final ISensorCallback webViewCallback = new WebViewSensorCallback(webView);
 
                 localSensorsManager.start(webViewCallback);
                 remoteSensorsManager.start(webViewCallback);

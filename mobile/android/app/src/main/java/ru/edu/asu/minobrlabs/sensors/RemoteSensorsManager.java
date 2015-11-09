@@ -44,7 +44,7 @@ public class RemoteSensorsManager extends Thread {
         }
     }
 
-    public void start(final WebViewSensorCallback callback) {
+    public void start(final ISensorCallback callback) {
         receiver.setReceiver(callback);
 
         super.start();

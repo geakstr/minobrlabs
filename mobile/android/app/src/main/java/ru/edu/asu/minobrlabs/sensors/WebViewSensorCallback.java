@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 
-public class WebViewSensorCallback {
+public class WebViewSensorCallback implements ISensorCallback {
     private final WebView webView;
 
     // Store prev accelerometer value for low pass filter
@@ -44,6 +44,9 @@ public class WebViewSensorCallback {
             case SensorTypes.ACCEL:
                 accel = lowPass(vals.clone(), accel, 0.025f);
                 action = String.format("accel([%s, %s, %s])", accel[0], accel[1], accel[2]);
+                break;
+            case SensorTypes.MICROPHONE:
+                action = String.format("microphone(%s)", vals[0]);
                 break;
             default:
                 return;
