@@ -1,16 +1,19 @@
-package ru.edu.asu.minobrlabs.sensors;
+package ru.edu.asu.minobrlabs.webview;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 
-public class WebViewSensorCallback implements ISensorCallback {
+import ru.edu.asu.minobrlabs.sensors.SensorTypes;
+import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
+
+public class WebViewCallback implements ISensorCallback {
     private final WebView webView;
 
     // Store prev accelerometer value for low pass filter
     private float[] accel;
 
-    public WebViewSensorCallback(final WebView webView) {
+    public WebViewCallback(final WebView webView) {
         this.webView = webView;
     }
 
@@ -45,7 +48,7 @@ public class WebViewSensorCallback implements ISensorCallback {
                 accel = lowPass(vals.clone(), accel, 0.025f);
                 action = String.format("accel([%s, %s, %s])", accel[0], accel[1], accel[2]);
                 break;
-            case SensorTypes.MICROPHONE:
+            case SensorTypes.MICROPHONE_DB:
                 action = String.format("microphone(%s)", vals[0]);
                 break;
             default:

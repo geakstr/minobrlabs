@@ -245,7 +245,7 @@ function light(v) {
 }
 
 function microphone(v) {
-  label.microphone.textContent = v + ' db';
+  labels.microphone.textContent = v + ' db';
 }
 
 

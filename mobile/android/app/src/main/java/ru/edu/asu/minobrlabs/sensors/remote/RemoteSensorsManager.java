@@ -1,4 +1,4 @@
-package ru.edu.asu.minobrlabs.sensors;
+package ru.edu.asu.minobrlabs.sensors.remote;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import ru.edu.asu.minobrlabs.R;
+import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 
 public class RemoteSensorsManager extends Thread {
     private static final String TAG = RemoteSensorsManager.class.getSimpleName();

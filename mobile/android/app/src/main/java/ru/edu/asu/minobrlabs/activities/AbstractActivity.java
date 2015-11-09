@@ -10,12 +10,12 @@ import android.webkit.WebViewClient;
 
 import ru.edu.asu.minobrlabs.R;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
-import ru.edu.asu.minobrlabs.sensors.LocalSensorsManager;
-import ru.edu.asu.minobrlabs.sensors.RemoteSensorsManager;
-import ru.edu.asu.minobrlabs.sensors.WebViewSensorCallback;
+import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
+import ru.edu.asu.minobrlabs.sensors.remote.RemoteSensorsManager;
+import ru.edu.asu.minobrlabs.webview.WebViewCallback;
 
-public abstract class AbstractSensorActivity extends AppCompatActivity {
-    private static final String TAG = AbstractSensorActivity.class.getSimpleName();
+public abstract class AbstractActivity extends AppCompatActivity {
+    private static final String TAG = AbstractActivity.class.getSimpleName();
 
     private LocalSensorsManager localSensorsManager;
     private RemoteSensorsManager remoteSensorsManager;
@@ -32,7 +32,6 @@ public abstract class AbstractSensorActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // TODO: Думаю здесь также нужно что-то сделать с тредом в remoteSensorsManager
         localSensorsManager.registerListeners();
     }
 
@@ -68,7 +67,7 @@ public abstract class AbstractSensorActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
-                final ISensorCallback webViewCallback = new WebViewSensorCallback(webView);
+                final ISensorCallback webViewCallback = new WebViewCallback(webView);
 
                 localSensorsManager.start(webViewCallback);
                 remoteSensorsManager.start(webViewCallback);
@@ -78,7 +77,7 @@ public abstract class AbstractSensorActivity extends AppCompatActivity {
     }
 
     public void moveToStatistics() {
-        final Intent i = new Intent(getApplicationContext(), StatsSensorActivity.class);
+        final Intent i = new Intent(getApplicationContext(), StatsActivity.class);
         startActivity(i);
     }
 }

@@ -1,4 +1,4 @@
-package ru.edu.asu.minobrlabs.sensors;
+package ru.edu.asu.minobrlabs.sensors.remote;
 
 import android.app.Activity;
 import android.app.IntentService;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 
 import java.util.Random;
+
+import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 public class RemoteSensorsService extends IntentService {
     final Random rnd = new Random();

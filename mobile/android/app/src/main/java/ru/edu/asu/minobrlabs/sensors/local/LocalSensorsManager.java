@@ -1,4 +1,4 @@
-package ru.edu.asu.minobrlabs.sensors;
+package ru.edu.asu.minobrlabs.sensors.local;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,11 +6,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.util.Log;
+
+import ru.edu.asu.minobrlabs.sensors.SensorTypes;
+import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 
 public class LocalSensorsManager implements SensorEventListener {
     private static final String TAG = LocalSensorsManager.class.getSimpleName();
@@ -22,15 +21,15 @@ public class LocalSensorsManager implements SensorEventListener {
     private Sensor sensorGyro;
     private Sensor sensorAccel;
 
-    private AudioRecordThread audioRecordThread;
+    private MicrophoneSensorThread microphoneSensorThread;
 
     public LocalSensorsManager(final Context context) {
-        this.sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        this.sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-        this.sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        this.sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        this.audioRecordThread = new AudioRecordThread();
+        microphoneSensorThread = new MicrophoneSensorThread();
     }
 
     public void registerListeners() {
@@ -93,12 +92,12 @@ public class LocalSensorsManager implements SensorEventListener {
     public void start(final ISensorCallback callback) {
         this.callback = callback;
 
-        this.audioRecordThread.setCallback(callback);
-        this.audioRecordThread.setRunning(true);
-        this.audioRecordThread.start();
+        microphoneSensorThread.setCallback(callback);
+        microphoneSensorThread.setRunning(true);
+        microphoneSensorThread.start();
     }
 
     public void stop() {
-        this.audioRecordThread.setRunning(false);
+        microphoneSensorThread.setRunning(false);
     }
 }

@@ -4,8 +4,8 @@ import android.os.Bundle;
 
 import ru.edu.asu.minobrlabs.R;
 
-public class MainSensorActivity extends AbstractSensorActivity {
-    private static final String TAG = MainSensorActivity.class.getSimpleName();
+public class MainActivity extends AbstractActivity {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

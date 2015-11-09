@@ -5,8 +5,8 @@ import android.view.Menu;
 
 import ru.edu.asu.minobrlabs.R;
 
-public class StatsSensorActivity extends AbstractSensorActivity {
-    private static final String TAG = StatsSensorActivity.class.getSimpleName();
+public class StatsActivity extends AbstractActivity {
+    private static final String TAG = StatsActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

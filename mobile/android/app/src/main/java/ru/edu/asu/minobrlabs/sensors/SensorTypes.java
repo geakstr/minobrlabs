@@ -6,5 +6,6 @@ public class SensorTypes {
     public static final int LIGHT = 3;
     public static final int GYRO = 4;
     public static final int ACCEL = 5;
-    public static final int MICROPHONE = 6;
+    public static final int MICROPHONE_DB = 6;
+    public static final int MICROPHONE_PA = 7;
 }
