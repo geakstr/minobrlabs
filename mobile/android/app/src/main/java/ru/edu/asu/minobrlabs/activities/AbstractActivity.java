@@ -15,8 +15,6 @@ import ru.edu.asu.minobrlabs.sensors.remote.RemoteSensorsManager;
 import ru.edu.asu.minobrlabs.webview.WebViewCallback;
 
 public abstract class AbstractActivity extends AppCompatActivity {
-    private static final String TAG = AbstractActivity.class.getSimpleName();
-
     private LocalSensorsManager localSensorsManager;
     private RemoteSensorsManager remoteSensorsManager;
 
@@ -24,8 +22,8 @@ public abstract class AbstractActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.localSensorsManager = new LocalSensorsManager(getApplicationContext());
-        this.remoteSensorsManager = new RemoteSensorsManager(getApplicationContext());
+        this.localSensorsManager = new LocalSensorsManager();
+        this.remoteSensorsManager = new RemoteSensorsManager();
     }
 
     @Override
@@ -72,8 +70,8 @@ public abstract class AbstractActivity extends AppCompatActivity {
                 localSensorsManager.setCallback(webViewCallback);
                 remoteSensorsManager.setCallback(webViewCallback);
 
-                localSensorsManager.setRunning(true);
-                remoteSensorsManager.setRunning(true);
+                localSensorsManager.start();
+                remoteSensorsManager.start();
             }
         });
         webView.loadUrl(webViewURL);

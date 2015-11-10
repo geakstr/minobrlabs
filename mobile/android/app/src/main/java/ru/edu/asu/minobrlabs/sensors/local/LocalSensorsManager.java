@@ -8,6 +8,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
+import ru.edu.asu.minobrlabs.GlobalApplication;
+import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 
@@ -23,13 +25,16 @@ public class LocalSensorsManager implements SensorEventListener {
 
     private MicrophoneSensorManager microphoneSensorManager;
 
-    public LocalSensorsManager(final Context context) {
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+    // Store prev accelerometer value for low pass filter
+    private float[] accel;
+
+    public LocalSensorsManager() {
+        sensorManager = (SensorManager) GlobalApplication.getInstance().getSystemService(Context.SENSOR_SERVICE);
         sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        microphoneSensorManager = new MicrophoneSensorManager(context);
+        microphoneSensorManager = new MicrophoneSensorManager();
     }
 
     public void registerListeners() {
@@ -70,10 +75,15 @@ public class LocalSensorsManager implements SensorEventListener {
             default:
                 break;
         }
-        final float[] vals = event.values;
 
+        float[] vals = event.values;
         if (0 == type || null == vals) {
             return;
+        }
+
+        if (type == SensorTypes.ACCEL) {
+            accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.025f);
+            vals = accel.clone();
         }
 
         final Bundle bundle = new Bundle();
@@ -92,14 +102,13 @@ public class LocalSensorsManager implements SensorEventListener {
     public void setCallback(final ISensorCallback callback) {
         this.callback = callback;
         microphoneSensorManager.setCallback(callback);
-
     }
 
-    public void setRunning(final boolean running) {
-        microphoneSensorManager.setRunning(running);
+    public void start() {
+        microphoneSensorManager.start();
     }
 
     public void stop() {
-        microphoneSensorManager.setRunning(false);
+        microphoneSensorManager.stop();
     }
 }
