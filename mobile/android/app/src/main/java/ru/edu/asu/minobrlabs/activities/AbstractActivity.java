@@ -12,7 +12,7 @@ import ru.edu.asu.minobrlabs.R;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.remote.RemoteSensorsManager;
-import ru.edu.asu.minobrlabs.webview.WebViewCallback;
+import ru.edu.asu.minobrlabs.sensors.SensorCallback;
 
 public abstract class AbstractActivity extends AppCompatActivity {
     private LocalSensorsManager localSensorsManager;
@@ -65,7 +65,7 @@ public abstract class AbstractActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
-                final ISensorCallback webViewCallback = new WebViewCallback(webView);
+                final ISensorCallback webViewCallback = new SensorCallback(webView);
 
                 localSensorsManager.setCallback(webViewCallback);
                 remoteSensorsManager.setCallback(webViewCallback);

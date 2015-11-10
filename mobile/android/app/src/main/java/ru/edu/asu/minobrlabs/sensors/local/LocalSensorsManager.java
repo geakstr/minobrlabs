@@ -8,28 +8,27 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
-import ru.edu.asu.minobrlabs.GlobalApplication;
+import ru.edu.asu.minobrlabs.Application;
+import ru.edu.asu.minobrlabs.db.entities.Stat;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
-import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
+import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 public class LocalSensorsManager implements SensorEventListener {
-    private static final String TAG = LocalSensorsManager.class.getSimpleName();
-
     private ISensorCallback callback;
 
-    private SensorManager sensorManager;
-    private Sensor sensorLight;
-    private Sensor sensorGyro;
-    private Sensor sensorAccel;
+    private final SensorManager sensorManager;
+    private final Sensor sensorLight;
+    private final Sensor sensorGyro;
+    private final Sensor sensorAccel;
 
-    private MicrophoneSensorManager microphoneSensorManager;
+    private final MicrophoneSensorManager microphoneSensorManager;
 
     // Store prev accelerometer value for low pass filter
     private float[] accel;
 
     public LocalSensorsManager() {
-        sensorManager = (SensorManager) GlobalApplication.getInstance().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) Application.getInstance().getSystemService(Context.SENSOR_SERVICE);
         sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -75,21 +74,21 @@ public class LocalSensorsManager implements SensorEventListener {
             default:
                 break;
         }
+        if (0 == type) {
+            return;
+        }
 
-        float[] vals = event.values;
-        if (0 == type || null == vals) {
+        final float[] vals = event.values;
+        if (null == vals) {
             return;
         }
 
         if (type == SensorTypes.ACCEL) {
             accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.025f);
-            vals = accel.clone();
         }
 
         final Bundle bundle = new Bundle();
-
-        bundle.putInt("type", type);
-        bundle.putFloatArray("values", vals);
+        bundle.putSerializable("stat", new Stat(type, vals));
 
         callback.onReceiveResult(Activity.RESULT_OK, bundle);
     }

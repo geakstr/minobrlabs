@@ -16,7 +16,7 @@ var g = new Dygraph(
 );
 
 function airTemperature(val) {
-  data.push([++i, val]);
+  data.push([++i, val[0]]);
   g.updateOptions({
     'file': data
   });

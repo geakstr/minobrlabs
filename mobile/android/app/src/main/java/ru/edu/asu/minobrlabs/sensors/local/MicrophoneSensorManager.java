@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import ru.edu.asu.minobrlabs.db.entities.Stat;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
@@ -25,11 +26,7 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
     public void run() {
         while (isRunning()) {
             final Bundle bundle = new Bundle();
-
-            final int db = Math.max(getDecibel(), 40);
-
-            bundle.putInt("type", SensorTypes.MICROPHONE_DB);
-            bundle.putFloatArray("values", new float[]{db});
+            bundle.putSerializable("stat", new Stat(SensorTypes.MICROPHONE_DB, new float[]{getDecibel()}));
 
             microphoneSensorHandler.apply(bundle);
 
@@ -86,7 +83,7 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
     // http://stackoverflow.com/questions/10655703/what-does-androids-getmaxamplitude-function-for-the-mediarecorder-actually-gi
     private double getPressure() {
         // Pa
-        return mediaRecorder.getMaxAmplitude() / 51805.5336; // 51805.5336 = 32767 / 0.6325 where 0.6325 (Pa) equals 90 dB
+        return mediaRecorder.getMaxAmplitude() / 51805.5336; // 51805.5336 = 32767 / 0.6325 where 0.6325 Pa equals 90 dB
     }
 
     private int getDecibel() {

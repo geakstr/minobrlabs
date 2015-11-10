@@ -228,24 +228,24 @@ var labels = {
 
 function airTemperature(v) {
   charts.airTemperature.load({
-    columns: [['data', v]]
+    columns: [['data', v[0]]]
   });
 }
 
 function humidity(v) {
   charts.humidity.load({
-    columns: [['data', v]]
+    columns: [['data', v[0]]]
   });
 }
 
 function light(v) {
   charts.light.load({
-    columns: [['data', v]]
+    columns: [['data', v[0]]]
   });
 }
 
 function microphone(v) {
-  labels.microphone.textContent = v + ' db';
+  labels.microphone.textContent = v[0] + ' db';
 }
 
 
