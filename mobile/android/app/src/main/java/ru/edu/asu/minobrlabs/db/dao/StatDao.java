@@ -10,18 +10,18 @@ import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class StatDao {
     public long put(final Stat stat) {
-        return cupboard().withDatabase(Application.db()).put(stat);
+        return cupboard().withDatabase(Application.db().conn()).put(stat);
     }
 
     public QueryResultIterable<Stat> findByType(final Integer type) {
-        return cupboard().withDatabase(Application.db())
+        return cupboard().withDatabase(Application.db().conn())
                 .query(Stat.class)
                 .withSelection("type = ?", type.toString())
                 .query();
     }
 
     public QueryResultIterable<Stat> findByDateRange(final Long from, final Long to) {
-        return cupboard().withDatabase(Application.db())
+        return cupboard().withDatabase(Application.db().conn())
                 .query(Stat.class)
                 .withSelection("date >= ? and date <= ?", from.toString(), to.toString())
                 .query();
@@ -32,22 +32,22 @@ public class StatDao {
     }
 
     public void delete(final long id) {
-        cupboard().withDatabase(Application.db()).delete(Stat.class, id);
+        cupboard().withDatabase(Application.db().conn()).delete(Stat.class, id);
     }
 
     public void delete(final Stat stat) {
-        cupboard().withDatabase(Application.db()).delete(stat);
+        cupboard().withDatabase(Application.db().conn()).delete(stat);
     }
 
     public void delete(final String where, final String... params) {
-        cupboard().withDatabase(Application.db()).delete(Stat.class, where, params);
+        cupboard().withDatabase(Application.db().conn()).delete(Stat.class, where, params);
     }
 
     public void delete(final String where) {
-        cupboard().withDatabase(Application.db()).delete(Stat.class, where);
+        cupboard().withDatabase(Application.db().conn()).delete(Stat.class, where);
     }
 
     public void delete() {
-        cupboard().withDatabase(Application.db()).delete(Stat.class, null);
+        cupboard().withDatabase(Application.db().conn()).delete(Stat.class, null);
     }
 }

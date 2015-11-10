@@ -12,6 +12,7 @@ import ru.edu.asu.minobrlabs.Application;
 import ru.edu.asu.minobrlabs.db.entities.Stat;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
+import ru.edu.asu.minobrlabs.sensors.SensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 public class LocalSensorsManager implements SensorEventListener {
@@ -88,7 +89,7 @@ public class LocalSensorsManager implements SensorEventListener {
         }
 
         final Bundle bundle = new Bundle();
-        bundle.putSerializable("stat", new Stat(type, vals));
+        bundle.putSerializable(SensorCallback.bundleKey, new Stat(type, vals));
 
         callback.onReceiveResult(Activity.RESULT_OK, bundle);
     }

@@ -7,6 +7,8 @@ import android.webkit.WebView;
 import ru.edu.asu.minobrlabs.db.entities.Stat;
 
 public class SensorCallback implements ISensorCallback {
+    public static final String bundleKey = "stat";
+
     private final WebView webView;
 
     public SensorCallback(final WebView webView) {
@@ -14,38 +16,19 @@ public class SensorCallback implements ISensorCallback {
     }
 
     @Override
-    public void onReceiveResult(final int status, final Bundle data) {
+    public void onReceiveResult(final int status, final Bundle bundle) {
         if (status != Activity.RESULT_OK) {
             return;
         }
 
-        final Stat stat = (Stat) data.getSerializable("stat");
+        final Stat stat = (Stat) bundle.getSerializable(bundleKey);
         if (null == stat) {
             return;
         }
 
-        String action;
-        switch (stat.type) {
-            case SensorTypes.HUMIDITY:
-                action = "humidity";
-                break;
-            case SensorTypes.AIR_TEMPERATURE:
-                action = "airTemperature";
-                break;
-            case SensorTypes.LIGHT:
-                action = "light";
-                break;
-            case SensorTypes.GYRO:
-                action = "gyro";
-                break;
-            case SensorTypes.ACCEL:
-                action = "accel";
-                break;
-            case SensorTypes.MICROPHONE_DB:
-                action = "microphone";
-                break;
-            default:
-                return;
+        final String action = SensorTypes.actions.get(stat.type);
+        if (null == action) {
+            return;
         }
 
         webView.loadUrl(String.format("javascript:%s(%s)", action, stat.vals));

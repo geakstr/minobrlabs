@@ -9,6 +9,7 @@ import android.os.ResultReceiver;
 import java.util.Random;
 
 import ru.edu.asu.minobrlabs.db.entities.Stat;
+import ru.edu.asu.minobrlabs.sensors.SensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 public class RemoteSensorsService extends IntentService {
@@ -23,7 +24,7 @@ public class RemoteSensorsService extends IntentService {
         final ResultReceiver receiver = intent.getParcelableExtra("receiver");
 
         final Bundle bundle = new Bundle();
-        bundle.putSerializable("stat", new Stat(rnd.nextBoolean() ? SensorTypes.HUMIDITY : SensorTypes.AIR_TEMPERATURE, new float[]{rnd.nextInt(100)}));
+        bundle.putSerializable(SensorCallback.bundleKey, new Stat(rnd.nextBoolean() ? SensorTypes.HUMIDITY : SensorTypes.AIR_TEMPERATURE, new float[]{rnd.nextInt(100)}));
 
         receiver.send(Activity.RESULT_OK, bundle);
     }
