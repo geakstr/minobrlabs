@@ -298,7 +298,7 @@ function accel(vals) {
   });
 
   axisesChart('accel', ['x', 'y', 'z'], vals, function(val) {
-    return Math.abs(val * 100.0 / 2.0);
+    return Math.min(Math.abs(val * 100.0 / 2.0), 100.0);
   });
 }
 
