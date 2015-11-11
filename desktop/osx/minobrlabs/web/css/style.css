@@ -1,6 +1,9 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -mox-box-sizing: border-box;
 }
 
 html,
@@ -27,6 +30,19 @@ body {
     box-sizing: border-box;
 }
 
+
+.cf:before,
+.cf:after {
+    content: " "; 
+    display: table;
+}
+.cf:after {
+    clear: both;
+}
+.cf {
+    *zoom: 1;
+}
+
 .charts-table-wrapper {
     position: absolute;
     top: 0;
@@ -43,10 +59,6 @@ body {
 
 
 /* Main page */
-.main-page .charts-table-wrapper {
-    top: -28px;
-}
-
 .main-page .charts-table td {
     width: 25%;
     padding: 0 11px;
@@ -85,6 +97,87 @@ body {
 }
 
 
+/* Axises chart */
+.main-page .chart-axises .chart-axises-positive {
+    width: 50%;
+    float: right;
+    padding-left: 11px;
+}
+.main-page .chart-axises .chart-axises-negative {
+    width: 50%;
+    float: left;
+    padding-right: 11px;
+}
+
+.main-page .chart-axis-wrapper {
+    position: relative;
+}
+.main-page .chart-axises-positive .chart-axis-wrapper {
+    padding-right: 70px;
+}
+.main-page .chart-axises-negative .chart-axis-wrapper {
+    padding-left: 70px;
+}
+
+.main-page .chart-axis {
+    position: relative;
+    height: 16px;    
+    font-size: 16px;
+    line-height: 16px;
+    border-top: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+}
+.main-page .chart-axises-positive .chart-axis {
+    border-radius: 0 3px 3px 0;
+}
+.main-page .chart-axises-negative .chart-axis {
+    float: right;
+    border-radius: 3px 0 0 3px;
+}
+.main-page .chart-x-axis {
+    background: red;
+}
+.main-page .chart-y-axis {
+    background: green;
+}
+.main-page .chart-z-axis {
+    background: blue;
+}
+
+.main-page .chart-axis-val {
+    position: absolute;
+    top: -1px;
+    width: 66px;  
+    white-space: pre;
+}
+.main-page .chart-axises-positive .chart-axis-val {
+    right: -70px;
+}
+.main-page .chart-axises-negative .chart-axis-val {
+    left: -70px;
+    text-align: right;
+}
+
+.main-page .chart-axises .chart-legend {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -11px;
+    list-style: none outside;
+}
+.main-page .chart-axises .chart-legend li {
+    margin: 8px 0;
+    width: 22px;
+    text-align: center;
+    font-size: 16px;
+    line-height: 16px;
+}
+.main-page .chart-axises .chart-legend li:last-child {
+    margin-bottom: 0;
+}
+.main-page .chart-axises .chart-title {
+    bottom: -34px;
+}
 
 /* Stats page */
 .stats-page .charts-table {

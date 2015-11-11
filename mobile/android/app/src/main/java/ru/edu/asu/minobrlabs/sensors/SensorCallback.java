@@ -2,7 +2,10 @@ package ru.edu.asu.minobrlabs.sensors;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebView;
+
+import java.util.Arrays;
 
 import ru.edu.asu.minobrlabs.db.entities.Stat;
 

@@ -12,7 +12,7 @@ charts.airTemperature = c3.generate({
         return (value > 0 ? '+' : '-') + value + ' °C';
       },
     },
-    min: 25,
+    min: -70,
     max: 70,
     width: 25
   },
@@ -220,6 +220,41 @@ charts.ph = c3.generate({
 });
 
 
+
+charts.accel = {
+  x : {
+    positive : {
+      bar : document.querySelector('.chart-axises-positive .chart-accel-x-axis'),
+      val : document.querySelector('.chart-axises-positive .chart-accel-x-val')  
+    },
+    negative : {
+      bar : document.querySelector('.chart-axises-negative .chart-accel-x-axis'),
+      val : document.querySelector('.chart-axises-negative .chart-accel-x-val')  
+    }
+  },
+  y : {
+    positive : {
+      bar : document.querySelector('.chart-axises-positive .chart-accel-y-axis'),
+      val : document.querySelector('.chart-axises-positive .chart-accel-y-val')  
+    },
+    negative : {
+      bar : document.querySelector('.chart-axises-negative .chart-accel-y-axis'),
+      val : document.querySelector('.chart-axises-negative .chart-accel-y-val')  
+    }
+  },
+  z : {
+    positive : {
+      bar : document.querySelector('.chart-axises-positive .chart-accel-z-axis'),
+      val : document.querySelector('.chart-axises-positive .chart-accel-z-val')  
+    },
+    negative : {
+      bar : document.querySelector('.chart-axises-negative .chart-accel-z-axis'),
+      val : document.querySelector('.chart-axises-negative .chart-accel-z-val')  
+    }
+  }
+};
+
+
 var labels = {
   gyro : document.querySelector('.label-gyro'),
   accel : document.querySelector('.label-accel'),
@@ -257,6 +292,37 @@ function gyro(axises) {
   labels.gyro.textContent = format3DAxises(axises);
 }
 
-function accel(axises) {
-  labels.accel.textContent = format3DAxises(axises);
+function accel(vals) {
+  vals = vals.map(function(val) {
+    return val / 9.8;
+  });
+
+  axisesChart('accel', ['x', 'y', 'z'], vals, function(val) {
+    return Math.abs(val * 100.0 / 2.0);
+  });
 }
+
+function axisesChart(name, axises, vals, widthFunction) {
+  var axis, val, sign, oppositeSign, l, i;
+  
+  l = axises.length;
+  for (i = 0; i < l; i++) {
+    axis = axises[i];
+    val = vals[i];
+
+    sign = val >= 0.0 ? 'positive' : 'negative';
+    oppositeSign = val >= 0.0 ? 'negative' : 'positive';
+
+    charts[name][axis][sign].val.style.display = 'inline';
+    charts[name][axis][sign].val.textContent = val.toFixed(2);  
+    charts[name][axis][oppositeSign].val.style.display = 'none';
+
+    charts[name][axis][sign].bar.style.width = widthFunction(val) + '%';
+    charts[name][axis][oppositeSign].bar.style.width = 0;
+  }
+}
+
+
+
+
+
