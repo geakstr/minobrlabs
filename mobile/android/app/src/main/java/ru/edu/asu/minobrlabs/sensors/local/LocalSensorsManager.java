@@ -85,7 +85,8 @@ public class LocalSensorsManager implements SensorEventListener {
         }
 
         if (type == SensorTypes.ACCEL) {
-            accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.025f);
+            accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.5f);
+            System.arraycopy(accel, 0, vals, 0, accel.length);
         }
 
         final Bundle bundle = new Bundle();

@@ -55,7 +55,7 @@ public abstract class AbstractSensorManager implements Runnable {
     }
 
     public static float lowPass(final float input, final float output, final float alpha) {
-        return output + alpha * (input - output);
+        return alpha * output + (1 - alpha) * input;
     }
 
     protected void sleep() {
