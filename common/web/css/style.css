@@ -168,8 +168,15 @@ body {
 .main-page .chart-axises .chart-legend li:last-child {
     margin-bottom: 0;
 }
-.main-page .chart-axises .chart-title {
+.main-page .chart-axises .chart-title,
+.main-page .chart-label .chart-title {
     bottom: -34px;
+}
+
+.main-page .chart-label .label {
+    font-size: 32px;
+    line-height: 80px;
+    text-align: center;
 }
 
 /* Stats page */
