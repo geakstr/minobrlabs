@@ -25,8 +25,9 @@ public class LocalSensorsManager implements SensorEventListener {
 
     private final MicrophoneSensorManager microphoneSensorManager;
 
-    // Store prev accelerometer value for low pass filter
+    // Store prev values for low pass filter
     private float[] accel;
+    private float[] gyro;
 
     public LocalSensorsManager() {
         sensorManager = (SensorManager) Application.getInstance().getSystemService(Context.SENSOR_SERVICE);
@@ -87,6 +88,9 @@ public class LocalSensorsManager implements SensorEventListener {
         if (type == SensorTypes.ACCEL) {
             accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.5f);
             System.arraycopy(accel, 0, vals, 0, accel.length);
+        } else if (type == SensorTypes.GYRO) {
+            gyro = AbstractSensorManager.lowPass(vals.clone(), gyro, 0.75f);
+            System.arraycopy(gyro, 0, vals, 0, gyro.length);
         }
 
         final Bundle bundle = new Bundle();

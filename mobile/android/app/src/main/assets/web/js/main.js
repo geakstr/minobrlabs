@@ -96,7 +96,7 @@ charts.light = c3.generate({
         return value + ' лк';
       },
     },
-    min: 1,
+    min: 0,
     max: 10000,
     width: 25
   },
@@ -219,37 +219,68 @@ charts.ph = c3.generate({
   }
 });
 
-
-
-charts.accel = {
+charts.gyro = {
   x : {
     positive : {
-      bar : document.querySelector('.chart-axises-positive .chart-accel-x-axis'),
-      val : document.querySelector('.chart-axises-positive .chart-accel-x-val')  
+      bar : document.querySelector('.chart-gyro .chart-axises-positive .chart-x-axis'),
+      val : document.querySelector('.chart-gyro .chart-axises-positive .chart-x-axis .chart-axis-val')  
     },
     negative : {
-      bar : document.querySelector('.chart-axises-negative .chart-accel-x-axis'),
-      val : document.querySelector('.chart-axises-negative .chart-accel-x-val')  
+      bar : document.querySelector('.chart-gyro .chart-axises-negative .chart-x-axis'),
+      val : document.querySelector('.chart-gyro .chart-axises-negative .chart-x-axis .chart-axis-val')  
     }
   },
   y : {
     positive : {
-      bar : document.querySelector('.chart-axises-positive .chart-accel-y-axis'),
-      val : document.querySelector('.chart-axises-positive .chart-accel-y-val')  
+      bar : document.querySelector('.chart-gyro .chart-axises-positive .chart-y-axis'),
+      val : document.querySelector('.chart-gyro .chart-axises-positive .chart-y-axis .chart-axis-val')  
     },
     negative : {
-      bar : document.querySelector('.chart-axises-negative .chart-accel-y-axis'),
-      val : document.querySelector('.chart-axises-negative .chart-accel-y-val')  
+      bar : document.querySelector('.chart-gyro .chart-axises-negative .chart-y-axis'),
+      val : document.querySelector('.chart-gyro .chart-axises-negative .chart-y-axis .chart-axis-val')  
     }
   },
   z : {
     positive : {
-      bar : document.querySelector('.chart-axises-positive .chart-accel-z-axis'),
-      val : document.querySelector('.chart-axises-positive .chart-accel-z-val')  
+      bar : document.querySelector('.chart-gyro .chart-axises-positive .chart-z-axis'),
+      val : document.querySelector('.chart-gyro .chart-axises-positive .chart-z-axis .chart-axis-val')  
     },
     negative : {
-      bar : document.querySelector('.chart-axises-negative .chart-accel-z-axis'),
-      val : document.querySelector('.chart-axises-negative .chart-accel-z-val')  
+      bar : document.querySelector('.chart-gyro .chart-axises-negative .chart-z-axis'),
+      val : document.querySelector('.chart-gyro .chart-axises-negative .chart-z-axis .chart-axis-val')  
+    }
+  }
+};
+
+charts.accel = {
+  x : {
+    positive : {
+      bar : document.querySelector('.chart-accel .chart-axises-positive .chart-x-axis'),
+      val : document.querySelector('.chart-accel .chart-axises-positive .chart-x-axis .chart-axis-val')  
+    },
+    negative : {
+      bar : document.querySelector('.chart-accel .chart-axises-negative .chart-x-axis'),
+      val : document.querySelector('.chart-accel .chart-axises-negative .chart-x-axis .chart-axis-val')  
+    }
+  },
+  y : {
+    positive : {
+      bar : document.querySelector('.chart-accel .chart-axises-positive .chart-y-axis'),
+      val : document.querySelector('.chart-accel .chart-axises-positive .chart-y-axis .chart-axis-val')  
+    },
+    negative : {
+      bar : document.querySelector('.chart-accel .chart-axises-negative .chart-y-axis'),
+      val : document.querySelector('.chart-accel .chart-axises-negative .chart-y-axis .chart-axis-val')  
+    }
+  },
+  z : {
+    positive : {
+      bar : document.querySelector('.chart-accel .chart-axises-positive .chart-z-axis'),
+      val : document.querySelector('.chart-accel .chart-axises-positive .chart-z-axis .chart-axis-val')  
+    },
+    negative : {
+      bar : document.querySelector('.chart-accel .chart-axises-negative .chart-z-axis'),
+      val : document.querySelector('.chart-accel .chart-axises-negative .chart-z-axis .chart-axis-val')  
     }
   }
 };
@@ -283,13 +314,10 @@ function microphone(v) {
   labels.microphone.textContent = v[0] + ' db';
 }
 
-
-function format3DAxises(axises) {
-  return 'x : ' + axises[0].toFixed(2) + '; y : ' + axises[1].toFixed(2) + '; z : ' + axises[2].toFixed(2);
-}
-
-function gyro(axises) {
-  labels.gyro.textContent = format3DAxises(axises);
+function gyro(vals) {
+  axisesChart('gyro', ['x', 'y', 'z'], vals, function(val) {
+    return Math.min(Math.abs(val * 100.0), 100.0);
+  });
 }
 
 function accel(vals) {
@@ -303,7 +331,15 @@ function accel(vals) {
 }
 
 function axisesChart(name, axises, vals, widthFunction) {
-  var axis, val, sign, oppositeSign, l, i;
+  var eps, axis, val, sign, oppositeSign, l, i;
+
+  eps = 0.005;
+  vals = vals.map(function(val) {
+    if (Math.abs(val) - eps < 0.0 + eps) {
+      val = 0.0;
+    }
+    return val;
+  });
   
   l = axises.length;
   for (i = 0; i < l; i++) {
