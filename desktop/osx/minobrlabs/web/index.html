@@ -8,23 +8,21 @@
 </head>
 <body class="main-page">
 
-
+<div id="message"></div>
 <table class="charts-table-wrapper">
     <tr>
         <td style="vertical-align: middle; height: 10%;">
             <table class="charts-table charts-table-top">
                 <tr>
-                    <td style="width: 20%; vertical-align: bottom;">
+                    <td style="width: 20%;">
                         <div class="chart-wrapper">
-                            <div class="chart chart-label cf" style="height: 80px;">
-                                <div class="label label-microphone"></div>                                
-                                <div class="chart-title"><p>Звуковое давление</p></div>
-                            </div>                                                        
+                            <div id="microphone" class="chart chart-label cf"></div>
+                            <div class="chart-title"><p>Звуковое давление</p></div>
                         </div>
                     </td>                    
                     <td style="width: 40%;">
                         <div class="chart-wrapper">
-                            <div class="chart chart-axises chart-accel cf">
+                            <div id="accel" class="chart chart-axises cf">
                                 <div class="chart-axises-negative">
                                     <div class="chart-axis-wrapper cf">
                                         <div class="chart-axis chart-x-axis">
@@ -58,19 +56,19 @@
                                             <span class="chart-axis-val"></span>
                                         </div>                                    
                                     </div>
-                                </div>   
-                                <ul class="chart-legend">
-                                    <li>x</li>
-                                    <li>y</li>
-                                    <li>z</li>
-                                </ul>
-                                <div class="chart-title"><p>Перегрузка (g)</p></div>                          
+                                </div>                                   
                             </div>
+                            <ul class="chart-legend">
+                                <li>x</li>
+                                <li>y</li>
+                                <li>z</li>
+                            </ul>
+                            <div class="chart-title"><p>Перегрузка (g)</p></div>
                         </div>
                     </td>
                     <td style="width: 40%;">
                         <div class="chart-wrapper">
-                            <div class="chart chart-axises chart-gyro cf">
+                            <div id="gyro" class="chart chart-axises cf">
                                 <div class="chart-axises-negative">
                                     <div class="chart-axis-wrapper cf">
                                         <div class="chart-axis chart-x-axis">
@@ -104,14 +102,14 @@
                                             <span class="chart-axis-val"></span>
                                         </div>                                    
                                     </div>
-                                </div>   
-                                <ul class="chart-legend">
-                                    <li>x</li>
-                                    <li>y</li>
-                                    <li>z</li>
-                                </ul>
-                                <div class="chart-title"><p>Частота вращения (рад/с)</p></div>                          
+                                </div>                                     
                             </div>
+                            <ul class="chart-legend">
+                                <li>x</li>
+                                <li>y</li>
+                                <li>z</li>
+                            </ul>
+                            <div class="chart-title"><p>Частота вращения (рад/с)</p></div>                        
                         </div>
                     </td>
                 </tr>
@@ -124,7 +122,7 @@
                 <tr>
                     <td>
                         <div class="chart-wrapper">                
-                            <svg class="chart chart-air-temperature"></svg>
+                            <div id="airTemperature" class="chart chart-gauge"></div>
                             <div class="chart-title">
                                 <p>Температура</p>
                                 <p>воздуха</p>
@@ -133,7 +131,7 @@
                     </td>
                     <td>
                         <div class="chart-wrapper">                
-                            <svg class="chart chart-humidity"></svg>
+                            <div id="humidity" class="chart chart-gauge"></div>
                             <div class="chart-title">
                                 <p>Относительная</p>
                                 <p>влажность</p>
@@ -142,7 +140,7 @@
                     </td>
                     <td>
                         <div class="chart-wrapper">                
-                            <svg class="chart chart-atmo-pressure"></svg>
+                            <div id="atmoPressure" class="chart chart-gauge"></div>
                             <div class="chart-title">
                                 <p>Атмосферное</p>
                                 <p>давление</p>
@@ -151,7 +149,7 @@
                     </td>
                     <td>
                         <div class="chart-wrapper">                
-                            <svg class="chart chart-light"></svg>
+                            <div id="light" class="chart chart-gauge"></div>
                             <div class="chart-title">
                                 <p>Освещенность</p>
                             </div>
@@ -161,7 +159,7 @@
                 <tr>
                     <td>
                         <div class="chart-wrapper">                
-                            <svg class="chart chart-solute-temperature"></svg>
+                            <div id="soluteTemperature" class="chart chart-gauge"></div>
                             <div class="chart-title">
                                 <p>Температура</p>
                                 <p>раствора</p>
@@ -170,7 +168,7 @@
                     </td>
                     <td>
                         <div class="chart-wrapper">                
-                            <svg class="chart chart-voltage"></svg>
+                            <div id="voltage" class="chart chart-gauge"></div>
                             <div class="chart-title">
                                 <p>Эл. напряжение</p>
                             </div>
@@ -178,7 +176,7 @@
                     </td>
                     <td>
                         <div class="chart-wrapper">                
-                            <svg class="chart chart-amperage"></svg>
+                            <div id="amperage" class="chart chart-gauge"></div>
                             <div class="chart-title">
                                 <p>Сила тока</p>
                             </div>
@@ -186,7 +184,7 @@
                     </td>
                     <td>
                         <div class="chart-wrapper">                
-                            <svg class="chart chart-ph"></svg>
+                            <div id="ph" class="chart chart-gauge"></div>
                             <div class="chart-title">
                                 <p>Водородный</p>
                                 <p>показатель</p>

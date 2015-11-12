@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
-import ru.edu.asu.minobrlabs.Application;
+import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 
@@ -19,7 +19,7 @@ public class RemoteSensorsManager extends AbstractSensorManager {
 
     @Override
     public void run() {
-        final Context context = Application.getInstance().getApplicationContext();
+        final Context context = App.getInstance().getApplicationContext();
         while (isRunning()) {
             final Intent i = new Intent(context, RemoteSensorsService.class);
             i.putExtra("receiver", receiver);

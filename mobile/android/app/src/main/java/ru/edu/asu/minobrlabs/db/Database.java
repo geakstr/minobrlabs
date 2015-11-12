@@ -3,7 +3,7 @@ package ru.edu.asu.minobrlabs.db;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import ru.edu.asu.minobrlabs.Application;
+import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.dao.StatDao;
 import ru.edu.asu.minobrlabs.db.entities.Stat;
 
@@ -21,7 +21,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public Database() {
-        super(Application.getInstance().getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
+        super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
 
         this.conn = getWritableDatabase();
         this.statDao = new StatDao();

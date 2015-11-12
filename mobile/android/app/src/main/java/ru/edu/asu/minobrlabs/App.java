@@ -1,9 +1,11 @@
 package ru.edu.asu.minobrlabs;
 
+import android.app.Application;
+
 import ru.edu.asu.minobrlabs.db.Database;
 
-public class Application extends android.app.Application {
-    private static Application singleton;
+public class App extends Application {
+    private static App singleton;
 
     private static Database db;
 
@@ -22,7 +24,7 @@ public class Application extends android.app.Application {
         return db;
     }
 
-    public static Application getInstance() {
+    public static App getInstance() {
         return singleton;
     }
 }

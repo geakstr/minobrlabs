@@ -26,8 +26,6 @@ body {
     -ms-user-select: none;
     user-select: none;
     cursor: default;
-
-    box-sizing: border-box;
 }
 
 
@@ -62,7 +60,7 @@ body {
 /* Main page */
 .main-page .charts-table td {
     width: 25%;
-    padding: 22px 11px;
+    padding: 0 11px;
 }
 
 .main-page .chart-wrapper {
@@ -71,9 +69,10 @@ body {
 }
 
 .main-page .chart {
-  max-height: 180px;
+    vertical-align: top;
+}
+.main-page .chart .chart-container { 
   width: 100%;
-  vertical-align: top;
 }
 
 .main-page .chart-title {
@@ -119,7 +118,15 @@ body {
     line-height: 16px;
     border-top: 2px solid #fff;
     border-bottom: 2px solid #fff;
+
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
 }
+.main-page .chart-axis.hidden {
+    background: transparent;
+}
+
 .main-page .chart-axises-positive .chart-axis {
     border-radius: 0 3px 3px 0;
 }
@@ -151,35 +158,60 @@ body {
     text-align: right;
 }
 
-.main-page .chart-axises .chart-legend {
+.main-page .chart-legend {
     position: absolute;
     top: 0;
     left: 50%;
     margin-left: -11px;
     list-style: none outside;
 }
-.main-page .chart-axises .chart-legend li {
+.main-page .chart-legend li {
     margin: 8px 0;
     width: 22px;
     text-align: center;
     font-size: 16px;
     line-height: 16px;
 }
-.main-page .chart-axises .chart-legend li:last-child {
+.main-page .chart-legend li:last-child {
     margin-bottom: 0;
 }
-.main-page .chart-axises .chart-title,
-.main-page .chart-label .chart-title {
-    bottom: -34px;
-}
 
-.main-page .chart-label .label {
+.main-page .chart-label .chart-container {
     font-size: 32px;
-    line-height: 80px;
+    line-height: 72px;
+    height: 72px;
     text-align: center;
 }
 
 /* Stats page */
 .stats-page .charts-table {
     height: 100%;
+}
+
+
+@media (max-height: 520px) {
+  .main-page .chart-title {
+    font-size: 12px;
+    line-height: 12px;
+  }
+
+  .main-page .chart-gauge .chart-container {
+    height: 120px;
+  }
+
+  .main-page .chart-label .chart-container {
+    font-size: 22px;
+  }
+  .main-page .chart-axis {
+    height: 14px;
+    font-size: 14px;
+    line-height: 14px;
+  }
+  .main-page .chart-legend li {
+    font-size: 14px;
+    line-height: 14px;
+  }
+  .main-page .chart-label + .chart-title {
+    bottom: -25px;
+  }
 }

@@ -8,7 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
-import ru.edu.asu.minobrlabs.Application;
+import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.entities.Stat;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
@@ -30,7 +30,7 @@ public class LocalSensorsManager implements SensorEventListener {
     private float[] gyro;
 
     public LocalSensorsManager() {
-        sensorManager = (SensorManager) Application.getInstance().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) App.getInstance().getSystemService(Context.SENSOR_SERVICE);
         sensorLight = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
         sensorGyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
