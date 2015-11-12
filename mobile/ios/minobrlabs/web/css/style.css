@@ -59,7 +59,7 @@ body {
 
 /* Main page */
 .main-page .charts-table td {
-    width: 25%;
+    width: 23.3%;
     padding: 0 11px;
 }
 
@@ -83,7 +83,7 @@ body {
     height: 28px;
     vertical-align: top;
     text-align: center;
-    color: #999;
+    color: #666;
     font-size: 14px;
     line-height: 14px;
 }
@@ -101,14 +101,15 @@ body {
     padding-right: 11px;
 }
 
+
 .main-page .chart-axis-wrapper {
     position: relative;
 }
 .main-page .chart-axises-positive .chart-axis-wrapper {
-    padding-right: 70px;
+    padding-right: 22px;
 }
 .main-page .chart-axises-negative .chart-axis-wrapper {
-    padding-left: 70px;
+    padding-left: 28px;
 }
 
 .main-page .chart-axis {
@@ -147,14 +148,14 @@ body {
 .main-page .chart-axis-val {
     position: absolute;
     top: -1px;
-    width: 66px;  
+    width: 30px;  
     white-space: pre;
 }
 .main-page .chart-axises-positive .chart-axis-val {
-    right: -70px;
+    right: -33px;
 }
 .main-page .chart-axises-negative .chart-axis-val {
-    left: -70px;
+    left: -39px;
     text-align: right;
 }
 
@@ -162,16 +163,17 @@ body {
     position: absolute;
     top: 0;
     left: 50%;
-    margin-left: -11px;
+    margin-left: -15px;
     list-style: none outside;
 }
 .main-page .chart-legend li {
     margin: 8px 0;
-    width: 22px;
+    width: 30px;
     text-align: center;
     font-size: 16px;
     line-height: 16px;
 }
+
 .main-page .chart-legend li:last-child {
     margin-bottom: 0;
 }
@@ -196,7 +198,7 @@ body {
   }
 
   .main-page .chart-gauge .chart-container {
-    height: 120px;
+    height: 110px;
   }
 
   .main-page .chart-label .chart-container {

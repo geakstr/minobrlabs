@@ -27,7 +27,7 @@ charts = {
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2, 3, 4]
+      states : [0, 1, 2]
     }
   },
   'accel': {
@@ -208,7 +208,7 @@ charts = {
 
 
 
-charts.microphone.container = createLabelContainer(charts.microphone);
+charts.microphone.container = createGaugeContainer(charts.microphone);
 
 charts.accel.container = createAxisesContainer(charts.accel);
 charts.gyro.container = createAxisesContainer(charts.gyro);
@@ -235,13 +235,7 @@ var clicks = 0;
       node = node.parentNode;
     }
 
-    if (!node) {
-      return;
-    }
-
     id = node.id;
-
-    document.getElementById("message").textContent = id;
   };
   
   for (chart in charts) {
@@ -296,13 +290,17 @@ function createAxisesContainer(chart) {
 }
 
 function createGaugeContainer(chart) {
-  var parent, container;
+  var parent, container, label;
 
   container = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   container.setAttribute('class', 'chart-container');
 
+  label = document.createElement('div');
+  label.className = 'chart-gauge-label';
+
   chart.dom.innerHTML = '';
   chart.dom.appendChild(container);
+  chart.dom.appendChild(label);
 
   return c3.generate({
     bindto: container,
@@ -382,7 +380,7 @@ function nextChartState(chart) {
 
 // Microphone chart
 function microphone(v) {
-  loadLabelChart(charts.microphone, v[0])
+  loadGaugeChart(charts.microphone, v[0])
 }
 
 // Accelerometer chart
