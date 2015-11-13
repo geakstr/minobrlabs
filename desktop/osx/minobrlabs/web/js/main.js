@@ -52,7 +52,7 @@ charts = {
     }
   },
   'accel': {
-    title: 'Перегрузка (g)',
+    title: 'Перегрузка',
     units : 'g',
     val: [0, 0, 0],
     dom : document.getElementById('accel'),    
@@ -72,7 +72,7 @@ charts = {
     }
   },
   'gyro': {
-    title: 'Частота вращения (рад/с)',
+    title: 'Частота вращения',
     units : 'рад/с',
     val: [0, 0, 0],    
     dom : document.getElementById('gyro'),    
@@ -341,7 +341,7 @@ function createAxisesContainer(chart) {
   chart.dom.appendChild(chartLegend);
 
   var chartTitle = createElement('div', 'chart-title cf');
-  chartTitle.textContent = chart.title;
+  chartTitle.textContent = chart.title + ' (' + chart.units + ')';
 
   chart.dom.appendChild(chartTitle);
 
