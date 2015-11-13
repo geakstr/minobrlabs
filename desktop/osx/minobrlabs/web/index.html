@@ -12,184 +12,73 @@
     <tr>
         <td>
             <table class="charts-table">
+                <tr> 
+                    <td colspan="4" style="height: 15%; padding: 0;">
+                        <table style="width: 100%; height: 100%; padding: 0;">
+                            <tr>
+                                <td style="width: 37.5%; padding: 0 22px 0 11px; vertical-align: middle;">                                  
+                                    <div class="chart-wrapper">
+                                        <div id="accel"></div>
+                                    </div>
+                                </td>
+                                <td style="width: 25%;">
+                                    <div class="chart-wrapper">                
+                                        <div id="light"></div>
+                                    </div>
+                                </td>
+                                <td style="width: 37.5%; padding: 0 11px 0 22px; vertical-align: middle;">                                  
+                                    <div class="chart-wrapper">
+                                        <div id="gyro"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>                
                 <tr>
+                    <td style="height: 35%;">
+                        <div class="chart-wrapper">                
+                            <div id="airTemperature"></div>
+                        </div>
+                    </td>
                     <td>
+                        <div class="chart-wrapper">                
+                            <div id="soluteTemperature"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="chart-wrapper">                
+                            <div id="voltage"></div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="chart-wrapper">                
+                            <div id="amperage"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="height: 50%;">
                         <div class="chart-wrapper">
-                            <div id="microphone" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Звуковое давление</p>
-                            </div>
+                            <div id="microphone"></div>
                         </div>
                     </td>  
                     <td>
                         <div class="chart-wrapper">                
-                            <div id="atmoPressure" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Атмосферное давление</p>
-                            </div>
+                            <div id="atmoPressure"></div>
                         </div>
                     </td>     
                     <td>
                         <div class="chart-wrapper">                
-                            <div id="ph" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Водородный показатель</p>
-                            </div>
+                            <div id="ph"></div>
                         </div>
-                    </td>             
-                    <td rowspan="3" style="width: 30%; padding: 0; vertical-align: middle;">
-                        <table style="width: 100%; height: 70%;">
-                            <tr>
-                                <td>                                    
-                                    <div class="chart-wrapper">
-                                        <div id="accel" class="chart chart-axises cf">
-                                            <div class="chart-axises-negative">
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-x-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-y-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-z-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>                                    
-                                                </div>
-                                            </div><!--
-                                            --><div class="chart-axises-positive">
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-x-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-y-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-z-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>                                    
-                                                </div>
-                                            </div>                                   
-                                        </div>
-                                        <ul class="chart-legend">
-                                            <li>x</li>
-                                            <li>y</li>
-                                            <li>z</li>
-                                        </ul>
-                                        <div class="chart-title"><p>Перегрузка (g)</p></div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="chart-wrapper">
-                                        <div id="gyro" class="chart chart-axises cf">
-                                            <div class="chart-axises-negative">
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-x-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-y-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-z-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>                                    
-                                                </div>
-                                            </div><!--
-                                            --><div class="chart-axises-positive">
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-x-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-y-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>
-                                                </div>
-                                                <div class="chart-axis-wrapper cf">
-                                                    <div class="chart-axis chart-z-axis">
-                                                        <span class="chart-axis-val"></span>
-                                                    </div>                                    
-                                                </div>
-                                            </div>                                     
-                                        </div>
-                                        <ul class="chart-legend">
-                                            <li>x</li>
-                                            <li>y</li>
-                                            <li>z</li>
-                                        </ul>
-                                        <div class="chart-title"><p>Частота вращения (рад/с)</p></div>                        
-                                    </div>
-                                </td>
-                            </td>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
+                    </td>  
                     <td>
                         <div class="chart-wrapper">                
-                            <div id="airTemperature" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Температура воздуха</p>
-                            </div>
+                            <div id="humidity"></div>
                         </div>
-                    </td>
-                    <td>
-                        <div class="chart-wrapper">                
-                            <div id="humidity" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Относительная влажность</p>
-                            </div>
-                        </div>
-                    </td>                    
-                    <td>
-                        <div class="chart-wrapper">                
-                            <div id="light" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Освещенность</p>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="chart-wrapper">                
-                            <div id="soluteTemperature" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Температура раствора</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="chart-wrapper">                
-                            <div id="voltage" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Эл. напряжение</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="chart-wrapper">                
-                            <div id="amperage" class="chart chart-gauge"></div>
-                            <div class="chart-title">
-                                <p>Сила тока</p>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                    </td>          
+                </tr> 
             </table>
         </td>
     </tr>
@@ -199,7 +88,5 @@
 <script src="vendor/c3.min.js"></script>
 
 <script src="js/main.js"></script>
-
-<script>accel([-1, 1, 0.5])</script>
 </body>
 </html>
