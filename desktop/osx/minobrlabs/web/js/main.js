@@ -21,14 +21,6 @@ utils = {
   }
 };
 
-// About states
-// state = 0 - disabled
-// state = 1 - gauge
-// state = 2 - label
-// state = 3 - 3D axises
-// state = 4 - horizontal bar
-// state = 5 - vertical bar
-
 charts = {
   'microphone': {
     title: 'Звуковое давление',
@@ -464,38 +456,30 @@ function nextChartState(chart) {
 }
 
 
-
-// Microphone chart
 function microphone(v) {
   charts.microphone.val = v[0];
   loadCurrentChartState(charts.microphone);
 }
 
-// Accelerometer chart
 function accel(v) {
   charts.accel.val = v.map(charts.accel.opts.normalize).map(utils.normalizeVal);
   loadCurrentChartState(charts.accel);
 }
 
-// Gyroscope chart
 function gyro(v) {
   charts.gyro.val = v.map(utils.normalizeVal);
   loadCurrentChartState(charts.gyro);
 }
 
-// Air temperature chart
 function airTemperature(v) {
   charts.airTemperature.val = v[0];
   loadCurrentChartState(charts.airTemperature);
 }
-
-// Humidity chart
 function humidity(v) {
   charts.humidity.val = v[0];
   loadCurrentChartState(charts.humidity);
 }
 
-// Light chart
 function light(v) {
   charts.light.val = v[0];
   loadCurrentChartState(charts.light);
@@ -518,8 +502,6 @@ charts.voltage.container = createGaugeContainer(charts.voltage);
 charts.amperage.container = createGaugeContainer(charts.amperage);
 charts.ph.container = createGaugeContainer(charts.ph);
 
-
-var clicks = 0;
 (function() {
   var onclick, chart;
 
@@ -542,8 +524,3 @@ var clicks = 0;
     }
   }
 })();
-
-
-
-microphone([43]);
-accel([-0.5, 1, 0.3]);
