@@ -2,15 +2,13 @@ package ru.edu.asu.minobrlabs.sensors;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.webkit.WebView;
 
-import java.util.Arrays;
-
-import ru.edu.asu.minobrlabs.db.entities.Stat;
+import ru.edu.asu.minobrlabs.db.entities.GenericStat;
 
 public class SensorCallback implements ISensorCallback {
     public static final String bundleKey = "stat";
+    public static final String bundleType = "type";
 
     private final WebView webView;
 
@@ -24,12 +22,12 @@ public class SensorCallback implements ISensorCallback {
             return;
         }
 
-        final Stat stat = (Stat) bundle.getSerializable(bundleKey);
+        final GenericStat stat = (GenericStat) bundle.getSerializable(bundleKey);
         if (null == stat) {
             return;
         }
 
-        final String action = SensorTypes.actions.get(stat.type);
+        final String action = bundle.getString(bundleType);
         if (null == action) {
             return;
         }

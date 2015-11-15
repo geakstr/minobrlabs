@@ -7,9 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import ru.edu.asu.minobrlabs.db.entities.Stat;
+import ru.edu.asu.minobrlabs.db.entities.Microphone;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
+import ru.edu.asu.minobrlabs.sensors.SensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 public class MicrophoneSensorManager extends AbstractSensorManager {
@@ -26,7 +27,8 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
     public void run() {
         while (isRunning()) {
             final Bundle bundle = new Bundle();
-            bundle.putSerializable("stat", new Stat(SensorTypes.MICROPHONE_DB, new float[]{getDecibel()}));
+            bundle.putSerializable(SensorCallback.bundleKey, new Microphone(new float[]{getDecibel()}));
+            bundle.putString(SensorCallback.bundleType, SensorTypes.MICROPHONE_DB);
 
             microphoneSensorHandler.apply(bundle);
 
