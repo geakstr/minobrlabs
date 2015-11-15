@@ -1,21 +1,15 @@
 package ru.edu.asu.minobrlabs.sensors;
 
-import android.util.SparseArray;
-
 public class SensorTypes {
-    public static final int HUMIDITY = 1;
-    public static final int AIR_TEMPERATURE = 2;
-    public static final int LIGHT = 3;
-    public static final int GYRO = 4;
-    public static final int ACCEL = 5;
-    public static final int MICROPHONE_DB = 6;
-
-    public static final SparseArray<String> actions = new SparseArray<String>() {{
-        put(HUMIDITY, "humidity");
-        put(AIR_TEMPERATURE, "airTemperature");
-        put(LIGHT, "light");
-        put(GYRO, "gyro");
-        put(ACCEL, "accel");
-        put(MICROPHONE_DB, "microphone");
-    }};
+    public static final String HUMIDITY = "humidity";
+    public static final String AIR_TEMPERATURE = "airTemperature";
+    public static final String LIGHT = "light";
+    public static final String GYRO = "gyro";
+    public static final String ACCEL = "accel";
+    public static final String AIR_PRESSURE = "airPressure";
+    public static final String AMPERAGE = "amperage";
+    public static final String PH = "pH";
+    public static final String SOLUTE_TEMPERATURE = "solutTemperature";
+    public static final String VOLTAGE = "voltage";
+    public static final String MICROPHONE_DB = "microphone";
 }

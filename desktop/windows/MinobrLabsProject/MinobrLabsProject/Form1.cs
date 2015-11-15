@@ -22,6 +22,7 @@ namespace MinobrLabsProject
         {
             string path = Path.GetDirectoryName(Application.ExecutablePath) + "\\web\\index.html";
             gaugeBrowser.Url = new Uri(path);
+            gaugeBrowser.UseDefaultContextMenu = false;
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)

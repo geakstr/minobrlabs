@@ -9,7 +9,10 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import ru.edu.asu.minobrlabs.App;
-import ru.edu.asu.minobrlabs.db.entities.Stat;
+import ru.edu.asu.minobrlabs.db.entities.Accel;
+import ru.edu.asu.minobrlabs.db.entities.GenericStat;
+import ru.edu.asu.minobrlabs.db.entities.Gyro;
+import ru.edu.asu.minobrlabs.db.entities.Light;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
@@ -62,40 +65,35 @@ public class LocalSensorsManager implements SensorEventListener {
             return;
         }
 
-        int type = 0;
-        switch (event.sensor.getType()) {
-            case Sensor.TYPE_LIGHT:
-                type = SensorTypes.LIGHT;
-                break;
-            case Sensor.TYPE_GYROSCOPE:
-                type = SensorTypes.GYRO;
-                break;
-            case Sensor.TYPE_ACCELEROMETER:
-                type = SensorTypes.ACCEL;
-                break;
-            default:
-                break;
-        }
-        if (0 == type) {
-            return;
-        }
-
         final float[] vals = event.values;
         if (null == vals) {
             return;
         }
-
-        if (type == SensorTypes.ACCEL) {
-            accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.5f);
-            System.arraycopy(accel, 0, vals, 0, accel.length);
-        } else if (type == SensorTypes.GYRO) {
-            gyro = AbstractSensorManager.lowPass(vals.clone(), gyro, 0.75f);
-            System.arraycopy(gyro, 0, vals, 0, gyro.length);
+        String type = null;
+        final Bundle bundle = new Bundle();
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_LIGHT:
+                type = SensorTypes.LIGHT;
+                bundle.putSerializable(SensorCallback.bundleKey, new Light(vals));
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                type = SensorTypes.GYRO;
+                gyro = AbstractSensorManager.lowPass(vals.clone(), gyro, 0.75f);
+                bundle.putSerializable(SensorCallback.bundleKey, new Gyro(gyro));
+                break;
+            case Sensor.TYPE_ACCELEROMETER:
+                type = SensorTypes.ACCEL;
+                accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.5f);
+                bundle.putSerializable(SensorCallback.bundleKey, new Accel(accel));
+                break;
+            default:
+                break;
+        }
+        if (null == type) {
+            return;
         }
 
-        final Bundle bundle = new Bundle();
-        bundle.putSerializable(SensorCallback.bundleKey, new Stat(type, vals));
-
+        bundle.putString(SensorCallback.bundleType, type);
         callback.onReceiveResult(Activity.RESULT_OK, bundle);
     }
 

@@ -16,8 +16,13 @@ public class App extends Application {
         singleton = this;
         db = new Database();
 
-        // TODO: Remove this line
-        db().statDao().delete();
+        /* Добавление записи в БД
+        Accel accel = new Accel("test");
+        TestName name = new TestName("testname");
+        db().testNameDao().put(name);
+        accel.name = name;
+        db().accelDao().put(accel);
+        */
     }
 
     public static Database db() {
