@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import ru.edu.asu.minobrlabs.db.entities.Microphone;
+import ru.edu.asu.minobrlabs.db.entities.params.Microphone;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;

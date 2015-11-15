@@ -9,10 +9,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 
 import ru.edu.asu.minobrlabs.App;
-import ru.edu.asu.minobrlabs.db.entities.Accel;
-import ru.edu.asu.minobrlabs.db.entities.GenericStat;
-import ru.edu.asu.minobrlabs.db.entities.Gyro;
-import ru.edu.asu.minobrlabs.db.entities.Light;
+import ru.edu.asu.minobrlabs.db.entities.params.Accel;
+import ru.edu.asu.minobrlabs.db.entities.params.Gyro;
+import ru.edu.asu.minobrlabs.db.entities.params.Light;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;

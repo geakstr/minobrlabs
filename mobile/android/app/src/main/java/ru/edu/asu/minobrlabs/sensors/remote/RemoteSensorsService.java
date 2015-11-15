@@ -8,8 +8,8 @@ import android.os.ResultReceiver;
 
 import java.util.Random;
 
-import ru.edu.asu.minobrlabs.db.entities.AirTemperature;
-import ru.edu.asu.minobrlabs.db.entities.Humidity;
+import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
+import ru.edu.asu.minobrlabs.db.entities.params.Humidity;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 

@@ -5,18 +5,18 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
-import ru.edu.asu.minobrlabs.db.entities.Accel;
-import ru.edu.asu.minobrlabs.db.entities.AirPressure;
-import ru.edu.asu.minobrlabs.db.entities.AirTemperature;
-import ru.edu.asu.minobrlabs.db.entities.Amperage;
-import ru.edu.asu.minobrlabs.db.entities.Gyro;
-import ru.edu.asu.minobrlabs.db.entities.Humidity;
-import ru.edu.asu.minobrlabs.db.entities.Light;
-import ru.edu.asu.minobrlabs.db.entities.SoluteTemperature;
-import ru.edu.asu.minobrlabs.db.entities.Microphone;
-import ru.edu.asu.minobrlabs.db.entities.PH;
-import ru.edu.asu.minobrlabs.db.entities.TestName;
-import ru.edu.asu.minobrlabs.db.entities.Voltage;
+import ru.edu.asu.minobrlabs.db.entities.params.Accel;
+import ru.edu.asu.minobrlabs.db.entities.params.AirPressure;
+import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
+import ru.edu.asu.minobrlabs.db.entities.params.Amperage;
+import ru.edu.asu.minobrlabs.db.entities.Experiment;
+import ru.edu.asu.minobrlabs.db.entities.params.Gyro;
+import ru.edu.asu.minobrlabs.db.entities.params.Humidity;
+import ru.edu.asu.minobrlabs.db.entities.params.Light;
+import ru.edu.asu.minobrlabs.db.entities.params.SoluteTemperature;
+import ru.edu.asu.minobrlabs.db.entities.params.Microphone;
+import ru.edu.asu.minobrlabs.db.entities.params.PH;
+import ru.edu.asu.minobrlabs.db.entities.params.Voltage;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
@@ -25,21 +25,23 @@ public class Database extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private final SQLiteDatabase conn;
+
+    private final Dao<Experiment> experimentDao;
+
     private final Dao<Accel> accelDao;
-    private final Dao<AirPressure> airPressureDao;
-    private final Dao<AirTemperature> airTemperatureDao;
-    private final Dao<Amperage> amperageDao;
-    private final Dao<Gyro> gyroDao;
-    private final Dao<Humidity> humidityDao;
     private final Dao<Light> lightDao;
-    private final Dao<SoluteTemperature> liquidTemperatureDao;
-    private final Dao<Microphone> microphoneDao;
-    private final Dao<PH> pHValueDao;
-    private final Dao<TestName> testNameDao;
+    private final Dao<Gyro> gyroDao;
+    private final Dao<AirTemperature> airTemperatureDao;
+    private final Dao<SoluteTemperature> soluteTemperatureDao;
     private final Dao<Voltage> voltageDao;
+    private final Dao<Amperage> amperageDao;
+    private final Dao<Microphone> microphoneDao;
+    private final Dao<AirPressure> airPressureDao;
+    private final Dao<PH> pHDao;
+    private final Dao<Humidity> humidityDao;
 
     static {
-        cupboard().register(TestName.class);
+        cupboard().register(Experiment.class);
         cupboard().register(Gyro.class);
         cupboard().register(Humidity.class);
         cupboard().register(AirTemperature.class);
@@ -57,18 +59,18 @@ public class Database extends SQLiteOpenHelper {
         super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
 
         this.conn = getWritableDatabase();
-        accelDao = new Dao<>(Accel.class);
-        airPressureDao = new Dao<>(AirPressure.class);
-        airTemperatureDao = new Dao<>(AirTemperature.class);
-        amperageDao = new Dao<>(Amperage.class);
-        gyroDao = new Dao<>(Gyro.class);
-        humidityDao = new Dao<>(Humidity.class);
-        lightDao = new Dao<>(Light.class);
-        liquidTemperatureDao = new Dao<>(SoluteTemperature.class);
-        microphoneDao = new Dao<>(Microphone.class);
-        pHValueDao = new Dao<>(PH.class);
-        testNameDao = new Dao<>(TestName.class);
-        voltageDao = new Dao<>(Voltage.class);
+        this.accelDao = new Dao<>(Accel.class);
+        this.airPressureDao = new Dao<>(AirPressure.class);
+        this.airTemperatureDao = new Dao<>(AirTemperature.class);
+        this.amperageDao = new Dao<>(Amperage.class);
+        this.gyroDao = new Dao<>(Gyro.class);
+        this.humidityDao = new Dao<>(Humidity.class);
+        this.lightDao = new Dao<>(Light.class);
+        this.soluteTemperatureDao = new Dao<>(SoluteTemperature.class);
+        this.microphoneDao = new Dao<>(Microphone.class);
+        this.pHDao = new Dao<>(PH.class);
+        this.experimentDao = new Dao<>(Experiment.class);
+        this.voltageDao = new Dao<>(Voltage.class);
     }
 
     @Override
@@ -114,7 +116,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public Dao<SoluteTemperature> liquidTemperatureDao() {
-        return liquidTemperatureDao;
+        return soluteTemperatureDao;
     }
 
     public Dao<Microphone> microphoneDao() {
@@ -122,11 +124,11 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public Dao<PH> pHValueDao() {
-        return pHValueDao;
+        return pHDao;
     }
 
-    public Dao<TestName> testNameDao() {
-        return testNameDao;
+    public Dao<Experiment> experimentDao() {
+        return experimentDao;
     }
 
     public Dao<Voltage> voltageDao() {

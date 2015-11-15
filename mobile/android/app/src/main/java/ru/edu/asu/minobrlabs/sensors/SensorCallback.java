@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 
-import ru.edu.asu.minobrlabs.db.entities.GenericStat;
+import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 
 public class SensorCallback implements ISensorCallback {
     public static final String bundleKey = "stat";
@@ -22,7 +22,7 @@ public class SensorCallback implements ISensorCallback {
             return;
         }
 
-        final GenericStat stat = (GenericStat) bundle.getSerializable(bundleKey);
+        final GenericParam stat = (GenericParam) bundle.getSerializable(bundleKey);
         if (null == stat) {
             return;
         }

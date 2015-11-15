@@ -18,9 +18,9 @@ public class App extends Application {
 
         /* Добавление записи в БД
         Accel accel = new Accel("test");
-        TestName name = new TestName("testname");
-        db().testNameDao().put(name);
-        accel.name = name;
+        Experiment experiment = new Experiment("testname");
+        db().experimentDao().put(experiment);
+        accel.experiment = experiment;
         db().accelDao().put(accel);
         */
     }
