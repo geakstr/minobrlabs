@@ -70,8 +70,10 @@ charts = {
     dom : document.getElementById('gyro'),    
     opts : {
       width: function(val) {
-        return Math.min(Math.abs(val * 100.0), 100.0);
-      }      
+        return Math.min(Math.abs(val * 100.0 / charts.gyro.opts.max), 100.0);
+      },
+      min: -1,
+      max: 1      
     },
     state : {
       curIndex : 1,
@@ -380,7 +382,7 @@ function createGaugeContainer(chart) {
       enabled: false
     },
     transition: {
-      duration: 300
+      duration: null
     }
   });
 }
