@@ -62,9 +62,6 @@ body {
     padding: 0 11px;
     vertical-align: bottom;
 }
-.main-page .charts-table-wrapper td {
-    padding-top: 11px;
-}
 
 .main-page .chart-wrapper {
     position: relative;
@@ -72,6 +69,7 @@ body {
 
 .main-page .chart .chart-container { 
   width: 100%;
+  position: relative;
 }
 
 .main-page .chart-title {
@@ -181,7 +179,7 @@ body {
 /* X & Y chart */
 .main-page .chart-axis .chart-container {
     position: relative;
-    height: 148px;
+    height: 146px;
 }
 .main-page .chart-axis .chart-axis-wrapper {
     background: #e0e0e0;
@@ -195,10 +193,10 @@ body {
 }
 .main-page .chart-axis .chart-axis-wrapper-y {
     position: absolute;
-    top: 0;
+    top: 11px;
     left: 50%;
     margin-left: -9px;
-    height: calc(100% - 22px);
+    height: calc(100% - 33px);
     width: 18px;
 }
 .main-page .chart-axis .chart-axis-axis {
@@ -280,7 +278,7 @@ body {
 .main-page .chart-disabled .chart-title {    
     position: relative;
     top: 60px;
-    height: 140px;
+    height: 138px;
     text-align: center;
     font-size: 18px;
     line-height: 26px;
@@ -305,7 +303,7 @@ body {
     font-size: 12px;
     line-height: 12px;
   }  
-  .main-page .chart-axis {
+  .main-page .chart-axis-axis {
     height: 14px;
     font-size: 14px;
     line-height: 14px;
