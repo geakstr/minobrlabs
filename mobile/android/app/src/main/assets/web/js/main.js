@@ -18,6 +18,9 @@ utils = {
       val = 0.0;
     }
     return val;
+  },
+  width: function(name, val) {
+    return Math.min(Math.abs((val - charts[name].opts.min) * 100.0 / (charts[name].opts.max - charts[name].opts.min)), 100.0);
   }
 };
 
@@ -28,6 +31,9 @@ charts = {
     val: 0,
     dom : document.getElementById('microphone'),    
     opts : {
+      width: function(val) {
+        return utils.width('microphone', val);
+      },
       formatFunction: function(value, ratio) {
         return value + ' дб';
       },
@@ -40,7 +46,7 @@ charts = {
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   },
   'accel': {
@@ -70,8 +76,10 @@ charts = {
     dom : document.getElementById('gyro'),    
     opts : {
       width: function(val) {
-        return Math.min(Math.abs(val * 100.0), 100.0);
-      }      
+        return Math.min(Math.abs(val * 100.0 / charts.gyro.opts.max), 100.0);
+      },
+      min: -1,
+      max: 1      
     },
     state : {
       curIndex : 1,
@@ -84,6 +92,9 @@ charts = {
     val: 0,
     dom : document.getElementById('airTemperature'),    
     opts : {
+      width: function(val) {
+        return utils.width('airTemperature', val);
+      },
       formatFunction: function(value, ratio) {
         return (value == 0 ? '' : (value > 0 ? '+' : '-')) + value + ' °C';
       },
@@ -91,12 +102,12 @@ charts = {
       max : 70,
       color : {
         pattern: ['#0000FF', '#00FF00', '#FFFF00', '#FFA500', '#FF0000'],
-        threshold: [1, 20, 30, 40, 50]
+        threshold: [1, 20, 30, 40]
       }
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   },
   'humidity': {
@@ -105,6 +116,9 @@ charts = {
     val: 0,
     dom : document.getElementById('humidity'),    
     opts : {
+      width: function(val) {
+        return utils.width('humidity', val);
+      },
       formatFunction: function(value, ratio) {
         return value + ' %';
       },
@@ -117,7 +131,7 @@ charts = {
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   },    
   'atmoPressure': {
@@ -126,6 +140,9 @@ charts = {
     val: 0,
     dom : document.getElementById('atmoPressure'),    
     opts : {
+      width: function(val) {
+        return utils.width('atmoPressure', val);
+      },
       formatFunction: function(value, ratio) {
         return value + ' кПа';
       },
@@ -138,7 +155,7 @@ charts = {
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   },
   'light': {
@@ -147,6 +164,9 @@ charts = {
     val: 0,
     dom : document.getElementById('light'),    
     opts : {
+      width: function(val) {
+        return utils.width('light', val);
+      },
       formatFunction: function(value, ratio) {
         return value + ' лк';
       },
@@ -159,7 +179,7 @@ charts = {
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   },
   'soluteTemperature': {
@@ -168,6 +188,9 @@ charts = {
     val: 0,
     dom : document.getElementById('soluteTemperature'),    
     opts : {
+      width: function(val) {
+        return utils.width('soluteTemperature', val);
+      },
       formatFunction: function(value, ratio) {
         return (value == 0 ? '' : (value > 0 ? '+' : '-')) + value + ' °C';
       },
@@ -175,12 +198,12 @@ charts = {
       max: 1500,
       color : {
         pattern: ['#0000FF', '#00FF00', '#FFFF00', '#FFA500', '#FF0000'],
-        threshold: [1, 300, 600, 900, 1200]
+        threshold: [1, 400, 800, 1200]
       }
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   },
   'voltage': {
@@ -189,6 +212,9 @@ charts = {
     val: 0,
     dom : document.getElementById('voltage'),    
     opts : {
+      width: function(val) {
+        return utils.width('voltage', val);
+      },
       formatFunction: function(value, ratio) {
         return (value == 0 ? '' : (value > 0 ? '+' : '-')) + value + ' В';
       },
@@ -201,7 +227,7 @@ charts = {
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   },
   'amperage': {
@@ -210,6 +236,9 @@ charts = {
     val: 0,
     dom : document.getElementById('amperage'),    
     opts : {
+      width: function(val) {
+        return utils.width('amperage', val);
+      },
       formatFunction: function(value, ratio) {
         return (value == 0 ? '' : (value > 0 ? '+' : '-')) + value + ' А';
       },
@@ -222,7 +251,7 @@ charts = {
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   },
   'ph': {
@@ -231,6 +260,9 @@ charts = {
     val: 0,
     dom : document.getElementById('ph'),    
     opts : {
+      width: function(val) {
+        return utils.width('ph', val);
+      },
       formatFunction: function(value, ratio) {
         return value + ' pH';
       },
@@ -243,7 +275,7 @@ charts = {
     }, 
     state : {
       curIndex : 1,
-      states : [0, 1, 2]
+      states : [0, 1, 2, 4, 5]
     }
   }
 };
@@ -260,7 +292,7 @@ function createDisabledContainer(chart) {
   container = createElement('div', 'chart-container');
 
   title = createElement('div', 'chart-title');
-  title.innerHTML = chart.title + '<p class="chart-on">показать</p>';
+  title.innerHTML = chart.title + '<p class="chart-on">включить</p>';
 
   chart.dom.innerHTML = '';
   chart.dom.className = 'chart chart-disabled cf';
@@ -284,6 +316,37 @@ function createLabelContainer(chart) {
 
   return container;
 }
+function createAxisContainer(chart, axis) {
+  var container = createElement('div', 'chart-container');
+
+  var chartAxisWrapper = createElement('div', 'chart-axis-wrapper chart-axis-wrapper-' + axis);
+  var chartAxis = createElement('div', 'chart-axis-axis');
+  var chartVal = createElement('span', 'chart-axis-val');
+  var chartTitle = createElement('div', 'chart-title');
+  chartTitle.textContent = chart.title;
+
+  var chartMinVal = createElement('span', 'chart-axis-min-val');
+  chartMinVal.textContent = chart.opts.min;
+
+  var chartMaxVal = createElement('span', 'chart-axis-max-val');
+  chartMaxVal.textContent = chart.opts.max;
+
+  chartAxisWrapper.appendChild(chartVal);
+  chartAxisWrapper.appendChild(chartMinVal);
+  chartAxisWrapper.appendChild(chartMaxVal);
+  chartAxisWrapper.appendChild(chartAxis);
+  container.appendChild(chartAxisWrapper);
+  container.appendChild(chartTitle);
+
+  chart.dom.innerHTML = '';
+  chart.dom.className = 'chart chart-axis';
+  chart.dom.appendChild(container);  
+
+  return {
+    axis : chartAxis,
+    val : chartVal
+  };
+}
 function createAxisesContainer(chart) {
   var bar, container, signs, selector;
 
@@ -303,7 +366,7 @@ function createAxisesContainer(chart) {
       container[sign][axis] = {};
 
       var chartAxisWrapper = createElement('div', 'chart-axis-wrapper cf');
-      var chartAxis = createElement('div', 'chart-axis chart-' + axis + '-axis');
+      var chartAxis = createElement('div', 'chart-axis-axis chart-' + axis + '-axis');
       var chartVal = createElement('span', 'chart-axis-val');
 
       chartAxis.appendChild(chartVal);
@@ -380,7 +443,7 @@ function createGaugeContainer(chart) {
       enabled: false
     },
     transition: {
-      duration: 300
+      duration: null
     }
   });
 }
@@ -405,6 +468,32 @@ function loadAxisesChart(chart) {
     chart.container[oppositeSign][axis].axis.classList.add('hidden');
   }
 }
+function loadAxisChart(chart, axis) {
+  chart.container.val.textContent = chart.opts.formatFunction(chart.val);
+  chart.container.axis.style[axis === 'x' ? 'width' : 'height'] = chart.opts.width(chart.val) + '%';
+
+  chart.container.axis.style.backgroundColor = (function() {
+      var val = chart.val;
+      var pattern = chart.opts.color.pattern;
+      var threshold = chart.opts.color.threshold;
+
+      var patternLength = pattern.length;
+      var thresholdLength = threshold.length;
+
+      if (thresholdLength === 0 || (thresholdLength > 0 && val < threshold[0])) {
+        return patternLength === 0 ? 'blue' : pattern[0];
+      }
+
+      var i = 0;
+      for (i = 1; i < thresholdLength && i < patternLength; i++) {
+        if (val >= threshold[i - 1] && val < threshold[i]) {
+          return pattern[i];
+        }
+      }
+
+      return patternLength === 0 ? 'blue' : pattern[patternLength - 1];
+    })();
+}
 function loadGaugeChart(chart) {
   chart.container.load({
     columns: [['data', chart.val]]
@@ -424,6 +513,13 @@ function loadCurrentChartState(chart) {
       break;
     case 3:
       loadAxisesChart(chart);
+      break;
+    case 4:
+      loadAxisChart(chart, 'x');
+      break;
+    case 5:
+      loadAxisChart(chart, 'y');
+      break;
     default:
       break;
   }
@@ -447,6 +543,12 @@ function nextChartState(chart) {
       break;
     case 3:
       chart.container = createAxisesContainer(chart);
+      break;
+    case 4:
+      chart.container = createAxisContainer(chart, 'x');
+      break;
+    case 5:
+      chart.container = createAxisContainer(chart, 'y');
       break;
     default:
       break;
@@ -475,6 +577,12 @@ function airTemperature(v) {
   charts.airTemperature.val = v[0];
   loadCurrentChartState(charts.airTemperature);
 }
+
+function soluteTemperature(v) {
+  charts.soluteTemperature.val = v[0];
+  loadCurrentChartState(charts.soluteTemperature);
+}
+
 function humidity(v) {
   charts.humidity.val = v[0];
   loadCurrentChartState(charts.humidity);
@@ -524,3 +632,5 @@ charts.ph.container = createGaugeContainer(charts.ph);
     }
   }
 })();
+
+accel([0.5, 1, -0.6]);
