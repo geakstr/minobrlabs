@@ -8,7 +8,7 @@
 // state = 4 - horizontal bar
 // state = 5 - vertical bar
 
-var charts, xyzAxises, utils;
+var charts, xyzAxises, utils, os;
 
 xyzAxises = ['x', 'y', 'z'];
 
@@ -524,13 +524,16 @@ function loadCurrentChartState(chart) {
       break;
   }
 }
-function nextChartState(chart) {
+function createNextChartState(chart) {
   chart.state.curIndex++;
 
   if (chart.state.curIndex === chart.state.states.length) {
     chart.state.curIndex = 0;    
   }
 
+  createCurrentChartState(chart);
+}
+function createCurrentChartState(chart) {
   switch (chart.state.states[chart.state.curIndex]) {
     case 0:
       chart.container = createDisabledContainer(chart);
@@ -593,25 +596,18 @@ function light(v) {
   loadCurrentChartState(charts.light);
 }
 
+function init(config) {
+  var onclick, chart, idx;
 
+  os = config.os;
 
-
-charts.microphone.container = createGaugeContainer(charts.microphone);
-
-charts.accel.container = createAxisesContainer(charts.accel);
-charts.gyro.container = createAxisesContainer(charts.gyro);
-
-charts.airTemperature.container = createGaugeContainer(charts.airTemperature);
-charts.humidity.container = createGaugeContainer(charts.humidity);
-charts.atmoPressure.container = createGaugeContainer(charts.atmoPressure);
-charts.light.container = createGaugeContainer(charts.light);
-charts.soluteTemperature.container = createGaugeContainer(charts.soluteTemperature);
-charts.voltage.container = createGaugeContainer(charts.voltage);
-charts.amperage.container = createGaugeContainer(charts.amperage);
-charts.ph.container = createGaugeContainer(charts.ph);
-
-(function() {
-  var onclick, chart;
+  for (chart in config.charts) {
+    if (config.charts.hasOwnProperty(chart)) {
+       idx = charts[chart].state.states.indexOf(config.charts[chart]);
+      charts[chart].state.curIndex = idx === -1 ? charts[chart].state.curIndex : idx;
+      createCurrentChartState(charts[chart]);
+    }
+  }
 
   onclick = function(e) {
     var node, id;
@@ -623,7 +619,7 @@ charts.ph.container = createGaugeContainer(charts.ph);
 
     id = node.id;
 
-    nextChartState(charts[id]);
+    createNextChartState(charts[id]);
   };
   
   for (chart in charts) {
@@ -631,6 +627,6 @@ charts.ph.container = createGaugeContainer(charts.ph);
       charts[chart].dom.onclick = onclick;
     }
   }
-})();
+}
 
-accel([0.5, 1, -0.6]);
+//init({"os":"android","charts":{"microphone":2,"accel":3,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});

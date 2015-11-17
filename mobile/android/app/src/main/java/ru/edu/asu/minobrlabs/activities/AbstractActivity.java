@@ -13,6 +13,7 @@ import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.remote.RemoteSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
+import ru.edu.asu.minobrlabs.webview.WebViewPageFinishedCallback;
 
 public abstract class AbstractActivity extends AppCompatActivity {
     private LocalSensorsManager localSensorsManager;
@@ -59,7 +60,7 @@ public abstract class AbstractActivity extends AppCompatActivity {
         return true;
     }
 
-    protected void initWebView(final String webViewURL, final int viewId) {
+    protected void initWebView(final String webViewURL, final int viewId, final WebViewPageFinishedCallback callback) {
         final WebView webView = (WebView) findViewById(viewId);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(new WebViewClient() {
@@ -72,9 +73,17 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
                 localSensorsManager.start();
                 remoteSensorsManager.start();
+
+                if (null != callback) {
+                    callback.callback(webView);
+                }
             }
         });
         webView.loadUrl(webViewURL);
+    }
+
+    protected void initWebView(final String webViewURL, final int viewId) {
+        initWebView(webViewURL, viewId, null);
     }
 
     public void moveToStatistics() {
