@@ -5,13 +5,11 @@ import android.util.Log;
 public abstract class AbstractSensorManager implements Runnable {
     protected final String tag;
 
-    private final Thread thread;
-    private boolean running;
+    private volatile boolean running;
     private long sleepTime;
 
     public AbstractSensorManager(final String tag) {
         this.tag = tag;
-        this.thread = new Thread(this);
         this.running = false;
         this.sleepTime = 300L;
     }
@@ -23,7 +21,7 @@ public abstract class AbstractSensorManager implements Runnable {
 
     public void start() {
         if (!running) {
-            thread.start();
+            new Thread(this).start();
         }
         running = true;
     }
@@ -38,10 +36,6 @@ public abstract class AbstractSensorManager implements Runnable {
 
     public boolean isRunning() {
         return running;
-    }
-
-    public Thread getThread() {
-        return thread;
     }
 
     public static float[] lowPass(final float[] input, final float[] output, final float alpha) {

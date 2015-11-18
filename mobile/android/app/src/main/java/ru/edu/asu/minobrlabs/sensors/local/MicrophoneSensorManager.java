@@ -77,6 +77,7 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
 
     private void stopMediaRecorder() {
         mediaRecorder.stop();
+        mediaRecorder.reset();
         mediaRecorder.release();
         mediaRecorder = null;
     }

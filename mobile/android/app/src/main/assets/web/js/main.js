@@ -618,7 +618,7 @@ function init(config) {
 
   for (chart in config.charts) {
     if (config.charts.hasOwnProperty(chart)) {
-       idx = charts[chart].state.states.indexOf(config.charts[chart]);
+      idx = charts[chart].state.states.indexOf(config.charts[chart]);
       charts[chart].state.curIndex = idx === -1 ? charts[chart].state.curIndex : idx;
       createCurrentChartState(charts[chart]);
     }

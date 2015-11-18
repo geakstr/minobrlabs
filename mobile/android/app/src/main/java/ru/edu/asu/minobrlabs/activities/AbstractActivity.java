@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +23,13 @@ public abstract class AbstractActivity extends AppCompatActivity {
     private LocalSensorsManager localSensorsManager;
     private RemoteSensorsManager remoteSensorsManager;
 
+    private boolean wasOnPause;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.wasOnPause = false;
 
         this.localSensorsManager = new LocalSensorsManager();
         this.remoteSensorsManager = new RemoteSensorsManager();
@@ -35,14 +40,24 @@ public abstract class AbstractActivity extends AppCompatActivity {
         super.onResume();
 
         localSensorsManager.registerListeners();
+
+        if (wasOnPause) {
+            localSensorsManager.start();
+            remoteSensorsManager.start();
+
+            wasOnPause = false;
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        // TODO: Думаю здесь также нужно что-то сделать с тредом в remoteSensorsManager
+        wasOnPause = true;
+
         localSensorsManager.unregisterListeners();
+        localSensorsManager.stop();
+        remoteSensorsManager.stop();
     }
 
     @Override
