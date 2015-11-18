@@ -26,6 +26,7 @@ utils = {
 
 charts = {
   'microphone': {
+    name: 'microphone',
     title: 'Звуковое давление',
     units : 'дб',
     val: 0,
@@ -50,6 +51,7 @@ charts = {
     }
   },
   'accel': {
+    name: 'accel',
     title: 'Перегрузка',
     units : 'g',
     val: [0, 0, 0],
@@ -70,6 +72,7 @@ charts = {
     }
   },
   'gyro': {
+    name: 'gyro',
     title: 'Частота вращения',
     units : 'рад/с',
     val: [0, 0, 0],    
@@ -87,6 +90,7 @@ charts = {
     }
   },
   'airTemperature': {
+    name: 'airTemperature',
     title: 'Температура воздуха',
     units : '°C',
     val: 0,
@@ -111,6 +115,7 @@ charts = {
     }
   },
   'humidity': {
+    name: 'humidity',
     title: 'Относительная влажность',
     units : '%',
     val: 0,
@@ -135,6 +140,7 @@ charts = {
     }
   },    
   'atmoPressure': {
+    name: 'atmoPressure',
     title: 'Атмосферное давление',
     units : 'кПа',
     val: 0,
@@ -159,6 +165,7 @@ charts = {
     }
   },
   'light': {
+    name: 'light',
     title: 'Освещенность',
     units : 'лк',
     val: 0,
@@ -183,6 +190,7 @@ charts = {
     }
   },
   'soluteTemperature': {
+    name: 'soluteTemperature',
     title: 'Температура раствора',
     units : '°C',
     val: 0,
@@ -207,6 +215,7 @@ charts = {
     }
   },
   'voltage': {
+    name: 'voltage',
     title: 'Напряжение',
     units : 'В',
     val: 0,
@@ -231,6 +240,7 @@ charts = {
     }
   },
   'amperage': {
+    name: 'amperage',
     title: 'Сила тока',
     units : 'А',
     val: 0,
@@ -255,6 +265,7 @@ charts = {
     }
   },
   'ph': {
+    name: 'ph',
     title: 'Водородный показатель',
     units : 'pH',
     val: 0,
@@ -532,6 +543,10 @@ function createNextChartState(chart) {
   }
 
   createCurrentChartState(chart);
+
+  if (os === 'android') {
+    Android.updateState(chart.name, chart.state.states[chart.state.curIndex]);
+  }
 }
 function createCurrentChartState(chart) {
   switch (chart.state.states[chart.state.curIndex]) {
@@ -629,4 +644,4 @@ function init(config) {
   }
 }
 
-//init({"os":"android","charts":{"microphone":2,"accel":3,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
+init({"os":"android","charts":{"microphone":2,"accel":3,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});

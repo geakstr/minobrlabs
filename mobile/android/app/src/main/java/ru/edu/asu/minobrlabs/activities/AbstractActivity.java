@@ -1,10 +1,12 @@
 package ru.edu.asu.minobrlabs.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -13,6 +15,7 @@ import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.remote.RemoteSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
+import ru.edu.asu.minobrlabs.webview.MainWebViewJavascriptInterface;
 import ru.edu.asu.minobrlabs.webview.WebViewPageFinishedCallback;
 
 public abstract class AbstractActivity extends AppCompatActivity {
@@ -62,7 +65,16 @@ public abstract class AbstractActivity extends AppCompatActivity {
 
     protected void initWebView(final String webViewURL, final int viewId, final WebViewPageFinishedCallback callback) {
         final WebView webView = (WebView) findViewById(viewId);
+
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setBuiltInZoomControls(false);
+        if (Build.VERSION.SDK_INT >= 19) {
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        } else {
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        webView.addJavascriptInterface(new MainWebViewJavascriptInterface(), "Android");
+
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
