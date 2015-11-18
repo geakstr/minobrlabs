@@ -93,8 +93,9 @@ public class App extends Application {
         public static String readMainWebViewStateAsJson() {
             String json = App.Preferences.readString("main_web_view_state", null);
             if (null == json) {
-                json = new Gson().toJson(new MainWebViewState());
-                App.Preferences.writeString("main_web_view_state", json);
+                final MainWebViewState state = new MainWebViewState();
+                App.Preferences.writeMainWebViewState(state);
+                json = new Gson().toJson(state);
             }
             return json;
         }
