@@ -303,7 +303,7 @@ function createDisabledContainer(chart) {
   container = createElement('div', 'chart-container');
 
   title = createElement('div', 'chart-title');
-  title.innerHTML = chart.title + '<p class="chart-on">включить</p>';
+  title.innerHTML = chart.title + '<br><p class="chart-on">включить</p>';
 
   chart.dom.innerHTML = '';
   chart.dom.className = 'chart chart-disabled cf';
