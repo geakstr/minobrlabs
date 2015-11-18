@@ -200,12 +200,13 @@ body {
     width: 18px;
 }
 .main-page .chart-axis .chart-axis-axis {
-    background: red;
     border-radius: 2px;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
 }
 .main-page .chart-axis .chart-axis-val {
-    position: absolute;
-    width: 100px;      
+    position: absolute;      
     text-align: center;
     font-size: 20px;
     line-height: 20px; 
@@ -223,6 +224,7 @@ body {
 .main-page .chart-axis .chart-axis-wrapper-x .chart-axis-val {
     top: -30px;
     left: 50%;    
+    width: 120px;
     margin-left: -60px;        
 }
 .main-page .chart-axis .chart-axis-wrapper-x .chart-axis-min-val,
@@ -241,6 +243,7 @@ body {
 .main-page .chart-axis .chart-axis-wrapper-y .chart-axis-val {
     top: 50%;
     left: 50%;
+    width: 100px;
     margin-left: 19px;
     text-align: left;
     margin-top: -10px;
@@ -251,8 +254,8 @@ body {
 .main-page .chart-axis .chart-axis-wrapper-y .chart-axis-min-val,
 .main-page .chart-axis .chart-axis-wrapper-y .chart-axis-max-val {
     left: 0;
-    width: 60px;
-    margin-left: -124px;
+    width: 100px;
+    margin-left: -104px;
     text-align: right;
 }
 .main-page .chart-axis .chart-title {

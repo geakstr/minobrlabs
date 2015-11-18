@@ -76,10 +76,12 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
     }
 
     private void stopMediaRecorder() {
-        mediaRecorder.stop();
-        mediaRecorder.reset();
-        mediaRecorder.release();
-        mediaRecorder = null;
+        if (null != mediaRecorder) {
+            mediaRecorder.stop();
+            mediaRecorder.reset();
+            mediaRecorder.release();
+            mediaRecorder = null;
+        }
     }
 
     // Thanks Lukas Ruge for pressure and decibel formulas
