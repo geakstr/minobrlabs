@@ -22,10 +22,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.StatsActivity"
-            android:screenOrientation="landscape" />
-
         <service
             android:name=".sensors.remote.RemoteSensorsService"
             android:exported="false" />

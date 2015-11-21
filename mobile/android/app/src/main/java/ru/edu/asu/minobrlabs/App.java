@@ -3,17 +3,34 @@ package ru.edu.asu.minobrlabs;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.util.Arrays;
+
 import ru.edu.asu.minobrlabs.db.Database;
+import ru.edu.asu.minobrlabs.db.TemporaryStorage;
+import ru.edu.asu.minobrlabs.db.dao.Dao;
+import ru.edu.asu.minobrlabs.db.entities.Experiment;
+import ru.edu.asu.minobrlabs.db.entities.GenericParam;
+import ru.edu.asu.minobrlabs.db.entities.params.Accel;
+import ru.edu.asu.minobrlabs.db.entities.params.AirPressure;
+import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
+import ru.edu.asu.minobrlabs.db.entities.params.Amperage;
+import ru.edu.asu.minobrlabs.db.entities.params.Gyro;
+import ru.edu.asu.minobrlabs.db.entities.params.Humidity;
+import ru.edu.asu.minobrlabs.db.entities.params.Light;
+import ru.edu.asu.minobrlabs.db.entities.params.Microphone;
+import ru.edu.asu.minobrlabs.db.entities.params.Ph;
+import ru.edu.asu.minobrlabs.db.entities.params.SoluteTemperature;
+import ru.edu.asu.minobrlabs.db.entities.params.Voltage;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class App extends Application {
     private static App singleton;
 
     private static Database db;
+    private static TemporaryStorage temporaryStorage;
 
     @Override
     public void onCreate() {
@@ -21,13 +38,22 @@ public class App extends Application {
 
         singleton = this;
 
-        /* Добавление записи в БД
-        Accel accel = new Accel("test");
-        Experiment experiment = new Experiment("testname");
-        db().experimentDao().put(experiment);
-        accel.experiment = experiment;
-        db().accelDao().put(accel);
-        */
+        Dao.deleteAll(Experiment.class);
+        Dao.deleteAll(Accel.class);
+        Dao.deleteAll(AirPressure.class);
+        Dao.deleteAll(AirTemperature.class);
+        Dao.deleteAll(Amperage.class);
+        Dao.deleteAll(Gyro.class);
+        Dao.deleteAll(Humidity.class);
+        Dao.deleteAll(Light.class);
+        Dao.deleteAll(Microphone.class);
+        Dao.deleteAll(Ph.class);
+        Dao.deleteAll(SoluteTemperature.class);
+        Dao.deleteAll(Voltage.class);
+    }
+
+    public static App getInstance() {
+        return singleton;
     }
 
     public static Database db() {
@@ -37,8 +63,11 @@ public class App extends Application {
         return db;
     }
 
-    public static App getInstance() {
-        return singleton;
+    public static TemporaryStorage temporaryStorage() {
+        if (null == temporaryStorage) {
+            temporaryStorage = new TemporaryStorage();
+        }
+        return temporaryStorage;
     }
 
     public static class Preferences {

@@ -3,6 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_to_string_stat"
+        android:title="DB_TO_SYSOUT"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_persist_recording"
+        android:title="@string/persist_recording"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_clear_recording"
+        android:title="@string/clear_recording"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_start_recording"
+        android:title="@string/start_recording"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_stop_recording"
+        android:title="@string/stop_recording"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_to_main"
+        android:title="@string/params"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/action_to_stats"
         android:title="@string/stats"
         app:showAsAction="always"/>

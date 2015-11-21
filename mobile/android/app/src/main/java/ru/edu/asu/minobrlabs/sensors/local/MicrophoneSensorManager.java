@@ -28,7 +28,7 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
         while (isRunning()) {
             final Bundle bundle = new Bundle();
             bundle.putSerializable(SensorCallback.bundleKey, new Microphone(new float[]{getDecibel()}));
-            bundle.putString(SensorCallback.bundleType, SensorTypes.MICROPHONE_DB);
+            bundle.putSerializable(SensorCallback.bundleType, SensorTypes.MICROPHONE_DB);
 
             microphoneSensorHandler.apply(bundle);
 

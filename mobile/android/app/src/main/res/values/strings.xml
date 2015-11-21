@@ -2,6 +2,11 @@
     <string name="app_name">MinobrLabs</string>
 
     <string name="stats">Статистика</string>
+    <string name="params">Показатели</string>
+    <string name="start_recording">Записывать</string>
+    <string name="stop_recording">Остановить</string>
+    <string name="persist_recording">Сохранить</string>
+    <string name="clear_recording">Сбросить</string>
 
     <string name="detectors_sleep_time_exception" formatted="false">Время должно быть в пределах от %s до %s сек.</string>
 </resources>

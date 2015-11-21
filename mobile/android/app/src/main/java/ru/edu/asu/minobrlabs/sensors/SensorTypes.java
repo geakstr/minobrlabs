@@ -1,15 +1,44 @@
 package ru.edu.asu.minobrlabs.sensors;
 
-public class SensorTypes {
-    public static final String HUMIDITY = "humidity";
-    public static final String AIR_TEMPERATURE = "airTemperature";
-    public static final String LIGHT = "light";
-    public static final String GYRO = "gyro";
-    public static final String ACCEL = "accel";
-    public static final String AIR_PRESSURE = "airPressure";
-    public static final String AMPERAGE = "amperage";
-    public static final String PH = "pH";
-    public static final String SOLUTE_TEMPERATURE = "solutTemperature";
-    public static final String VOLTAGE = "voltage";
-    public static final String MICROPHONE_DB = "microphone";
+import ru.edu.asu.minobrlabs.db.entities.GenericParam;
+import ru.edu.asu.minobrlabs.db.entities.params.Accel;
+import ru.edu.asu.minobrlabs.db.entities.params.AirPressure;
+import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
+import ru.edu.asu.minobrlabs.db.entities.params.Amperage;
+import ru.edu.asu.minobrlabs.db.entities.params.Gyro;
+import ru.edu.asu.minobrlabs.db.entities.params.Humidity;
+import ru.edu.asu.minobrlabs.db.entities.params.Light;
+import ru.edu.asu.minobrlabs.db.entities.params.Microphone;
+import ru.edu.asu.minobrlabs.db.entities.params.Ph;
+import ru.edu.asu.minobrlabs.db.entities.params.SoluteTemperature;
+import ru.edu.asu.minobrlabs.db.entities.params.Voltage;
+
+public enum SensorTypes {
+    HUMIDITY("humidity", Humidity.class),
+    AIR_TEMPERATURE("airTemperature", AirTemperature.class),
+    LIGHT("light", Light.class),
+    GYRO("gyro", Gyro.class),
+    ACCEL("accel", Accel.class),
+    AIR_PRESSURE("airPressure", AirPressure.class),
+    AMPERAGE("amperage", Amperage.class),
+    PH("ph", Ph.class),
+    SOLUTE_TEMPERATURE("soluteTemperature", SoluteTemperature.class),
+    VOLTAGE("voltage", Voltage.class),
+    MICROPHONE_DB("microphone", Microphone.class);
+
+    private final String name;
+    private final Class<? extends GenericParam> clazz;
+
+    SensorTypes(final String name, final Class<? extends GenericParam> clazz) {
+        this.name = name;
+        this.clazz = clazz;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Class<? extends GenericParam> getClazz() {
+        return clazz;
+    }
 }

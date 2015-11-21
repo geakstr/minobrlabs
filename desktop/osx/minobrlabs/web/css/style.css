@@ -57,22 +57,22 @@ body {
 
 
 /* Main page */
-.main-page .charts-table td {
+#main-page .charts-table td {
     width: 25%;
     padding: 0 11px;
     vertical-align: bottom;
 }
 
-.main-page .chart-wrapper {
+#main-page .chart-wrapper {
     position: relative;
 }
 
-.main-page .chart .chart-container { 
+#main-page .chart .chart-container { 
   width: 100%;
   position: relative;
 }
 
-.main-page .chart-title {
+#main-page .chart-title {
     width: 100%;
     text-align: center;
     color: #666;
@@ -81,39 +81,39 @@ body {
 }
 
 /* Gauge chart */
-.main-page .chart-gauge .chart-container {
+#main-page .chart-gauge .chart-container {
     height: 120px;
 }
 
 /* 3D axises chart */
-.main-page .chart-axises .chart-axises-positive {
+#main-page .chart-axises .chart-axises-positive {
     width: 50%;
     float: right;
     padding-left: 11px;
 }
-.main-page .chart-axises .chart-axises-negative {
+#main-page .chart-axises .chart-axises-negative {
     width: 50%;
     float: left;
     padding-right: 11px;
 }
-.main-page .chart-axises .chart-axis-wrapper {
+#main-page .chart-axises .chart-axis-wrapper {
     position: relative;
 }
-.main-page .chart-axises .chart-axises-positive .chart-axis-wrapper {
+#main-page .chart-axises .chart-axises-positive .chart-axis-wrapper {
     margin-right: 22px;
     padding-right: 1px;
     border-right: 1px solid #eee;
 }
-.main-page .chart-axises .chart-axises-negative .chart-axis-wrapper {
+#main-page .chart-axises .chart-axises-negative .chart-axis-wrapper {
     margin-left: 28px;
     padding-left: 1px;
     border-left: 1px solid #eee;
 }
-.main-page .chart-axises .chart-title {
+#main-page .chart-axises .chart-title {
     position: relative;
     top: 11px;
 }
-.main-page .chart-axises .chart-axis-axis {
+#main-page .chart-axises .chart-axis-axis {
     position: relative;
     height: 16px;    
     font-size: 16px;
@@ -125,73 +125,73 @@ body {
     -moz-transition: all 0.3s;
     transition: all 0.3s;
 }
-.main-page .chart-axises .chart-axis-axis.hidden {
+#main-page .chart-axises .chart-axis-axis.hidden {
     background: transparent;
 }
 
-.main-page .chart-axises .chart-axises-positive .chart-axis-axis {
+#main-page .chart-axises .chart-axises-positive .chart-axis-axis {
     border-radius: 0 3px 3px 0;
 }
-.main-page .chart-axises .chart-axises-negative .chart-axis-axis {
+#main-page .chart-axises .chart-axises-negative .chart-axis-axis {
     float: right;
     border-radius: 3px 0 0 3px;
 }
-.main-page .chart-axises .chart-x-axis {
+#main-page .chart-axises .chart-x-axis {
     background: red;
 }
-.main-page .chart-axises .chart-y-axis {
+#main-page .chart-axises .chart-y-axis {
     background: green;
 }
-.main-page .chart-axises .chart-z-axis {
+#main-page .chart-axises .chart-z-axis {
     background: blue;
 }
-.main-page .chart-axises .chart-axis-val {
+#main-page .chart-axises .chart-axis-val {
     position: absolute;
     top: -1px;
     width: 30px;  
     white-space: pre;
 }
-.main-page .chart-axises .chart-axises-positive .chart-axis-val {
+#main-page .chart-axises .chart-axises-positive .chart-axis-val {
     right: -33px;
 }
-.main-page .chart-axises .chart-axises-negative .chart-axis-val {
+#main-page .chart-axises .chart-axises-negative .chart-axis-val {
     left: -39px;
     text-align: right;
 }
-.main-page .chart-axises .chart-legend {
+#main-page .chart-axises .chart-legend {
     position: absolute;
     top: 0;
     left: 50%;
     margin-left: -15px;
     list-style: none outside;
 }
-.main-page .chart-axises .chart-legend li {
+#main-page .chart-axises .chart-legend li {
     margin: 8px 0;
     width: 30px;
     text-align: center;
     font-size: 16px;
     line-height: 16px;
 }
-.main-page .chart-axises .chart-legend li:last-child {
+#main-page .chart-axises .chart-legend li:last-child {
     margin-bottom: 0;
 }
 
 /* X & Y chart */
-.main-page .chart-axis .chart-container {
+#main-page .chart-axis .chart-container {
     position: relative;
     height: 146px;
 }
-.main-page .chart-axis .chart-axis-wrapper {
+#main-page .chart-axis .chart-axis-wrapper {
     background: #e0e0e0;
     border-radius: 2px;
 }
-.main-page .chart-axis .chart-axis-wrapper-x {
+#main-page .chart-axis .chart-axis-wrapper-x {
     position: absolute;
     top: 77px;
     left: 0;
     width: 100%;    
 }
-.main-page .chart-axis .chart-axis-wrapper-y {
+#main-page .chart-axis .chart-axis-wrapper-y {
     position: absolute;
     top: 11px;
     left: 50%;
@@ -199,48 +199,48 @@ body {
     height: calc(100% - 33px);
     width: 18px;
 }
-.main-page .chart-axis .chart-axis-axis {
+#main-page .chart-axis .chart-axis-axis {
     border-radius: 2px;
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     transition: all 0.3s;
 }
-.main-page .chart-axis .chart-axis-val {
+#main-page .chart-axis .chart-axis-val {
     position: absolute;      
     text-align: center;
     font-size: 20px;
     line-height: 20px; 
 }
-.main-page .chart-axis .chart-axis-min-val,
-.main-page .chart-axis .chart-axis-max-val {
+#main-page .chart-axis .chart-axis-min-val,
+#main-page .chart-axis .chart-axis-max-val {
     position: absolute;
     font-size: 10px;
     line-height: 10px;
     color: #999;
 }
-.main-page .chart-axis .chart-axis-wrapper-x .chart-axis-axis {
+#main-page .chart-axis .chart-axis-wrapper-x .chart-axis-axis {
     height: 18px;
 }
-.main-page .chart-axis .chart-axis-wrapper-x .chart-axis-val {
+#main-page .chart-axis .chart-axis-wrapper-x .chart-axis-val {
     top: -30px;
     left: 50%;    
     width: 120px;
     margin-left: -60px;        
 }
-.main-page .chart-axis .chart-axis-wrapper-x .chart-axis-min-val,
-.main-page .chart-axis .chart-axis-wrapper-x .chart-axis-max-val {
+#main-page .chart-axis .chart-axis-wrapper-x .chart-axis-min-val,
+#main-page .chart-axis .chart-axis-wrapper-x .chart-axis-max-val {
     top: 22px;
 }
-.main-page .chart-axis .chart-axis-wrapper-x .chart-axis-max-val {
+#main-page .chart-axis .chart-axis-wrapper-x .chart-axis-max-val {
     right: 0;
 }
-.main-page .chart-axis .chart-axis-wrapper-y .chart-axis-axis {
+#main-page .chart-axis .chart-axis-wrapper-y .chart-axis-axis {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
 }
-.main-page .chart-axis .chart-axis-wrapper-y .chart-axis-val {
+#main-page .chart-axis .chart-axis-wrapper-y .chart-axis-val {
     top: 50%;
     left: 50%;
     width: 100px;
@@ -248,17 +248,17 @@ body {
     text-align: left;
     margin-top: -10px;
 }
-.main-page .chart-axis .chart-axis-wrapper-y .chart-axis-min-val {
+#main-page .chart-axis .chart-axis-wrapper-y .chart-axis-min-val {
     bottom: 0;
 }
-.main-page .chart-axis .chart-axis-wrapper-y .chart-axis-min-val,
-.main-page .chart-axis .chart-axis-wrapper-y .chart-axis-max-val {
+#main-page .chart-axis .chart-axis-wrapper-y .chart-axis-min-val,
+#main-page .chart-axis .chart-axis-wrapper-y .chart-axis-max-val {
     left: 0;
     width: 100px;
     margin-left: -104px;
     text-align: right;
 }
-.main-page .chart-axis .chart-title {
+#main-page .chart-axis .chart-title {
     position: absolute;
     bottom: 4px;
     left: 0;
@@ -266,7 +266,7 @@ body {
 }
 
 /* Label chart */
-.main-page .chart-label .chart-container {    
+#main-page .chart-label .chart-container {    
     height: 126px;    
     line-height: 100px;    
     padding-top: 26px;
@@ -275,10 +275,10 @@ body {
 }
 
 /* Disabled chart */
-.main-page .chart-disabled {
+#main-page .chart-disabled {
     overflow: hidden;
 }
-.main-page .chart-disabled .chart-title {    
+#main-page .chart-disabled .chart-title {    
     position: relative;
     top: 60px;
     height: 138px;
@@ -288,7 +288,7 @@ body {
     color: #ccc;
     font-weight: 700;
 }
-.main-page .chart-disabled .chart-on {
+#main-page .chart-disabled .chart-on {
     display: inline-block;
     font-weight: 400;
     margin-top: 11px;
@@ -301,22 +301,28 @@ body {
 }
 
 /* Stats page */
-.stats-page .charts-table {
+#stats-page {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+#stats-page .charts-table {
     height: 100%;
 }
 
 
 @media (max-height: 520px) {
-  .main-page .chart-title {
+  #main-page .chart-title {
     font-size: 12px;
     line-height: 12px;
   }  
-  .main-page .chart-axis-axis {
+  #main-page .chart-axis-axis {
     height: 14px;
     font-size: 14px;
     line-height: 14px;
   }
-  .main-page .chart-legend li {
+  #main-page .chart-legend li {
     font-size: 14px;
     line-height: 14px;
   }

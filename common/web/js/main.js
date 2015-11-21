@@ -8,9 +8,30 @@
 // state = 4 - horizontal bar
 // state = 5 - vertical bar
 
-var charts, xyzAxises, utils, os;
+var pages, charts, stats, xyzAxises, utils, os, recording;
 
-xyzAxises = ['x', 'y', 'z'];
+pages = {
+  mainPage: document.getElementById('main-page'),
+  statsPage: document.getElementById('stats-page')
+};
+
+stats = {
+  chart : null,
+  currentChart: null,
+  data: {
+    microphone: [],
+    accel: [],
+    gyro: [],
+    airTemperature: [],
+    humidity: [],
+    atmoPressure: [],
+    light: [],
+    soluteTemperature: [],
+    voltage: [],
+    amperage: [],
+    ph: []
+  }
+};
 
 utils = {
   normalizeVal : function(val) {
@@ -23,6 +44,40 @@ utils = {
     return Math.min(Math.abs((val - charts[name].opts.min) * 100.0 / (charts[name].opts.max - charts[name].opts.min)), 100.0);
   }
 };
+
+xyzAxises = ['x', 'y', 'z'];
+
+var g;
+var i = 3;
+var data = [];
+data.push([1, 35.0]);
+data.push([2, 25.0]);
+data.push([3, 66.0]);
+
+function showMainPage() {
+  pages.mainPage.style.display = 'block';
+  pages.statsPage.style.display = 'none';
+}
+
+function showStatsPage() {
+  pages.mainPage.style.display = 'none';
+  pages.statsPage.style.display = 'block';
+
+  g = new Dygraph(
+      document.getElementById("chart-stats"),
+      data,
+      {
+        drawPoints: true,
+        ylabel: 'Температура воздуха (°C)',
+        labels: ['Время', 'Температура']
+      }
+  );
+}
+
+function isRecording(flag) {
+  recording = flag;
+}
+
 
 charts = {
   'microphone': {
@@ -575,40 +630,64 @@ function createCurrentChartState(chart) {
   loadCurrentChartState(chart);
 }
 
-
-function microphone(v) {
+function microphone(v, date) {
   charts.microphone.val = v[0];
   loadCurrentChartState(charts.microphone);
 }
 
-function accel(v) {
+function accel(v, date) {
   charts.accel.val = v.map(charts.accel.opts.normalize).map(utils.normalizeVal);
   loadCurrentChartState(charts.accel);
 }
 
-function gyro(v) {
+function gyro(v, date) {
   charts.gyro.val = v.map(utils.normalizeVal);
   loadCurrentChartState(charts.gyro);
 }
 
-function airTemperature(v) {
+function airTemperature(v, date) {
   charts.airTemperature.val = v[0];
   loadCurrentChartState(charts.airTemperature);
+
+  // data.push([++i, v[0]]);
+  // g.updateOptions({
+  //   'file': data
+  // });
 }
 
-function soluteTemperature(v) {
-  charts.soluteTemperature.val = v[0];
-  loadCurrentChartState(charts.soluteTemperature);
-}
-
-function humidity(v) {
+function humidity(v, date) {
   charts.humidity.val = v[0];
   loadCurrentChartState(charts.humidity);
 }
 
-function light(v) {
+function atmoPressure(v, date) {
+  charts.atmoPressure.val = v[0];
+  loadCurrentChartState(charts.atmoPressure);
+}
+
+function light(v, date) {
   charts.light.val = v[0];
   loadCurrentChartState(charts.light);
+}
+
+function soluteTemperature(v, date) {
+  charts.soluteTemperature.val = v[0];
+  loadCurrentChartState(charts.soluteTemperature);
+}
+
+function voltage(v, date) {
+  charts.voltage.val = v[0];
+  loadCurrentChartState(charts.voltage);
+}
+
+function amperage(v, date) {
+  charts.amperage.val = v[0];
+  loadCurrentChartState(charts.amperage);
+}
+
+function ph(v, date) {
+  charts.ph.val = v[0];
+  loadCurrentChartState(charts.ph);
 }
 
 function init(config) {

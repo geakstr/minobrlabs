@@ -68,7 +68,7 @@ public class LocalSensorsManager implements SensorEventListener {
         if (null == vals) {
             return;
         }
-        String type = null;
+        SensorTypes type = null;
         final Bundle bundle = new Bundle();
         switch (event.sensor.getType()) {
             case Sensor.TYPE_LIGHT:
@@ -92,7 +92,7 @@ public class LocalSensorsManager implements SensorEventListener {
             return;
         }
 
-        bundle.putString(SensorCallback.bundleType, type);
+        bundle.putSerializable(SensorCallback.bundleType, type);
         callback.onReceiveResult(Activity.RESULT_OK, bundle);
     }
 

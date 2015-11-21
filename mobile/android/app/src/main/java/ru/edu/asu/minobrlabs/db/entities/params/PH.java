@@ -2,8 +2,10 @@ package ru.edu.asu.minobrlabs.db.entities.params;
 
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 
-public class PH extends GenericParam {
-    public PH(final float[] vals) {
+public class Ph extends GenericParam {
+    public Ph() {}
+
+    public Ph(final float[] vals) {
         super(vals);
     }
 }

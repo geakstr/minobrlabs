@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 
 public class SensorCallback implements ISensorCallback {
@@ -27,11 +28,13 @@ public class SensorCallback implements ISensorCallback {
             return;
         }
 
-        final String action = bundle.getString(bundleType);
-        if (null == action) {
+        final SensorTypes sensorType = (SensorTypes) bundle.getSerializable(bundleType);
+        if (null == sensorType) {
             return;
         }
 
-        webView.loadUrl(String.format("javascript:%s(%s)", action, stat.vals));
+        App.temporaryStorage().add(stat);
+
+        webView.loadUrl(String.format("javascript:%s(%s, %s)", sensorType.getName(), stat.vals, stat.date));
     }
 }
