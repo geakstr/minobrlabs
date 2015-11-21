@@ -10,28 +10,9 @@
 
 var pages, charts, stats, xyzAxises, utils, os, recording;
 
-pages = {
-  mainPage: document.getElementById('main-page'),
-  statsPage: document.getElementById('stats-page')
-};
+var i = 3;
 
-stats = {
-  chart : null,
-  currentChart: null,
-  data: {
-    microphone: [],
-    accel: [],
-    gyro: [],
-    airTemperature: [],
-    humidity: [],
-    atmoPressure: [],
-    light: [],
-    soluteTemperature: [],
-    voltage: [],
-    amperage: [],
-    ph: []
-  }
-};
+xyzAxises = ['x', 'y', 'z'];
 
 utils = {
   normalizeVal : function(val) {
@@ -45,39 +26,31 @@ utils = {
   }
 };
 
-xyzAxises = ['x', 'y', 'z'];
+pages = {
+  active: 'mainPage',
+  mainPage: document.getElementById('main-page'),
+  statsPage: document.getElementById('stats-page')
+};
 
-var g;
-var i = 3;
-var data = [];
-data.push([1, 35.0]);
-data.push([2, 25.0]);
-data.push([3, 66.0]);
-
-function showMainPage() {
-  pages.mainPage.style.display = 'block';
-  pages.statsPage.style.display = 'none';
-}
-
-function showStatsPage() {
-  pages.mainPage.style.display = 'none';
-  pages.statsPage.style.display = 'block';
-
-  g = new Dygraph(
-      document.getElementById("chart-stats"),
-      data,
-      {
-        drawPoints: true,
-        ylabel: 'Температура воздуха (°C)',
-        labels: ['Время', 'Температура']
-      }
-  );
-}
-
-function isRecording(flag) {
-  recording = flag;
-}
-
+stats = {
+  chart : null,
+  currentChart: null,
+  mode: 'realtime', // "realtime" or "experiment"
+  data: {
+    current: [],
+    microphone: [],
+    accel: [],
+    gyro: [],
+    airTemperature: [],
+    humidity: [],
+    atmoPressure: [],
+    light: [],
+    soluteTemperature: [],
+    voltage: [],
+    amperage: [],
+    ph: []
+  }
+};
 
 charts = {
   'microphone': {
@@ -346,6 +319,51 @@ charts = {
   }
 };
 
+function showMainPage() {
+  pages.active = 'mainPage';
+
+  pages.mainPage.style.display = 'block';
+  pages.statsPage.style.display = 'none';
+}
+
+function showStatsPage() {
+  pages.active = 'statsPage';
+
+  pages.mainPage.style.display = 'none';
+  pages.statsPage.style.display = 'block';
+
+  stats.chart = new Dygraph(
+      document.getElementById("chart-stats"),
+      stats.data.current,
+      {
+        drawPoints: true,
+        ylabel: 'Температура воздуха (°C)',
+        labels: ['Время', 'Температура']
+      }
+  );
+}
+
+function clear() {
+  stats.data =  {
+    current: [],
+    microphone: [],
+    accel: [],
+    gyro: [],
+    airTemperature: [],
+    humidity: [],
+    atmoPressure: [],
+    light: [],
+    soluteTemperature: [],
+    voltage: [],
+    amperage: [],
+    ph: []
+  };
+}
+
+function isRecording(flag) {
+  recording = flag;
+}
+
 function createElement(tag, className) {
   var node = document.createElement(tag);
   node.className = typeof className === 'undefined' ? '' : className;
@@ -570,24 +588,31 @@ function loadLabelChart(chart) {
 }
 
 function loadCurrentChartState(chart) {
-  switch (chart.state.states[chart.state.curIndex]) {
-    case 1:
-      loadGaugeChart(chart);
-      break;
-    case 2:
-      loadLabelChart(chart);
-      break;
-    case 3:
-      loadAxisesChart(chart);
-      break;
-    case 4:
-      loadAxisChart(chart, 'x');
-      break;
-    case 5:
-      loadAxisChart(chart, 'y');
-      break;
-    default:
-      break;
+  if (pages.active === 'mainPage') {
+    switch (chart.state.states[chart.state.curIndex]) {
+      case 1:
+        loadGaugeChart(chart);
+        break;
+      case 2:
+        loadLabelChart(chart);
+        break;
+      case 3:
+        loadAxisesChart(chart);
+        break;
+      case 4:
+        loadAxisChart(chart, 'x');
+        break;
+      case 5:
+        loadAxisChart(chart, 'y');
+        break;
+      default:
+        break;
+    }
+  } else if (pages.active === 'statsPage' && stats.mode === 'realtime') {
+    stats.data.current.push([++i, charts.airTemperature.val]);
+    stats.chart.updateOptions({
+      'file': stats.data.current
+    });
   }
 }
 function createNextChartState(chart) {
@@ -648,11 +673,6 @@ function gyro(v, date) {
 function airTemperature(v, date) {
   charts.airTemperature.val = v[0];
   loadCurrentChartState(charts.airTemperature);
-
-  // data.push([++i, v[0]]);
-  // g.updateOptions({
-  //   'file': data
-  // });
 }
 
 function humidity(v, date) {
