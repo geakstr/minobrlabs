@@ -130,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_start_recording:
                 App.temporaryStorage().startRecording();
+                webView.loadUrl("javascript:isRecording(true)");
+
                 menu.findItem(R.id.action_start_recording).setVisible(false);
                 menu.findItem(R.id.action_stop_recording).setVisible(true);
                 menu.findItem(R.id.action_persist_recording).setVisible(false);
@@ -137,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_stop_recording:
                 App.temporaryStorage().stopRecording();
+                webView.loadUrl("javascript:isRecording(false)");
+
                 menu.findItem(R.id.action_start_recording).setVisible(true);
                 menu.findItem(R.id.action_stop_recording).setVisible(false);
                 menu.findItem(R.id.action_persist_recording).setVisible(true);
@@ -149,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_clear_recording:
                 App.temporaryStorage().clear();
+                webView.loadUrl("javascript:clear()");
+
                 menu.findItem(R.id.action_persist_recording).setVisible(false);
                 menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
@@ -160,17 +166,17 @@ public class MainActivity extends AppCompatActivity {
 
     private AlertDialog.Builder createExperimentDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Название эксперимента");
+        builder.setTitle(getString(R.string.experiment_name));
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
-        builder.setPositiveButton("Сохранить", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 App.temporaryStorage().persist(new Experiment(input.getText().toString().trim()));
             }
         });
-        builder.setNegativeButton("Отменить", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();

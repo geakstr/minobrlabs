@@ -8,9 +8,9 @@
 // state = 4 - horizontal bar
 // state = 5 - vertical bar
 
-var pages, charts, stats, xyzAxises, utils, os, recording;
+var pages, charts, stats, xyzAxises, utils, os;
 
-var i = 3;
+var i = 0;
 
 xyzAxises = ['x', 'y', 'z'];
 
@@ -32,31 +32,12 @@ pages = {
   statsPage: document.getElementById('stats-page')
 };
 
-stats = {
-  chart : null,
-  currentChart: null,
-  mode: 'realtime', // "realtime" or "experiment"
-  data: {
-    current: [],
-    microphone: [],
-    accel: [],
-    gyro: [],
-    airTemperature: [],
-    humidity: [],
-    atmoPressure: [],
-    light: [],
-    soluteTemperature: [],
-    voltage: [],
-    amperage: [],
-    ph: []
-  }
-};
-
 charts = {
   'microphone': {
     name: 'microphone',
     title: 'Звуковое давление',
     units : 'дб',
+    disabled: false,
     val: 0,
     dom : document.getElementById('microphone'),    
     opts : {
@@ -82,6 +63,7 @@ charts = {
     name: 'accel',
     title: 'Перегрузка',
     units : 'g',
+    disabled: false,
     val: [0, 0, 0],
     dom : document.getElementById('accel'),    
     opts : {
@@ -103,6 +85,7 @@ charts = {
     name: 'gyro',
     title: 'Частота вращения',
     units : 'рад/с',
+    disabled: false,
     val: [0, 0, 0],    
     dom : document.getElementById('gyro'),    
     opts : {
@@ -121,6 +104,7 @@ charts = {
     name: 'airTemperature',
     title: 'Температура воздуха',
     units : '°C',
+    disabled: false,
     val: 0,
     dom : document.getElementById('airTemperature'),    
     opts : {
@@ -146,6 +130,7 @@ charts = {
     name: 'humidity',
     title: 'Относительная влажность',
     units : '%',
+    disabled: false,
     val: 0,
     dom : document.getElementById('humidity'),    
     opts : {
@@ -171,6 +156,7 @@ charts = {
     name: 'atmoPressure',
     title: 'Атмосферное давление',
     units : 'кПа',
+    disabled: false,
     val: 0,
     dom : document.getElementById('atmoPressure'),    
     opts : {
@@ -196,6 +182,7 @@ charts = {
     name: 'light',
     title: 'Освещенность',
     units : 'лк',
+    disabled: false,
     val: 0,
     dom : document.getElementById('light'),    
     opts : {
@@ -221,6 +208,7 @@ charts = {
     name: 'soluteTemperature',
     title: 'Температура раствора',
     units : '°C',
+    disabled: false,
     val: 0,
     dom : document.getElementById('soluteTemperature'),    
     opts : {
@@ -246,6 +234,7 @@ charts = {
     name: 'voltage',
     title: 'Напряжение',
     units : 'В',
+    disabled: false,
     val: 0,
     dom : document.getElementById('voltage'),    
     opts : {
@@ -271,6 +260,7 @@ charts = {
     name: 'amperage',
     title: 'Сила тока',
     units : 'А',
+    disabled: false,
     val: 0,
     dom : document.getElementById('amperage'),    
     opts : {
@@ -296,6 +286,7 @@ charts = {
     name: 'ph',
     title: 'Водородный показатель',
     units : 'pH',
+    disabled: false,
     val: 0,
     dom : document.getElementById('ph'),    
     opts : {
@@ -319,6 +310,49 @@ charts = {
   }
 };
 
+
+stats = {
+  chart : null,
+  currentChart: null,
+  recording: false,
+  mode: 'realtime', // "realtime" or "experiment"
+  data: {
+    microphone: [],
+    accel: [],
+    gyro: [],
+    airTemperature: [],
+    humidity: [],
+    atmoPressure: [],
+    light: [],
+    soluteTemperature: [],
+    voltage: [],
+    amperage: [],
+    ph: []
+  },
+  opts: {
+    microphone: {
+      ylabel: charts.microphone.title + ' (' + charts.microphone.units + ')',
+      labels: ['Время', charts.microphone.units]
+    },
+    accel: {
+      ylabel: charts.accel.title + ' (' + charts.accel.units + ')',
+      labels: ['Время', 'X', 'Y', 'Z']
+    },
+    gyro: {
+      ylabel: charts.gyro.title + ' (' + charts.gyro.units + ')',
+      labels: ['Время', 'X', 'Y', 'Z']
+    },
+    airTemperature: {
+      ylabel: charts.airTemperature.title + ' (' + charts.airTemperature.units + ')',
+      labels: ['Время', charts.airTemperature.title]
+    },
+    humidity: {
+      ylabel: charts.humidity.title + ' (' + charts.humidity.units + ')',
+      labels: ['Время', charts.humidity.title]
+    },
+  }
+};
+
 function showMainPage() {
   pages.active = 'mainPage';
 
@@ -332,20 +366,11 @@ function showStatsPage() {
   pages.mainPage.style.display = 'none';
   pages.statsPage.style.display = 'block';
 
-  stats.chart = new Dygraph(
-      document.getElementById("chart-stats"),
-      stats.data.current,
-      {
-        drawPoints: true,
-        ylabel: 'Температура воздуха (°C)',
-        labels: ['Время', 'Температура']
-      }
-  );
+  createDygraph();
 }
 
 function clear() {
   stats.data =  {
-    current: [],
     microphone: [],
     accel: [],
     gyro: [],
@@ -361,13 +386,38 @@ function clear() {
 }
 
 function isRecording(flag) {
-  recording = flag;
+  stats.recording = flag;
 }
 
 function createElement(tag, className) {
   var node = document.createElement(tag);
   node.className = typeof className === 'undefined' ? '' : className;
   return node;
+}
+
+function createDygraph() {
+  if (stats.data[stats.currentChart].length > 0) {
+    stats.chart = new Dygraph(
+        document.getElementById("chart-stats"),
+        stats.data[stats.currentChart],
+        {
+          drawPoints: true,
+          ylabel: stats.opts[stats.currentChart].ylabel,
+          labels: stats.opts[stats.currentChart].labels,
+          axes: {
+            x: {
+              axisLabelFormatter: function (d, gran) {
+                return Dygraph.zeropad(d.getHours()) + ":" + Dygraph.zeropad(d.getMinutes()) + ":" + Dygraph.zeropad(d.getSeconds());
+              },
+              valueFormatter: function (ms) {
+                var d = new Date(ms);
+                return ("0" + d.getDate()).slice(-2) + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ":" + ("0" + d.getSeconds()).slice(-2);
+              }
+            }
+          }
+        }
+    );
+  }
 }
 
 function createDisabledContainer(chart) {
@@ -587,7 +637,7 @@ function loadLabelChart(chart) {
   chart.container.textContent = chart.opts.formatFunction(chart.val);
 }
 
-function loadCurrentChartState(chart) {
+function loadCurrentChartState(chart, mills) {
   if (pages.active === 'mainPage') {
     switch (chart.state.states[chart.state.curIndex]) {
       case 1:
@@ -608,11 +658,22 @@ function loadCurrentChartState(chart) {
       default:
         break;
     }
-  } else if (pages.active === 'statsPage' && stats.mode === 'realtime') {
-    stats.data.current.push([++i, charts.airTemperature.val]);
-    stats.chart.updateOptions({
-      'file': stats.data.current
-    });
+  }
+
+  if (stats.mode === 'realtime') {
+    stats.data[chart.name].push([new Date(mills)].concat(chart.val));
+
+    if (pages.active === 'statsPage') {
+      if (chart.name === stats.currentChart) {
+        if (null === stats.chart) {
+          createDygraph();
+        } else {
+          stats.chart.updateOptions({
+            'file': stats.data[chart.name]
+          });
+        }
+      }
+    }
   }
 }
 function createNextChartState(chart) {
@@ -655,59 +716,59 @@ function createCurrentChartState(chart) {
   loadCurrentChartState(chart);
 }
 
-function microphone(v, date) {
+function microphone(v, mills) {
   charts.microphone.val = v[0];
-  loadCurrentChartState(charts.microphone);
+  loadCurrentChartState(charts.microphone, mills);
 }
 
-function accel(v, date) {
+function accel(v, mills) {
   charts.accel.val = v.map(charts.accel.opts.normalize).map(utils.normalizeVal);
-  loadCurrentChartState(charts.accel);
+  loadCurrentChartState(charts.accel, mills);
 }
 
-function gyro(v, date) {
+function gyro(v, mills) {
   charts.gyro.val = v.map(utils.normalizeVal);
-  loadCurrentChartState(charts.gyro);
+  loadCurrentChartState(charts.gyro, mills);
 }
 
-function airTemperature(v, date) {
+function airTemperature(v, mills) {
   charts.airTemperature.val = v[0];
-  loadCurrentChartState(charts.airTemperature);
+  loadCurrentChartState(charts.airTemperature, mills);
 }
 
-function humidity(v, date) {
+function humidity(v, mills) {
   charts.humidity.val = v[0];
-  loadCurrentChartState(charts.humidity);
+  loadCurrentChartState(charts.humidity, mills);
 }
 
-function atmoPressure(v, date) {
+function atmoPressure(v, mills) {
   charts.atmoPressure.val = v[0];
-  loadCurrentChartState(charts.atmoPressure);
+  loadCurrentChartState(charts.atmoPressure, mills);
 }
 
-function light(v, date) {
+function light(v, mills) {
   charts.light.val = v[0];
-  loadCurrentChartState(charts.light);
+  loadCurrentChartState(charts.light, mills);
 }
 
-function soluteTemperature(v, date) {
+function soluteTemperature(v, mills) {
   charts.soluteTemperature.val = v[0];
-  loadCurrentChartState(charts.soluteTemperature);
+  loadCurrentChartState(charts.soluteTemperature, mills);
 }
 
-function voltage(v, date) {
+function voltage(v, mills) {
   charts.voltage.val = v[0];
-  loadCurrentChartState(charts.voltage);
+  loadCurrentChartState(charts.voltage, mills);
 }
 
-function amperage(v, date) {
+function amperage(v, mills) {
   charts.amperage.val = v[0];
-  loadCurrentChartState(charts.amperage);
+  loadCurrentChartState(charts.amperage, mills);
 }
 
-function ph(v, date) {
+function ph(v, mills) {
   charts.ph.val = v[0];
-  loadCurrentChartState(charts.ph);
+  loadCurrentChartState(charts.ph, mills);
 }
 
 function init(config) {
@@ -741,6 +802,14 @@ function init(config) {
       charts[chart].dom.onclick = onclick;
     }
   }
+
+  stats.currentChart = 'airTemperature';  
 }
 
-init({"os":"android","charts":{"microphone":2,"accel":3,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
+init({"os":"browser","charts":{"microphone":2,"accel":3,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
+
+
+// showStatsPage();
+// microphone([40], 87400000)
+// accel([1, 2, 3]);
+// accel([5, 1, 2]);

@@ -9,4 +9,7 @@
     <string name="clear_recording">Сбросить</string>
 
     <string name="detectors_sleep_time_exception" formatted="false">Время должно быть в пределах от %s до %s сек.</string>
+    <string name="experiment_name">Название эксперимента</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отменить</string>
 </resources>
