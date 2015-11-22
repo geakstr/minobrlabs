@@ -1,6 +1,10 @@
 package ru.edu.asu.minobrlabs.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +26,7 @@ import ru.edu.asu.minobrlabs.db.entities.params.Accel;
 import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
+import ru.edu.asu.minobrlabs.sensors.SensorsService;
 import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.remote.RemoteSensorsManager;
 import ru.edu.asu.minobrlabs.webview.MainWebViewJavascriptInterface;
@@ -39,6 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean wasOnPause;
 
+    private Intent sensorsServiceIntent;
+
+    private final BroadcastReceiver sensorsServiceBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            System.out.println(intent.getStringExtra("counter"));
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +62,9 @@ public class MainActivity extends AppCompatActivity {
 
         localSensorsManager = new LocalSensorsManager();
         remoteSensorsManager = new RemoteSensorsManager();
+
+        sensorsServiceIntent = new Intent(this, SensorsService.class);
+        sensorsServiceIntent.putExtra("sleepTime", 200L);
 
         webView = createWebView("file:///android_asset/web/index.html", R.id.mainWebView, new WebViewPageFinishedCallback() {
             @Override
@@ -61,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        startService(sensorsServiceIntent);
+        registerReceiver(sensorsServiceBroadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
 
         localSensorsManager.registerListeners();
 
@@ -81,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
         localSensorsManager.unregisterListeners();
         localSensorsManager.stop();
         remoteSensorsManager.stop();
+
+        unregisterReceiver(sensorsServiceBroadcastReceiver);
+        stopService(sensorsServiceIntent);
     }
 
     @Override
