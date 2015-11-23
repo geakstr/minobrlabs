@@ -28,7 +28,6 @@ body {
     cursor: default;
 }
 
-
 .cf:before,
 .cf:after {
     content: " "; 
@@ -317,6 +316,11 @@ body {
 }
 #stats-page .filters td {
     text-align: left;
+    vertical-align: middle;    
+}
+#stats-page .filters td:first-child {
+    padding-left: 11px;
+    border-bottom: 1px solid #efefef;
 }
 #stats-page .filters input[type=radio] {
   display: none;
@@ -326,35 +330,24 @@ body {
 } 
 #stats-page .filters input[type="radio"] + span {
   display: block;
-  padding: 5px 3px;
-  margin-bottom: 11px;
-  border: 1px solid #666;
-  border-bottom-width: 2px;
-  text-align: center;
+  height: 100%;
+  padding: 11px;
   border-radius: 3px;
   cursor: pointer;
-  font-size: 12px;
-  line-height: 14px;
-  color: #666;
-  white-space: pre;
-}
-#stats-page .filters input[type="radio"]:not([disabled]) + span:hover {
-  border-color: #666;
-}
-#stats-page .filters input[type="radio"]:not([disabled]) + span:active {
-  position: relative;
-  top: 1px;
-  margin-bottom: 12px;
-  border-bottom-width: 1px;
-}
-#stats-page .filters input[type="radio"]:not([disabled]):checked + span {
+  font-size: 14px;
   color: blue;
-  border-color: blue;
+  font-weight: 700;
+  white-space: pre;
+  text-transform: uppercase;
 }
-#stats-page .filters input[type="radio"]:disabled + span {
-  cursor: default;
-  color: #ddd;
-  border-color: #ddd;
+#stats-page .filters input[type="radio"] + span:hover {
+  color: blue;
+}
+#stats-page .filters input[type="radio"] + span:active {
+  color: blue;
+}
+#stats-page .filters input[type="radio"]:checked + span {
+  color: green;
 }
 
 

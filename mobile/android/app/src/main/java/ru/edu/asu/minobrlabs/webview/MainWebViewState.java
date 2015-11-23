@@ -14,7 +14,7 @@ public class MainWebViewState {
         put(SensorTypes.GYRO.getName(), 1);
         put(SensorTypes.AIR_TEMPERATURE.getName(), 1);
         put(SensorTypes.HUMIDITY.getName(), 1);
-        put(SensorTypes.AIR_PRESSURE.getName(), 1);
+        put(SensorTypes.ATMO_PRESSURE.getName(), 1);
         put(SensorTypes.LIGHT.getName(), 1);
         put(SensorTypes.SOLUTE_TEMPERATURE.getName(), 1);
         put(SensorTypes.VOLTAGE.getName(), 1);

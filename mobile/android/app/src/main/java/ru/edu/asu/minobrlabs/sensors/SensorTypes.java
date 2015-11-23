@@ -2,7 +2,7 @@ package ru.edu.asu.minobrlabs.sensors;
 
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 import ru.edu.asu.minobrlabs.db.entities.params.Accel;
-import ru.edu.asu.minobrlabs.db.entities.params.AirPressure;
+import ru.edu.asu.minobrlabs.db.entities.params.AtmoPressure;
 import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
 import ru.edu.asu.minobrlabs.db.entities.params.Amperage;
 import ru.edu.asu.minobrlabs.db.entities.params.Gyro;
@@ -19,7 +19,7 @@ public enum SensorTypes {
     LIGHT("light", Light.class),
     GYRO("gyro", Gyro.class),
     ACCEL("accel", Accel.class),
-    AIR_PRESSURE("airPressure", AirPressure.class),
+    ATMO_PRESSURE("atmoPressure", AtmoPressure.class),
     AMPERAGE("amperage", Amperage.class),
     PH("ph", Ph.class),
     SOLUTE_TEMPERATURE("soluteTemperature", SoluteTemperature.class),

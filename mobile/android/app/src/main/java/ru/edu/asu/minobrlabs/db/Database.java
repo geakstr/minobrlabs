@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.entities.params.Accel;
-import ru.edu.asu.minobrlabs.db.entities.params.AirPressure;
+import ru.edu.asu.minobrlabs.db.entities.params.AtmoPressure;
 import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
 import ru.edu.asu.minobrlabs.db.entities.params.Amperage;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
@@ -35,7 +35,7 @@ public class Database extends SQLiteOpenHelper {
         cupboard().register(Microphone.class);
         cupboard().register(SoluteTemperature.class);
         cupboard().register(Ph.class);
-        cupboard().register(AirPressure.class);
+        cupboard().register(AtmoPressure.class);
         cupboard().register(Voltage.class);
         cupboard().register(Amperage.class);
     }

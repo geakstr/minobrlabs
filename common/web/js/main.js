@@ -331,24 +331,19 @@ stats = {
   },
   opts: {
     microphone: {
-      ylabel: charts.microphone.title + ' (' + charts.microphone.units + ')',
-      labels: ['Время', charts.microphone.units]
+      labels: ['Время', charts.microphone.title + ' (' + charts.microphone.units + ')']
     },
     accel: {
-      ylabel: charts.accel.title + ' (' + charts.accel.units + ')',
       labels: ['Время', 'X', 'Y', 'Z']
     },
     gyro: {
-      ylabel: charts.gyro.title + ' (' + charts.gyro.units + ')',
       labels: ['Время', 'X', 'Y', 'Z']
     },
     airTemperature: {
-      ylabel: charts.airTemperature.title + ' (' + charts.airTemperature.units + ')',
-      labels: ['Время', charts.airTemperature.title]
+      labels: ['Время', charts.airTemperature.title + ' (' + charts.airTemperature.units + ')']
     },
     humidity: {
-      ylabel: charts.humidity.title + ' (' + charts.humidity.units + ')',
-      labels: ['Время', charts.humidity.title]
+      labels: ['Время', charts.humidity.title + ' (' + charts.humidity.units + ')']
     },
   }
 };
@@ -401,20 +396,37 @@ function createDygraph() {
         document.getElementById("chart-stats"),
         stats.data[stats.currentChart],
         {
-          drawPoints: true,
-          ylabel: stats.opts[stats.currentChart].ylabel,
+          legend: "always",
+          drawPoints: false,
           labels: stats.opts[stats.currentChart].labels,
           axes: {
             x: {
               axisLabelFormatter: function (d, gran) {
-                return Dygraph.zeropad(d.getHours()) + ":" + Dygraph.zeropad(d.getMinutes()) + ":" + Dygraph.zeropad(d.getSeconds());
+                var hours = Dygraph.zeropad(d.getHours());
+                var mins = Dygraph.zeropad(d.getMinutes());
+                var secs = Dygraph.zeropad(d.getSeconds());
+                return hours + ":" + mins + ":" + secs;
               },
               valueFormatter: function (ms) {
                 var d = new Date(ms);
-                return ("0" + d.getDate()).slice(-2) + "-" + ("0"+(d.getMonth()+1)).slice(-2) + "-" + d.getFullYear() + " " + ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2) + ":" + ("0" + d.getSeconds()).slice(-2);
+                var date = Dygraph.zeropad(d.getDate());
+                var month = Dygraph.zeropad(d.getMonth() + 1);
+                var year = d.getFullYear();
+                var hours = Dygraph.zeropad(d.getHours());
+                var mins = Dygraph.zeropad(d.getMinutes());
+                var secs = Dygraph.zeropad(d.getSeconds());
+                return date + "." + month + "." + year + " " + hours + ":" + mins + ":" + secs;
               }
             }
-          }
+          },
+          interactionModel:{ 
+            mousedown: Dygraph.defaultInteractionModel.mousedown, 
+            mousemove: Dygraph.defaultInteractionModel.mousemove, 
+            mouseup: Dygraph.defaultInteractionModel.mouseup, 
+            touchstart: CustomDygraphsInteractionModel.startTouch, 
+            touchend: CustomDygraphsInteractionModel.endTouch, 
+            touchmove: CustomDygraphsInteractionModel.moveTouch
+          } 
         }
     );
   }
@@ -661,6 +673,10 @@ function loadCurrentChartState(chart, mills) {
   }
 
   if (stats.mode === 'realtime') {
+    if (typeof mills === 'undefined') {
+      return;
+    }
+
     stats.data[chart.name].push([new Date(mills)].concat(chart.val));
 
     if (pages.active === 'statsPage') {
@@ -772,7 +788,7 @@ function ph(v, mills) {
 }
 
 function init(config) {
-  var onclick, chart, idx;
+  var chartOnClick, filterOnClick, chart, idx, i, l;
 
   os = config.os;
 
@@ -784,7 +800,7 @@ function init(config) {
     }
   }
 
-  onclick = function(e) {
+  chartOnClick = function(e) {
     var node, id;
 
     node = e.target;
@@ -799,17 +815,30 @@ function init(config) {
   
   for (chart in charts) {
     if (charts.hasOwnProperty(chart)) {
-      charts[chart].dom.onclick = onclick;
+      charts[chart].dom.onclick = chartOnClick;
     }
   }
 
-  stats.currentChart = 'airTemperature';  
+  stats.currentChart = 'microphone';  
+
+
+  filterOnClick = function(e) {
+    var param = e.target.value;
+    stats.currentChart = param;
+    createDygraph();
+  };
+
+  var filters = document.getElementsByName("filter");
+  for (i = 0, l = filters.length; i < l; i++) {
+    filters[i].onclick = filterOnClick;
+  }
 }
 
-init({"os":"browser","charts":{"microphone":2,"accel":3,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
+//init({"os":"browser","charts":{"microphone":2,"accel":3,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
 
-
-// showStatsPage();
-// microphone([40], 87400000)
-// accel([1, 2, 3]);
-// accel([5, 1, 2]);
+if (os === 'browser') {
+  showStatsPage();
+  microphone([40], 87400000);
+  // accel([1, 2, 3]);
+  // accel([5, 1, 2]);
+}

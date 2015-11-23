@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
         localSensorsManager = new LocalSensorsManager();
         remoteSensorsManager = new RemoteSensorsManager();
 
-        sensorsServiceIntent = new Intent(this, SensorsService.class);
-        sensorsServiceIntent.putExtra("sleepTime", 200L);
+//        sensorsServiceIntent = new Intent(this, SensorsService.class);
+//        sensorsServiceIntent.putExtra("sleepTime", 200L);
 
         webView = createWebView("file:///android_asset/web/index.html", R.id.mainWebView, new WebViewPageFinishedCallback() {
             @Override
@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        startService(sensorsServiceIntent);
-        registerReceiver(sensorsServiceBroadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
+//        startService(sensorsServiceIntent);
+//        registerReceiver(sensorsServiceBroadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
 
         localSensorsManager.registerListeners();
 
@@ -102,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
         localSensorsManager.stop();
         remoteSensorsManager.stop();
 
-        unregisterReceiver(sensorsServiceBroadcastReceiver);
-        stopService(sensorsServiceIntent);
+//        unregisterReceiver(sensorsServiceBroadcastReceiver);
+//        stopService(sensorsServiceIntent);
     }
 
     @Override

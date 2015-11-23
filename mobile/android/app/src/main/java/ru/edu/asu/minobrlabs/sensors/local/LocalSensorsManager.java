@@ -8,6 +8,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
+import java.util.Date;
+
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.entities.params.Accel;
 import ru.edu.asu.minobrlabs.db.entities.params.Gyro;
@@ -28,8 +30,12 @@ public class LocalSensorsManager implements SensorEventListener {
     private final MicrophoneSensorManager microphoneSensorManager;
 
     // Store prev values for low pass filter
-    private float[] accel;
-    private float[] gyro;
+    private float[] accel = new float[3];
+    private float[] gyro = new float[3];
+
+    private long prevLightTime = new Date().getTime();
+    private long prevAccelTime = new Date().getTime();
+    private long prevGyroTime = new Date().getTime();
 
     public LocalSensorsManager() {
         sensorManager = (SensorManager) App.getInstance().getSystemService(Context.SENSOR_SERVICE);
@@ -70,20 +76,28 @@ public class LocalSensorsManager implements SensorEventListener {
         }
         SensorTypes type = null;
         final Bundle bundle = new Bundle();
+        final long currentTime = new Date().getTime();
         switch (event.sensor.getType()) {
             case Sensor.TYPE_LIGHT:
-                type = SensorTypes.LIGHT;
-                bundle.putSerializable(SensorCallback.bundleKey, new Light(vals));
+                if (currentTime - prevLightTime >= 100) {
+                    type = SensorTypes.LIGHT;
+                    bundle.putSerializable(SensorCallback.bundleKey, new Light(vals));
+                }
                 break;
             case Sensor.TYPE_GYROSCOPE:
-                type = SensorTypes.GYRO;
-                gyro = AbstractSensorManager.lowPass(vals.clone(), gyro, 0.75f);
-                bundle.putSerializable(SensorCallback.bundleKey, new Gyro(gyro));
+                if (currentTime - prevGyroTime >= 100) {
+                    type = SensorTypes.GYRO;
+                    gyro = AbstractSensorManager.lowPass(vals.clone(), gyro, 0.75f);
+                    bundle.putSerializable(SensorCallback.bundleKey, new Gyro(gyro));
+                }
                 break;
             case Sensor.TYPE_ACCELEROMETER:
-                type = SensorTypes.ACCEL;
-                accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.5f);
-                bundle.putSerializable(SensorCallback.bundleKey, new Accel(accel));
+                if (currentTime - prevAccelTime >= 100) {
+                    type = SensorTypes.ACCEL;
+                    accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.5f);
+                    bundle.putSerializable(SensorCallback.bundleKey, new Accel(accel));
+                    prevAccelTime = currentTime;
+                }
                 break;
             default:
                 break;

@@ -93,7 +93,8 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
 
     private int getDecibel() {
         // Db
-        return (int) (20 * Math.log10(getPressure() / 0.00002)); // Convert pressure to dB (SPL)
+        int db = (int) (20 * Math.log10(getPressure() / 0.00002)); // Convert pressure to dB (SPL)
+        return db < 0 ? 40 : db;
     }
 
     private static class MicrophoneSensorHandler extends Handler {

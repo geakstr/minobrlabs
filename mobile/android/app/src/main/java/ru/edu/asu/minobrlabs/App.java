@@ -6,15 +6,12 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
-import java.util.Arrays;
-
 import ru.edu.asu.minobrlabs.db.Database;
 import ru.edu.asu.minobrlabs.db.TemporaryStorage;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
-import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 import ru.edu.asu.minobrlabs.db.entities.params.Accel;
-import ru.edu.asu.minobrlabs.db.entities.params.AirPressure;
+import ru.edu.asu.minobrlabs.db.entities.params.AtmoPressure;
 import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
 import ru.edu.asu.minobrlabs.db.entities.params.Amperage;
 import ru.edu.asu.minobrlabs.db.entities.params.Gyro;
@@ -40,7 +37,7 @@ public class App extends Application {
 
         Dao.deleteAll(Experiment.class);
         Dao.deleteAll(Accel.class);
-        Dao.deleteAll(AirPressure.class);
+        Dao.deleteAll(AtmoPressure.class);
         Dao.deleteAll(AirTemperature.class);
         Dao.deleteAll(Amperage.class);
         Dao.deleteAll(Gyro.class);

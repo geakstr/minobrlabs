@@ -93,21 +93,61 @@
             <td style="vertical-align: middle">
                 <table class="charts-table">
                     <tr class="filters">
-                        <td style="padding: 11px; vertical-align: top;">
+                        <td class="filter">
                             <label><input type="radio" name="filter" value="microphone"><span>Звуковое давление</span></label>
-                            <label><input type="radio" name="filter" value="accel"><span>Перегрузка</span></label>
-                            <label><input type="radio" name="filter" value="gyro"><span>Частота вращения</span></label>
-                            <label><input type="radio" name="filter" value="airTemperature"><span>Температура воздуха</span></label>
-                            <label><input type="radio" name="filter" value="humidity"><span>Относительная влажность</span></label>
-                            <label><input type="radio" name="filter" value="atmoPressure"><span>Атмосферное давление</span></label>
-                            <label><input type="radio" name="filter" value="light"><span>Освещенность</span></label>
-                            <label><input type="radio" name="filter" value="soluteTemperature"><span>Температура раствора</span></label>
-                            <label><input type="radio" name="filter" value="voltage"><span>Напряжение</span></label>
-                            <label><input type="radio" name="filter" value="amperage"><span>Сила тока</span></label>
-                            <label><input type="radio" name="filter" value="ph"><span>Водородный показатель</span></label>
                         </td>
-                        <td style="width: 100%;">
+                        <td rowspan="11" style="width: 100%;">
                             <div id="chart-stats">Нет данных</div>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="accel"><span>Перегрузка</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="gyro"><span>Частота вращения</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="airTemperature"><span>Температура воздуха</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="humidity"><span>Относительная влажность</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="atmoPressure"><span>Атмосферное давление</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="light"><span>Освещенность</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="soluteTemperature"><span>Температура раствора</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="voltage"><span>Напряжение</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="amperage"><span>Сила тока</span></label>
+                        </td>
+                    </tr>
+                    <tr class="filters">
+                        <td>
+                            <label><input type="radio" name="filter" value="ph"><span>Водородный показатель</span></label>
                         </td>
                     </tr>
                 </table>
@@ -121,6 +161,7 @@
 <script src="vendor/c3.min.js"></script>
 <script src="vendor/dygraph.min.js"></script>
 
+<script src="js/custom-dygraphs-interaction-model.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
