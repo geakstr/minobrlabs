@@ -1,10 +1,6 @@
 package ru.edu.asu.minobrlabs.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -15,26 +11,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
-import nl.qbusict.cupboard.QueryResultIterable;
+import com.google.gson.Gson;
+
+import java.util.List;
+
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
-import ru.edu.asu.minobrlabs.db.entities.params.Accel;
-import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
-import ru.edu.asu.minobrlabs.sensors.SensorsService;
 import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.remote.RemoteSensorsManager;
 import ru.edu.asu.minobrlabs.webview.MainWebViewJavascriptInterface;
 import ru.edu.asu.minobrlabs.webview.WebViewPageFinishedCallback;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private Menu menu;
 
     private WebView webView;
@@ -44,14 +39,14 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean wasOnPause;
 
-    private Intent sensorsServiceIntent;
+//    private Intent sensorsServiceIntent;
 
-    private final BroadcastReceiver sensorsServiceBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            System.out.println(intent.getStringExtra("counter"));
-        }
-    };
+//    private final BroadcastReceiver sensorsServiceBroadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            System.out.println(intent.getStringExtra("counter"));
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
 
+        menu.findItem(R.id.action_experiments).setVisible(true);
+
+        menu.findItem(R.id.action_repeat).setVisible(false);
+
         menu.findItem(R.id.action_clear_recording).setVisible(false);
         menu.findItem(R.id.action_persist_recording).setVisible(false);
 
@@ -127,19 +126,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_to_string_stat:
-                final QueryResultIterable<Experiment> experiments = Dao.findAll(Experiment.class);
-                final QueryResultIterable<Accel> accels = Dao.findAll(Accel.class);
-                final QueryResultIterable<AirTemperature> airTemps = Dao.findAll(AirTemperature.class);
-                for (Experiment experiment : experiments) {
-                    System.out.println(experiment.toString());
-                }
-                for (Accel accel : accels) {
-                    System.out.println(accel.toString());
-                }
-                for (AirTemperature airTemp : airTemps) {
-                    System.out.println(airTemp.toString());
-                }
+            case R.id.action_experiments:
+                createExperimentsListDialog().show();
+                break;
+            case R.id.action_repeat:
+                webView.loadUrl("javascript:setRealtime()");
+                menu.findItem(R.id.action_repeat).setVisible(false);
+                menu.findItem(R.id.action_start_recording).setVisible(true);
                 break;
             case R.id.action_to_stats:
                 webView.loadUrl("javascript:showStatsPage()");
@@ -155,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                 App.temporaryStorage().startRecording();
                 webView.loadUrl("javascript:isRecording(true)");
 
+                menu.findItem(R.id.action_experiments).setVisible(false);
                 menu.findItem(R.id.action_start_recording).setVisible(false);
                 menu.findItem(R.id.action_stop_recording).setVisible(true);
                 menu.findItem(R.id.action_persist_recording).setVisible(false);
@@ -164,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 App.temporaryStorage().stopRecording();
                 webView.loadUrl("javascript:isRecording(false)");
 
+                menu.findItem(R.id.action_experiments).setVisible(false);
                 menu.findItem(R.id.action_start_recording).setVisible(true);
                 menu.findItem(R.id.action_stop_recording).setVisible(false);
                 menu.findItem(R.id.action_persist_recording).setVisible(true);
@@ -171,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_persist_recording:
                 createExperimentDialog().show();
+                menu.findItem(R.id.action_experiments).setVisible(true);
                 menu.findItem(R.id.action_persist_recording).setVisible(false);
                 menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
@@ -178,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 App.temporaryStorage().clear();
                 webView.loadUrl("javascript:clear()");
 
+                menu.findItem(R.id.action_experiments).setVisible(true);
                 menu.findItem(R.id.action_persist_recording).setVisible(false);
                 menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
@@ -203,6 +200,33 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
+            }
+        });
+        return builder;
+    }
+
+    private AlertDialog.Builder createExperimentsListDialog() {
+        final ArrayAdapter<Object> adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
+        final List experiments = Dao.findAll(Experiment.class);
+        for (final Object experiment : experiments) {
+            adapter.add(experiment);
+        }
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.experiments));
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final Experiment experiment = (Experiment) adapter.getItem(which);
+
+                final String stats = new Gson().toJson(Dao.findByExperiment(experiment));
+
+                webView.loadUrl(String.format("javascript:loadExperiment('%s', %s)", experiment.name, stats));
+
+                menu.findItem(R.id.action_to_main).setVisible(true);
+                menu.findItem(R.id.action_repeat).setVisible(true);
+                menu.findItem(R.id.action_to_stats).setVisible(false);
+                menu.findItem(R.id.action_start_recording).setVisible(false);
             }
         });
         return builder;

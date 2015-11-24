@@ -2,28 +2,48 @@ package ru.edu.asu.minobrlabs.db.dao;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import nl.qbusict.cupboard.QueryResultIterable;
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
+import ru.edu.asu.minobrlabs.db.entities.GenericParam;
+import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 import static nl.qbusict.cupboard.CupboardFactory.cupboard;
 
 public class Dao {
-    public static QueryResultIterable findAll(final Class clazz) {
+    public static List findAll(final Class clazz) {
         return cupboard().withDatabase(App.db().conn())
                 .query(clazz)
-                .query();
+                .query().list();
     }
 
-    public static QueryResultIterable findByDateRange(final Class clazz, final Long from, final Long to) {
+    public static Map<String, List<Object>> findByExperiment(final Experiment experiment) {
+        final String id = experiment._id.toString();
+
+        final Map<String, List<Object>> map = new HashMap<>();
+        for (final SensorTypes sensorType : SensorTypes.values()) {
+            final String name = sensorType.getName();
+            final Class clazz = sensorType.getClazz();
+
+            map.put(name, cupboard().withDatabase(App.db().conn())
+                    .query(clazz)
+                    .withSelection("experimentId = ?", id)
+                    .query().list());
+        }
+        return map;
+    }
+
+    public static List findByDateRange(final Class clazz, final Long from, final Long to) {
         return cupboard().withDatabase(App.db().conn())
                 .query(clazz)
                 .withSelection("date >= ? and date <= ?", from.toString(), to.toString())
-                .query();
+                .query().list();
     }
 
-    public static QueryResultIterable findByDateRange(final Class clazz, final Date from, final Date to) {
+    public static List findByDateRange(final Class clazz, final Date from, final Date to) {
         return findByDateRange(clazz, from.getTime(), to.getTime());
     }
 
@@ -43,8 +63,8 @@ public class Dao {
         cupboard().withDatabase(App.db().conn()).delete(clazz, id);
     }
 
-    public static void deleteByName(final Class clazz, final Experiment experiment) {
-        cupboard().withDatabase(App.db().conn()).delete(clazz, "experiment = ?", experiment._id.toString());
+    public static void deleteByExperimentId(final Class clazz, final Experiment experiment) {
+        cupboard().withDatabase(App.db().conn()).delete(clazz, "experimentId = ?", experiment._id.toString());
     }
 
     public static void deleteAll(final Class clazz) {

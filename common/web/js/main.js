@@ -349,10 +349,18 @@ stats = {
 };
 
 function showMainPage() {
+  var chart;
+
   pages.active = 'mainPage';
 
   pages.mainPage.style.display = 'block';
   pages.statsPage.style.display = 'none';
+
+  for (chart in charts) {
+    if (charts.hasOwnProperty(chart)) {
+      createCurrentChartState(charts[chart]);
+    }
+  }
 }
 
 function showStatsPage() {
@@ -378,6 +386,12 @@ function clear() {
     amperage: [],
     ph: []
   };
+}
+
+function setRealtime() {
+  stats.mode = "realtime";
+  clear();
+  createDygraph();  
 }
 
 function isRecording(flag) {
@@ -678,7 +692,6 @@ function loadCurrentChartState(chart, mills) {
     }
 
     stats.data[chart.name].push([new Date(mills)].concat(chart.val));
-
     if (pages.active === 'statsPage') {
       if (chart.name === stats.currentChart) {
         if (null === stats.chart) {
@@ -692,6 +705,26 @@ function loadCurrentChartState(chart, mills) {
     }
   }
 }
+
+function loadExperiment(name, data) {
+  var stat;
+
+  stats.mode = 'experiment';
+  showStatsPage();
+
+  for (stat in data) {
+    if (data.hasOwnProperty(stat)) {
+      stats.data[stat] = data[stat].map(function(a) {
+        return [new Date(a.date)].concat(JSON.parse(a.vals));
+      });
+    }
+  }
+
+  stats.chart.updateOptions({
+    'file': stats.data[stats.currentChart]
+  });
+} 
+
 function createNextChartState(chart) {
   chart.state.curIndex++;
 
