@@ -432,17 +432,19 @@ function createDygraph() {
                 return date + "." + month + "." + year + " " + hours + ":" + mins + ":" + secs;
               }
             }
-          },
-          interactionModel:{ 
-            mousedown: Dygraph.defaultInteractionModel.mousedown, 
-            mousemove: Dygraph.defaultInteractionModel.mousemove, 
-            mouseup: Dygraph.defaultInteractionModel.mouseup, 
-            touchstart: CustomDygraphsInteractionModel.startTouch, 
-            touchend: CustomDygraphsInteractionModel.endTouch, 
-            touchmove: CustomDygraphsInteractionModel.moveTouch
-          } 
+          }
         }
     );
+    stats.chart.updateOptions({
+      interactionModel:{
+        mousedown: Dygraph.defaultInteractionModel.mousedown, 
+        mousemove: Dygraph.defaultInteractionModel.mousemove, 
+        mouseup: Dygraph.defaultInteractionModel.mouseup, 
+        touchstart: CustomDygraphsInteractionModel.startTouch, 
+        touchend: CustomDygraphsInteractionModel.endTouch, 
+        touchmove: CustomDygraphsInteractionModel.moveTouch
+      } 
+    });
   }
 }
 
@@ -872,6 +874,9 @@ function init(config) {
 if (os === 'browser') {
   showStatsPage();
   microphone([40], 87400000);
+  microphone([50], 87400100);
+  microphone([60], 87400200);
+  microphone([10], 87400300);
   // accel([1, 2, 3]);
   // accel([5, 1, 2]);
 }
