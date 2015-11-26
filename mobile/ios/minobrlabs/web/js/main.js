@@ -440,6 +440,7 @@ function createDygraph() {
       labels: stats.opts[stats.currentChart].labels,
       includeZero: true,
       animatedZooms: true,
+      dateWindow: getStatsChartDateWindow(charts[stats.currentChart]),
       axes: {
         x: {
           axisLabelFormatter: function (d, gran) {
@@ -479,6 +480,12 @@ function createDygraph() {
     stats.chart = null;
     stats.dom.chart.innerHTML = '<div class="message">Нет данных</div>';
   }
+}
+function getStatsChartDateWindow(chart) {
+  var data = stats.data[chart.name];
+  var lastDate = data[data.length - 1][0].getTime();
+  var startDate = new Date(lastDate - 60000);
+  return [startDate, new Date(lastDate)];
 }
 function createParamsState() {
   stats.dom.params.innerHTML = '';
@@ -801,7 +808,8 @@ function loadCurrentChartState(chart, mills) {
           createDygraph();
         } else {
           stats.chart.updateOptions({
-            'file': stats.data[chart.name]
+            'file': stats.data[chart.name],
+            'dateWindow': getStatsChartDateWindow(chart),
           });
         }
       }
