@@ -438,6 +438,8 @@ function createDygraph() {
       legend: "always",
       drawPoints: false,
       labels: stats.opts[stats.currentChart].labels,
+      includeZero: true,
+      animatedZooms: true,
       axes: {
         x: {
           axisLabelFormatter: function (d, gran) {
@@ -472,7 +474,7 @@ function createDygraph() {
         stats.dom.chart,
         stats.data[stats.currentChart],
         opts
-    );
+    );    
   } else {
     stats.chart = null;
     stats.dom.chart.innerHTML = '<div class="message">Нет данных</div>';
@@ -500,6 +502,32 @@ function addParamToParamsState(param) {
   stats.dom.params.appendChild(li);
 
   return input;
+}
+function barChartPlotter(e) {
+  var ctx = e.drawingContext;
+  var points = e.points;
+  var y_bottom = e.dygraph.toDomYCoord(0);
+
+  ctx.fillStyle = e.color;
+
+  // Find the minimum separation between x-values.
+  // This determines the bar width.
+  var min_sep = Infinity;
+  for (var i = 1; i < points.length; i++) {
+    var sep = points[i].canvasx - points[i - 1].canvasx;
+    if (sep < min_sep) min_sep = sep;
+  }
+  var bar_width = Math.floor(2.0 / 3 * min_sep);
+
+  // Do the actual plotting.
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    var center_x = p.canvasx;
+
+    ctx.fillRect(center_x - bar_width / 2, p.canvasy, bar_width, y_bottom - p.canvasy);
+
+    ctx.strokeRect(center_x - bar_width / 2, p.canvasy, bar_width, y_bottom - p.canvasy);
+  }
 }
 
 function createDisabledContainer(chart) {
@@ -903,7 +931,7 @@ function ph(v, mills) {
 }
 
 function init(config) {
-  var chartOnClick, paramOnClick, chart, idx, i, l;
+  var chartOnClick, paramOnClick, chartTypesRadioOnClick, chart, idx, i, l;
 
   os = config.os;
   stats.currentChart = stats.currentChart ? stats.currentChart : 'microphone';  
@@ -947,6 +975,17 @@ function init(config) {
       }
     }
   }
+
+  chartTypesRadioOnClick = function(e) {
+    var type = e.target.value;
+    stats.chart.updateOptions({
+      'plotter' : type === 'line' ? null : barChartPlotter
+    });
+  };
+  var chartTypesRadio = document.getElementsByName("chart-stats-type");
+  for (i = 0, l = chartTypesRadio.length; i < l; i++) {
+    chartTypesRadio[i].onclick = chartTypesRadioOnClick;
+  }
 }
 
 //init({"os":"browser","charts":{"microphone":1,"accel":-1,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
@@ -954,9 +993,9 @@ function init(config) {
 if (os === 'browser') {
   showStatsPage();
   microphone([40], 87400000);
-  microphone([50], 87400100);
-  microphone([60], 87400200);
-  microphone([10], 87400300);
+  microphone([50], 97500000);
+  microphone([60], 107600200);
+  microphone([10], 117700300);
   // accel([1, 2, 3]);
   // accel([5, 1, 2]);
 }

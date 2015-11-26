@@ -322,6 +322,27 @@ body {
     height: 100%;
 }
 
+#stats-page #chart-stats-types {
+    position: absolute; 
+    left: 57px;
+    z-index: 9999;
+    text-align: center;
+    line-height: 12px;
+    font-size: 14px;
+}
+#stats-page #chart-stats-types label {
+    display: inline-block;
+    padding: 0 11px 33px 11px;
+}
+#stats-page #chart-stats-types input {
+    position: relative;
+    top: 2px;
+}
+#stats-page #chart-stats-types span {
+    margin-right: 11px;
+    padding-left: 4px;
+}
+
 #stats-page #chart-stats {
     position: relative;
     width: 100%;
