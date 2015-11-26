@@ -8,6 +8,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
+import com.google.gson.Gson;
+
 import java.util.Date;
 
 import ru.edu.asu.minobrlabs.App;
@@ -18,6 +20,7 @@ import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
+import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class LocalSensorsManager implements SensorEventListener {
     private ISensorCallback callback;
@@ -47,21 +50,50 @@ public class LocalSensorsManager implements SensorEventListener {
     }
 
     public void registerListeners() {
+        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+
         if (null != sensorLight) {
             sensorManager.registerListener(this, sensorLight, SensorManager.SENSOR_DELAY_NORMAL);
+            if (state.charts.get(SensorTypes.LIGHT.getName()) == -1) {
+                state.charts.put(SensorTypes.LIGHT.getName(), 1);
+            }
+        } else {
+            state.charts.put(SensorTypes.LIGHT.getName(), -1);
         }
 
         if (null != sensorGyro) {
             sensorManager.registerListener(this, sensorGyro, SensorManager.SENSOR_DELAY_NORMAL);
+            if (state.charts.get(SensorTypes.GYRO.getName()) == -1) {
+                state.charts.put(SensorTypes.GYRO.getName(), 1);
+            }
+        } else {
+            state.charts.put(SensorTypes.GYRO.getName(), -1);
         }
 
         if (null != sensorAccel) {
             sensorManager.registerListener(this, sensorAccel, SensorManager.SENSOR_DELAY_NORMAL);
+            if (state.charts.get(SensorTypes.ACCEL.getName()) == -1) {
+                state.charts.put(SensorTypes.ACCEL.getName(), 1);
+            }
+        } else {
+            state.charts.put(SensorTypes.ACCEL.getName(), -1);
         }
+
+        sendInitStateBundle(state);
     }
 
     public void unregisterListeners() {
         sensorManager.unregisterListener(this);
+    }
+
+    private void sendInitStateBundle(final MainWebViewState state) {
+        App.Preferences.writeMainWebViewState(state);
+        if (null != callback) {
+            final Bundle bundle = new Bundle();
+            bundle.putBoolean(SensorCallback.bundleInitKey, true);
+            bundle.putString(SensorCallback.bundleInitState, new Gson().toJson(state));
+            callback.onReceiveResult(Activity.RESULT_OK, bundle);
+        }
     }
 
     @Override
@@ -81,21 +113,21 @@ public class LocalSensorsManager implements SensorEventListener {
             case Sensor.TYPE_LIGHT:
                 if (currentTime - prevLightTime >= 100) {
                     type = SensorTypes.LIGHT;
-                    bundle.putSerializable(SensorCallback.bundleKey, new Light(vals));
+                    bundle.putSerializable(SensorCallback.bundleStatKey, new Light(vals));
                 }
                 break;
             case Sensor.TYPE_GYROSCOPE:
                 if (currentTime - prevGyroTime >= 100) {
                     type = SensorTypes.GYRO;
                     gyro = AbstractSensorManager.lowPass(vals.clone(), gyro, 0.75f);
-                    bundle.putSerializable(SensorCallback.bundleKey, new Gyro(gyro));
+                    bundle.putSerializable(SensorCallback.bundleStatKey, new Gyro(gyro));
                 }
                 break;
             case Sensor.TYPE_ACCELEROMETER:
                 if (currentTime - prevAccelTime >= 100) {
                     type = SensorTypes.ACCEL;
                     accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.5f);
-                    bundle.putSerializable(SensorCallback.bundleKey, new Accel(accel));
+                    bundle.putSerializable(SensorCallback.bundleStatKey, new Accel(accel));
                     prevAccelTime = currentTime;
                 }
                 break;
@@ -106,7 +138,7 @@ public class LocalSensorsManager implements SensorEventListener {
             return;
         }
 
-        bundle.putSerializable(SensorCallback.bundleType, type);
+        bundle.putSerializable(SensorCallback.bundleStatType, type);
         callback.onReceiveResult(Activity.RESULT_OK, bundle);
     }
 

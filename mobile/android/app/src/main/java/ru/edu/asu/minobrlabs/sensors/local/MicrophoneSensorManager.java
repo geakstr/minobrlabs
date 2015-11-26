@@ -7,11 +7,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
+import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.entities.params.Microphone;
 import ru.edu.asu.minobrlabs.sensors.AbstractSensorManager;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
+import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class MicrophoneSensorManager extends AbstractSensorManager {
     private MediaRecorder mediaRecorder;
@@ -27,8 +31,8 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
     public void run() {
         while (isRunning()) {
             final Bundle bundle = new Bundle();
-            bundle.putSerializable(SensorCallback.bundleKey, new Microphone(new float[]{getDecibel()}));
-            bundle.putSerializable(SensorCallback.bundleType, SensorTypes.MICROPHONE_DB);
+            bundle.putSerializable(SensorCallback.bundleStatKey, new Microphone(new float[]{getDecibel()}));
+            bundle.putSerializable(SensorCallback.bundleStatType, SensorTypes.MICROPHONE_DB);
 
             microphoneSensorHandler.apply(bundle);
 
@@ -58,6 +62,7 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
             return;
         }
 
+        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
         try {
             mediaRecorder = new MediaRecorder();
 
@@ -70,8 +75,19 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
 
             mediaRecorder.prepare();
             mediaRecorder.start();
+
+            if (state.charts.get(SensorTypes.MICROPHONE_DB.getName()) == -1) {
+                state.charts.put(SensorTypes.MICROPHONE_DB.getName(), 1);
+            }
         } catch (Exception e) {
-            Log.e(tag, e.getMessage(), e);
+            // Log.e(tag, e.getMessage(), e);
+            state.charts.put(SensorTypes.LIGHT.getName(), -1);
+        } finally {
+            App.Preferences.writeMainWebViewState(state);
+            final Bundle bundle = new Bundle();
+            bundle.putBoolean(SensorCallback.bundleInitKey, true);
+            bundle.putString(SensorCallback.bundleInitState, new Gson().toJson(state));
+            microphoneSensorHandler.apply(bundle);
         }
     }
 
@@ -111,7 +127,7 @@ public class MicrophoneSensorManager extends AbstractSensorManager {
         @Override
         public void handleMessage(final Message msg) {
             final Bundle bundle = msg.getData().getBundle("bundle");
-            if (null != bundle) {
+            if (null != callback && null != bundle) {
                 callback.onReceiveResult(Activity.RESULT_OK, bundle);
             }
         }

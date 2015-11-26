@@ -25,7 +25,7 @@ CustomDygraphsInteractionModel = {
       context.initialPinchCenter = touches[0];
       context.touchDirections = { x: true, y: true };
 
-      var width = document.querySelector("#stats-page .filter").offsetWidth;
+      var width = document.querySelector("#stats-page #params").offsetWidth;
       var closestTouchP = g.findClosestPoint(touches[0].pageX - width, touches[0].pageY); 
       if (closestTouchP) { 
         var selectionChanged = g.setSelection(closestTouchP.row, closestTouchP.seriesName); 

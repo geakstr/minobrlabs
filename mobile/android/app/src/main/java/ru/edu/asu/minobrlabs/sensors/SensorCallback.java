@@ -4,12 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
 
+import com.google.gson.Gson;
+
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
+import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class SensorCallback implements ISensorCallback {
-    public static final String bundleKey = "stat";
-    public static final String bundleType = "type";
+    public static final String bundleInitKey = "init";
+    public static final String bundleInitState = "state";
+    public static final String bundleStatKey = "stat";
+    public static final String bundleStatType = "type";
 
     private final WebView webView;
 
@@ -23,12 +28,25 @@ public class SensorCallback implements ISensorCallback {
             return;
         }
 
-        final GenericParam stat = (GenericParam) bundle.getSerializable(bundleKey);
+        // If we want re-init webview state
+        final boolean init = bundle.getBoolean(bundleInitKey, false);
+        if (init) {
+            final String state = bundle.getString(bundleInitState);
+            if (null == state) {
+                return;
+            }
+
+            webView.loadUrl(String.format("javascript:init(%s)", state));
+            return;
+        }
+
+        // If we get new stat
+        final GenericParam stat = (GenericParam) bundle.getSerializable(bundleStatKey);
         if (null == stat) {
             return;
         }
 
-        final SensorTypes sensorType = (SensorTypes) bundle.getSerializable(bundleType);
+        final SensorTypes sensorType = (SensorTypes) bundle.getSerializable(bundleStatType);
         if (null == sensorType) {
             return;
         }

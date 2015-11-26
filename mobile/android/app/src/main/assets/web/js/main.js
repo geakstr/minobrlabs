@@ -8,7 +8,7 @@
 // state = 4 - horizontal bar
 // state = 5 - vertical bar
 
-var pages, charts, stats, xyzAxises, utils, os;
+var pages, charts, chartsOrder, stats, xyzAxises, utils, os;
 
 var i = 0;
 
@@ -31,6 +31,8 @@ pages = {
   mainPage: document.getElementById('main-page'),
   statsPage: document.getElementById('stats-page')
 };
+
+chartsOrder = ['microphone', 'accel', 'gyro', 'light', 'airTemperature', 'humidity', 'atmoPressure', 'soluteTemperature', 'voltage', 'amperage', 'ph'];
 
 charts = {
   'microphone': {
@@ -55,8 +57,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   },
   'accel': {
@@ -77,8 +79,8 @@ charts = {
       max: 2
     },
     state : {
-      curIndex : 1,
-      states : [0, 3]
+      curIndex : 2,
+      states : [-1, 0, 3]
     }
   },
   'gyro': {
@@ -96,8 +98,8 @@ charts = {
       max: 1      
     },
     state : {
-      curIndex : 1,
-      states : [0, 3]
+      curIndex : 2,
+      states : [-1, 0, 3]
     }
   },
   'airTemperature': {
@@ -122,8 +124,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   },
   'humidity': {
@@ -148,8 +150,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   },    
   'atmoPressure': {
@@ -174,8 +176,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   },
   'light': {
@@ -200,8 +202,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   },
   'soluteTemperature': {
@@ -226,8 +228,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   },
   'voltage': {
@@ -252,8 +254,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   },
   'amperage': {
@@ -278,8 +280,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   },
   'ph': {
@@ -304,8 +306,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 1,
-      states : [0, 1, 2, 4, 5]
+      curIndex : 2,
+      states : [-1, 0, 1, 2, 4, 5]
     }
   }
 };
@@ -316,6 +318,10 @@ stats = {
   currentChart: null,
   recording: false,
   mode: 'realtime', // "realtime" or "experiment"
+  dom: {
+    params: document.getElementById("params"),
+    chart: document.getElementById("chart-stats")
+  },
   data: {
     microphone: [],
     accel: [],
@@ -345,6 +351,24 @@ stats = {
     humidity: {
       labels: ['Время', charts.humidity.title + ' (' + charts.humidity.units + ')']
     },
+    atmoPressure: {
+      labels: ['Время', charts.atmoPressure.title + ' (' + charts.atmoPressure.units + ')']
+    },
+    light: {
+      labels: ['Время', charts.light.title + ' (' + charts.light.units + ')']
+    },
+    soluteTemperature: {
+      labels: ['Время', charts.soluteTemperature.title + ' (' + charts.soluteTemperature.units + ')']
+    },
+    voltage: {
+      labels: ['Время', charts.voltage.title + ' (' + charts.voltage.units + ')']
+    },
+    amperage: {
+      labels: ['Время', charts.amperage.title + ' (' + charts.amperage.units + ')']
+    },
+    ph: {
+      labels: ['Время', charts.ph.title + ' (' + charts.ph.units + ')']
+    }
   }
 };
 
@@ -404,46 +428,78 @@ function createElement(tag, className) {
   return node;
 }
 
+function zeropad(x) {
+  if (x < 10) return "0" + x; else return "" + x;
+}
+
 function createDygraph() {
   if (stats.data[stats.currentChart].length > 0) {
-    stats.chart = new Dygraph(
-        document.getElementById("chart-stats"),
-        stats.data[stats.currentChart],
-        {
-          legend: "always",
-          drawPoints: false,
-          labels: stats.opts[stats.currentChart].labels,
-          axes: {
-            x: {
-              axisLabelFormatter: function (d, gran) {
-                var hours = Dygraph.zeropad(d.getHours());
-                var mins = Dygraph.zeropad(d.getMinutes());
-                var secs = Dygraph.zeropad(d.getSeconds());
-                return hours + ":" + mins + ":" + secs;
-              },
-              valueFormatter: function (ms) {
-                var d = new Date(ms);
-                var date = Dygraph.zeropad(d.getDate());
-                var month = Dygraph.zeropad(d.getMonth() + 1);
-                var year = d.getFullYear();
-                var hours = Dygraph.zeropad(d.getHours());
-                var mins = Dygraph.zeropad(d.getMinutes());
-                var secs = Dygraph.zeropad(d.getSeconds());
-                return date + "." + month + "." + year + " " + hours + ":" + mins + ":" + secs;
-              }
-            }
+    var opts = {
+      legend: "always",
+      drawPoints: false,
+      labels: stats.opts[stats.currentChart].labels,
+      axes: {
+        x: {
+          axisLabelFormatter: function (d, gran) {
+            var hours = zeropad(d.getHours());
+            var mins = zeropad(d.getMinutes());
+            var secs = zeropad(d.getSeconds());
+            return hours + ":" + mins + ":" + secs;
           },
-          interactionModel:{ 
-            mousedown: Dygraph.defaultInteractionModel.mousedown, 
-            mousemove: Dygraph.defaultInteractionModel.mousemove, 
-            mouseup: Dygraph.defaultInteractionModel.mouseup, 
-            touchstart: CustomDygraphsInteractionModel.startTouch, 
-            touchend: CustomDygraphsInteractionModel.endTouch, 
-            touchmove: CustomDygraphsInteractionModel.moveTouch
-          } 
+          valueFormatter: function (ms) {
+            var d = new Date(ms);
+            var date = zeropad(d.getDate());
+            var month = zeropad(d.getMonth() + 1);
+            var year = d.getFullYear();
+            var hours = zeropad(d.getHours());
+            var mins = zeropad(d.getMinutes());
+            var secs = zeropad(d.getSeconds());
+            return date + "." + month + "." + year + " " + hours + ":" + mins + ":" + secs;
+          }
         }
+      }
+    };
+
+    if (os === 'android') {
+      opts.interactionModel = {
+        touchstart: CustomDygraphsInteractionModel.startTouch, 
+        touchend: CustomDygraphsInteractionModel.endTouch, 
+        touchmove: CustomDygraphsInteractionModel.moveTouch
+      };
+    }
+
+    stats.chart = new Dygraph(
+        stats.dom.chart,
+        stats.data[stats.currentChart],
+        opts
     );
+  } else {
+    stats.chart = null;
+    stats.dom.chart.innerHTML = '<div class="message">Нет данных</div>';
   }
+}
+function createParamsState() {
+  stats.dom.params.innerHTML = '';
+}
+function addParamToParamsState(param) {
+  var li = createElement("li");
+  var label = createElement("label");
+
+  var input = createElement("input");
+  input.type = "radio";
+  input.name = "filter";
+  input.value = param;
+
+  var span = createElement("span");
+  span.textContent = charts[param].title;
+
+  label.appendChild(input);
+  label.appendChild(span);
+  li.appendChild(label);
+
+  stats.dom.params.appendChild(li);
+
+  return input;
 }
 
 function createDisabledContainer(chart) {
@@ -456,6 +512,21 @@ function createDisabledContainer(chart) {
 
   chart.dom.innerHTML = '';
   chart.dom.className = 'chart chart-disabled cf';
+  chart.dom.appendChild(container);
+  chart.dom.appendChild(title);
+
+  return container;
+}
+function createUnavailableContainer(chart) {
+  var container, title;
+
+  container = createElement('div', 'chart-container');
+
+  title = createElement('div', 'chart-title');
+  title.innerHTML = chart.title + '<br><p class="chart-label">недоступно</p>';
+
+  chart.dom.innerHTML = '';
+  chart.dom.className = 'chart chart-unavailable cf';
   chart.dom.appendChild(container);
   chart.dom.appendChild(title);
 
@@ -664,6 +735,10 @@ function loadLabelChart(chart) {
 }
 
 function loadCurrentChartState(chart, mills) {
+  if (chart.state.curIndex <= 0) {
+    return;
+  }
+
   if (pages.active === 'mainPage') {
     switch (chart.state.states[chart.state.curIndex]) {
       case 1:
@@ -726,10 +801,14 @@ function loadExperiment(name, data) {
 } 
 
 function createNextChartState(chart) {
+  if (chart.state.curIndex === 0) {
+    return;
+  }
+
   chart.state.curIndex++;
 
   if (chart.state.curIndex === chart.state.states.length) {
-    chart.state.curIndex = 0;    
+    chart.state.curIndex = 1;    
   }
 
   createCurrentChartState(chart);
@@ -740,6 +819,9 @@ function createNextChartState(chart) {
 }
 function createCurrentChartState(chart) {
   switch (chart.state.states[chart.state.curIndex]) {
+    case -1:
+      chart.container = createUnavailableContainer(chart);
+      break;
     case 0:
       chart.container = createDisabledContainer(chart);
       break;
@@ -821,17 +903,10 @@ function ph(v, mills) {
 }
 
 function init(config) {
-  var chartOnClick, filterOnClick, chart, idx, i, l;
+  var chartOnClick, paramOnClick, chart, idx, i, l;
 
   os = config.os;
-
-  for (chart in config.charts) {
-    if (config.charts.hasOwnProperty(chart)) {
-      idx = charts[chart].state.states.indexOf(config.charts[chart]);
-      charts[chart].state.curIndex = idx === -1 ? charts[chart].state.curIndex : idx;
-      createCurrentChartState(charts[chart]);
-    }
-  }
+  stats.currentChart = stats.currentChart ? stats.currentChart : 'microphone';  
 
   chartOnClick = function(e) {
     var node, id;
@@ -845,33 +920,43 @@ function init(config) {
 
     createNextChartState(charts[id]);
   };
-  
-  for (chart in charts) {
-    if (charts.hasOwnProperty(chart)) {
-      charts[chart].dom.onclick = chartOnClick;
-    }
-  }
 
-  stats.currentChart = 'microphone';  
-
-
-  filterOnClick = function(e) {
+  paramOnClick = function(e) {
     var param = e.target.value;
     stats.currentChart = param;
     createDygraph();
   };
 
-  var filters = document.getElementsByName("filter");
-  for (i = 0, l = filters.length; i < l; i++) {
-    filters[i].onclick = filterOnClick;
+  createParamsState();
+  for (i = 0, l = chartsOrder.length; i < l; i++) {
+    chart = chartsOrder[i];
+    if (config.charts.hasOwnProperty(chart)) {
+      idx = charts[chart].state.states.indexOf(config.charts[chart]);
+      charts[chart].state.curIndex = idx === -1 ? charts[chart].state.curIndex : idx;
+      createCurrentChartState(charts[chart]);
+
+      charts[chart].dom.onclick = chartOnClick;
+
+      var param = addParamToParamsState(chart);
+      param.onclick = paramOnClick;
+      if (config.charts[chart] === -1) {
+        param.disabled = true;
+      }
+      if (chart === stats.currentChart) {
+        param.checked = true;
+      }
+    }
   }
 }
 
-//init({"os":"browser","charts":{"microphone":2,"accel":3,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
+//init({"os":"browser","charts":{"microphone":1,"accel":-1,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
 
 if (os === 'browser') {
   showStatsPage();
   microphone([40], 87400000);
+  microphone([50], 87400100);
+  microphone([60], 87400200);
+  microphone([10], 87400300);
   // accel([1, 2, 3]);
   // accel([5, 1, 2]);
 }

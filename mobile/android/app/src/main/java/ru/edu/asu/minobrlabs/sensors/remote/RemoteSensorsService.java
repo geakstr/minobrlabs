@@ -26,11 +26,11 @@ public class RemoteSensorsService extends IntentService {
 
         final Bundle bundle = new Bundle();
         if (rnd.nextBoolean()) {
-            bundle.putSerializable(SensorCallback.bundleKey, new Humidity(new float[]{rnd.nextInt(100)}));
-            bundle.putSerializable(SensorCallback.bundleType, SensorTypes.HUMIDITY);
+            bundle.putSerializable(SensorCallback.bundleStatKey, new Humidity(new float[]{rnd.nextInt(100)}));
+            bundle.putSerializable(SensorCallback.bundleStatType, SensorTypes.HUMIDITY);
         } else {
-            bundle.putSerializable(SensorCallback.bundleKey, new AirTemperature(new float[]{rnd.nextInt(100)}));
-            bundle.putSerializable(SensorCallback.bundleType, SensorTypes.AIR_TEMPERATURE);
+            bundle.putSerializable(SensorCallback.bundleStatKey, new AirTemperature(new float[]{rnd.nextInt(100)}));
+            bundle.putSerializable(SensorCallback.bundleStatType, SensorTypes.AIR_TEMPERATURE);
         }
         receiver.send(Activity.RESULT_OK, bundle);
     }
