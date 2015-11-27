@@ -938,6 +938,10 @@ function ph(v, mills) {
   loadCurrentChartState(charts.ph, mills);
 }
 
+function stringStartsWith(string, prefix) {
+  return string.slice(0, prefix.length) == prefix;
+}
+
 function init(config) {
   var chartOnClick, paramOnClick, chartTypesRadioOnClick, chart, idx, i, l;
 
@@ -948,7 +952,7 @@ function init(config) {
     var node, id;
 
     node = e.target;
-    while (node && node.parentNode && node.classList && !node.classList.contains('chart')) {
+    while (node && node.parentNode && node.className && !stringStartsWith(node.className.toString(), 'chart ')) {
       node = node.parentNode;
     }
 
