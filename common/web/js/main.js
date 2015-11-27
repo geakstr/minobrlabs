@@ -318,6 +318,8 @@ stats = {
   currentChart: null,
   recording: false,
   mode: 'realtime', // "realtime" or "experiment"
+  plotter : null,
+  wasInteract: false,
   dom: {
     params: document.getElementById("params"),
     chart: document.getElementById("chart-stats")
@@ -439,8 +441,8 @@ function createDygraph() {
       drawPoints: false,
       labels: stats.opts[stats.currentChart].labels,
       includeZero: true,
-      animatedZooms: true,
-      dateWindow: getStatsChartDateWindow(charts[stats.currentChart]),
+      plotter: stats.plotter,
+      //dateWindow: getStatsChartDateWindow(charts[stats.currentChart]),
       axes: {
         x: {
           axisLabelFormatter: function (d, gran) {
@@ -465,9 +467,9 @@ function createDygraph() {
 
     if (os === 'android') {
       opts.interactionModel = {
-        touchstart: CustomDygraphsInteractionModel.startTouch, 
-        touchend: CustomDygraphsInteractionModel.endTouch, 
-        touchmove: CustomDygraphsInteractionModel.moveTouch
+        touchstart: CustomDygraphsInteractionModel.startTouch.bind(stats), 
+        touchend: CustomDygraphsInteractionModel.endTouch.bind(stats), 
+        touchmove: CustomDygraphsInteractionModel.moveTouch.bind(stats)
       };
     }
 
@@ -807,10 +809,15 @@ function loadCurrentChartState(chart, mills) {
         if (null === stats.chart) {
           createDygraph();
         } else {
-          stats.chart.updateOptions({
-            'file': stats.data[chart.name],
-            'dateWindow': getStatsChartDateWindow(chart),
-          });
+          var opts = {
+            'file': stats.data[chart.name]
+          };
+
+          if (!stats.wasInteract) {
+            //opts.dateWindow = getStatsChartDateWindow(chart);
+          }
+
+          stats.chart.updateOptions(opts);
         }
       }
     }
@@ -990,8 +997,11 @@ function init(config) {
 
   chartTypesRadioOnClick = function(e) {
     var type = e.target.value;
+
+    stats.plotter = type === 'line' ? null : barChartPlotter;
+
     stats.chart.updateOptions({
-      'plotter' : type === 'line' ? null : barChartPlotter
+      'plotter' : stats.plotter
     });
   };
   var chartTypesRadio = document.getElementsByName("chart-stats-type");

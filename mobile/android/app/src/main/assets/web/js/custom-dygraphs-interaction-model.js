@@ -1,5 +1,7 @@
 CustomDygraphsInteractionModel = {
   startTouch : function(event, g, context) {
+    this.wasInteract = true;
+    
     event.preventDefault();  // touch browsers are all nice.
     if (event.touches.length > 1) {
       // If the user ever puts two fingers down, it's not a double tap.
@@ -81,6 +83,7 @@ CustomDygraphsInteractionModel = {
           context.doubleTapX && Math.abs(context.doubleTapX - t.screenX) < 50 &&
           context.doubleTapY && Math.abs(context.doubleTapY - t.screenY) < 50) {
         g.resetZoom();
+        this.wasInteract = false;
         // Fix doubletap
         context.startTimeForDoubleTapMs = null;
       } else {
@@ -94,6 +97,8 @@ CustomDygraphsInteractionModel = {
     // If the tap moves, then it's definitely not part of a double-tap.
     // Fix double tap
     //context.startTimeForDoubleTapMs = null;
+
+    this.wasInteract = true;
 
     var i, touches = [];
     for (i = 0; i < event.touches.length; i++) {
