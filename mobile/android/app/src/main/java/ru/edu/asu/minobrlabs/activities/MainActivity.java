@@ -24,15 +24,18 @@ import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.sensors.ISensorCallback;
 import ru.edu.asu.minobrlabs.sensors.SensorCallback;
+import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.remote.RemoteSensorsManager;
 import ru.edu.asu.minobrlabs.webview.MainWebViewJavascriptInterface;
+import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 import ru.edu.asu.minobrlabs.webview.WebViewPageFinishedCallback;
 
 public class MainActivity extends AppCompatActivity {
     private Menu menu;
 
     private WebView webView;
+    private MainWebViewJavascriptInterface mainWebViewJavascriptInterface;
 
     private LocalSensorsManager localSensorsManager;
     private RemoteSensorsManager remoteSensorsManager;
@@ -105,6 +108,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
 
+        mainWebViewJavascriptInterface.setContext(this, menu, localSensorsManager);
+
+        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+        menu.findItem(R.id.action_experiment_interval).setVisible(false);
+        menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
+
         menu.findItem(R.id.action_experiments).setVisible(true);
 
         menu.findItem(R.id.action_repeat).setVisible(false);
@@ -136,11 +145,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_to_stats:
                 webView.loadUrl("javascript:showStatsPage()");
+                menu.findItem(R.id.action_experiment_interval).setVisible(true);
                 menu.findItem(R.id.action_to_main).setVisible(true);
                 menu.findItem(R.id.action_to_stats).setVisible(false);
                 break;
             case R.id.action_to_main:
                 webView.loadUrl("javascript:showMainPage()");
+                menu.findItem(R.id.action_experiment_interval).setVisible(false);
                 menu.findItem(R.id.action_to_main).setVisible(false);
                 menu.findItem(R.id.action_to_stats).setVisible(true);
                 break;
@@ -177,6 +188,18 @@ public class MainActivity extends AppCompatActivity {
                 menu.findItem(R.id.action_experiments).setVisible(true);
                 menu.findItem(R.id.action_persist_recording).setVisible(false);
                 menu.findItem(R.id.action_clear_recording).setVisible(false);
+                break;
+            case R.id.action_experiment_interval:
+                final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+                state.nextCurrentInterval();
+                menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
+                for (final SensorTypes type : SensorTypes.values()) {
+                    if (type.getName().equalsIgnoreCase(state.currentStatsChart)) {
+                        localSensorsManager.setSleepTime(type, state.getCurrentInterval());
+                        break;
+                    }
+                }
+                App.Preferences.writeMainWebViewState(state);
                 break;
             default:
                 break;
@@ -242,7 +265,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
-        webView.addJavascriptInterface(new MainWebViewJavascriptInterface(), "Android");
+
+        mainWebViewJavascriptInterface = new MainWebViewJavascriptInterface();
+        webView.addJavascriptInterface(mainWebViewJavascriptInterface, "Android");
 
         webView.setWebViewClient(new WebViewClient() {
             @Override

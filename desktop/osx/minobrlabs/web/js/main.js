@@ -953,7 +953,10 @@ function init(config) {
   var chartOnClick, paramOnClick, chartTypesRadioOnClick, chart, idx, i, l;
 
   os = config.os;
-  stats.currentChart = stats.currentChart ? stats.currentChart : 'microphone';  
+  stats.currentChart = stats.currentChart ? stats.currentChart : config.currentStatsChart;  
+  if (os === "android") {
+    Android.selectStatsChart(stats.currentChart);
+  }
 
   chartOnClick = function(e) {
     var node, id;
@@ -971,6 +974,11 @@ function init(config) {
   paramOnClick = function(e) {
     var param = e.target.value;
     stats.currentChart = param;
+
+    if (os === 'android') {
+      Android.selectStatsChart(param);
+    }
+
     createDygraph();
   };
 
@@ -997,7 +1005,6 @@ function init(config) {
 
   chartTypesRadioOnClick = function(e) {
     var type = e.target.value;
-
     stats.plotter = type === 'line' ? null : barChartPlotter;
 
     stats.chart.updateOptions({

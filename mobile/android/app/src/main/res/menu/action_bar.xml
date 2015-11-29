@@ -3,6 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_experiment_interval"
+        android:title="300"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/action_experiments"
         android:title="@string/experiments"
         app:showAsAction="always"/>

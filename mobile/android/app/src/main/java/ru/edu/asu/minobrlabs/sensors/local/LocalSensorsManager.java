@@ -36,6 +36,10 @@ public class LocalSensorsManager implements SensorEventListener {
     private float[] accel = new float[3];
     private float[] gyro = new float[3];
 
+    private long lightSleepTime;
+    private long accelSleepTime;
+    private long gyroSleepTime;
+
     private long prevLightTime = new Date().getTime();
     private long prevAccelTime = new Date().getTime();
     private long prevGyroTime = new Date().getTime();
@@ -47,6 +51,30 @@ public class LocalSensorsManager implements SensorEventListener {
         sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         microphoneSensorManager = new MicrophoneSensorManager();
+
+        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+        this.lightSleepTime = state.intervals.get(SensorTypes.LIGHT.getName()).cur();
+        this.accelSleepTime = state.intervals.get(SensorTypes.ACCEL.getName()).cur();
+        this.gyroSleepTime = state.intervals.get(SensorTypes.GYRO.getName()).cur();
+        this.microphoneSensorManager.setSleepTime(state.intervals.get(SensorTypes.MICROPHONE_DB.getName()).cur());
+    }
+
+    public void setSleepTime(final SensorTypes type, final long time) {
+        switch (type) {
+            case LIGHT:
+                this.lightSleepTime = time;
+                break;
+            case ACCEL:
+                this.accelSleepTime = time;
+                break;
+            case GYRO:
+                this.gyroSleepTime = time;
+                break;
+            case MICROPHONE_DB:
+                this.microphoneSensorManager.setSleepTime(time);
+            default:
+                break;
+        }
     }
 
     public void registerListeners() {
@@ -111,20 +139,20 @@ public class LocalSensorsManager implements SensorEventListener {
         final long currentTime = new Date().getTime();
         switch (event.sensor.getType()) {
             case Sensor.TYPE_LIGHT:
-                if (currentTime - prevLightTime >= 100) {
+                if (currentTime - prevLightTime >= lightSleepTime) {
                     type = SensorTypes.LIGHT;
                     bundle.putSerializable(SensorCallback.bundleStatKey, new Light(vals));
                 }
                 break;
             case Sensor.TYPE_GYROSCOPE:
-                if (currentTime - prevGyroTime >= 100) {
+                if (currentTime - prevGyroTime >= gyroSleepTime) {
                     type = SensorTypes.GYRO;
                     gyro = AbstractSensorManager.lowPass(vals.clone(), gyro, 0.75f);
                     bundle.putSerializable(SensorCallback.bundleStatKey, new Gyro(gyro));
                 }
                 break;
             case Sensor.TYPE_ACCELEROMETER:
-                if (currentTime - prevAccelTime >= 100) {
+                if (currentTime - prevAccelTime >= accelSleepTime) {
                     type = SensorTypes.ACCEL;
                     accel = AbstractSensorManager.lowPass(vals.clone(), accel, 0.5f);
                     bundle.putSerializable(SensorCallback.bundleStatKey, new Accel(accel));
