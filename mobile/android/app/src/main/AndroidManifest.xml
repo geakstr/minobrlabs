@@ -23,10 +23,6 @@
         </activity>
 
         <service
-            android:name=".sensors.remote.RemoteSensorsService"
-            android:exported="false" />
-
-        <service
             android:name=".sensors.SensorsService"
             android:exported="false" />
     </application>

@@ -26,8 +26,7 @@ import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 public class App extends Application {
     private static App singleton;
 
-    private static Database db;
-    private static TemporaryStorage temporaryStorage;
+    private static State state;
 
     @Override
     public void onCreate() {
@@ -53,18 +52,11 @@ public class App extends Application {
         return singleton;
     }
 
-    public static Database db() {
-        if (null == db) {
-            db = new Database();
+    public static State state() {
+        if (null == state) {
+            state = new State();
         }
-        return db;
-    }
-
-    public static TemporaryStorage temporaryStorage() {
-        if (null == temporaryStorage) {
-            temporaryStorage = new TemporaryStorage();
-        }
-        return temporaryStorage;
+        return state;
     }
 
     public static class Preferences {
