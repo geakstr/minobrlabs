@@ -1,20 +1,16 @@
 package ru.edu.asu.minobrlabs.sensors.local;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
-import ru.edu.asu.minobrlabs.sensors.SensorsState;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class LocalSensorsManager implements SensorEventListener {
@@ -32,32 +28,6 @@ public class LocalSensorsManager implements SensorEventListener {
             put(SensorTypes.GYRO, new GyroSensorManager(sensorManager));
         }};
     }
-
-    public final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (App.state().getSensorsState().wantReInit) {
-                App.state().getSensorsState().wantReInit = false;
-
-                final String state = App.Preferences.readMainWebViewStateAsJson();
-                App.state().getWebView().loadUrl(String.format("javascript:init(%s)", state));
-                return;
-            }
-
-            final LinkedList<SensorsState.Update> updates = App.state().getSensorsState().getUpdates();
-            while (!updates.isEmpty()) {
-                final SensorsState.Update update = updates.poll();
-
-                App.state().getTemporaryStorage().add(update.param);
-                App.state().getWebView().loadUrl(String.format("javascript:%s(%s, %s)",
-                                update.type.getName(),
-                                update.param.vals,
-                                update.param.date
-                        )
-                );
-            }
-        }
-    };
 
     public void update() {
         ((MicrophoneSensorManager) sensorManagers.get(SensorTypes.MICROPHONE_DB)).update();

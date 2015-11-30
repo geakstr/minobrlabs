@@ -29,7 +29,7 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
     }
 
     public void update() {
-        if (!period()) {
+        if (!period() || null == mediaRecorder) {
             return;
         }
 

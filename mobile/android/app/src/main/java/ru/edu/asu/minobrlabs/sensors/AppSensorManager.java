@@ -1,5 +1,6 @@
 package ru.edu.asu.minobrlabs.sensors;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 
@@ -19,17 +20,17 @@ public class AppSensorManager {
         this.bluetoothSensorsManager = new BluetoothSensorsManager();
     }
 
-    public void init() {
+    public void init(final BroadcastReceiver broadcastReceiver) {
         App.state().getActivity().startService(sensorsServiceIntent);
-        App.state().getActivity().registerReceiver(localSensorsManager.broadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
+        App.state().getActivity().registerReceiver(broadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
 
         localSensorsManager.registerListeners();
     }
 
-    public void destroy() {
+    public void destroy(final BroadcastReceiver broadcastReceiver) {
         localSensorsManager.unregisterListeners();
 
-        App.state().getActivity().unregisterReceiver(localSensorsManager.broadcastReceiver);
+        App.state().getActivity().unregisterReceiver(broadcastReceiver);
         App.state().getActivity().stopService(sensorsServiceIntent);
     }
 
