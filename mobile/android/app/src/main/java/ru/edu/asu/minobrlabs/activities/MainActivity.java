@@ -24,6 +24,7 @@ import java.util.List;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
+import ru.edu.asu.minobrlabs.State;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
@@ -37,26 +38,26 @@ public class MainActivity extends AppCompatActivity {
     private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (App.state().getSensorsState().wantReInit) {
-                App.state().getSensorsState().wantReInit = false;
+            if (App.state.sensors.wantReInit) {
+                App.state.sensors.wantReInit = false;
 
                 final String state = App.Preferences.readMainWebViewStateAsJson();
-                App.state().getWebView().loadUrl(String.format("javascript:init(%s)", state));
+                App.state.webView.loadUrl(String.format("javascript:init(%s)", state));
                 return;
             }
 
-            final LinkedList<SensorsState.Update> updates = App.state().getSensorsState().getUpdates();
-            while (!updates.isEmpty()) {
-                final SensorsState.Update update = updates.poll();
 
-                App.state().getTemporaryStorage().add(update.param);
-                App.state().getWebView().loadUrl(String.format("javascript:%s(%s, %s)",
+            final LinkedList<SensorsState.Update> updates = App.state.sensors.updates;
+            for (final SensorsState.Update update : updates) {
+                App.state.temporaryStorage.add(update.param);
+                App.state.webView.loadUrl(String.format("javascript:%s(%s, %s)",
                                 update.type.getName(),
                                 update.param.vals,
                                 update.param.date
                         )
                 );
             }
+            updates.clear();
         }
     };
 
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        App.state().setActivity(this);
-        App.state().setWebView(createWebView());
+        App.state.activity = this;
+        App.state.webView = createWebView();
 
         wasOnPause = false;
     }
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (wasOnPause) {
-            App.state().getAppSensorManager().init(broadcastReceiver);
+            App.state.appSensorsManager.init(broadcastReceiver);
         }
 
         wasOnPause = false;
@@ -88,14 +89,14 @@ public class MainActivity extends AppCompatActivity {
 
         wasOnPause = true;
 
-        App.state().getAppSensorManager().destroy(broadcastReceiver);
+        App.state.appSensorsManager.destroy(broadcastReceiver);
     }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar, menu);
 
-        App.state().setMenu(menu);
+        App.state.menu = menu;
 
         final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
         menu.findItem(R.id.action_experiment_interval).setVisible(false);
@@ -124,63 +125,63 @@ public class MainActivity extends AppCompatActivity {
                 createExperimentsListDialog().show();
                 break;
             case R.id.action_repeat:
-                App.state().getWebView().loadUrl("javascript:setRealtime()");
-                App.state().getMenu().findItem(R.id.action_repeat).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_start_recording).setVisible(true);
+                App.state.webView.loadUrl("javascript:setRealtime()");
+                App.state.menu.findItem(R.id.action_repeat).setVisible(false);
+                App.state.menu.findItem(R.id.action_start_recording).setVisible(true);
                 break;
             case R.id.action_to_stats:
-                App.state().getWebView().loadUrl("javascript:showStatsPage()");
-                App.state().getMenu().findItem(R.id.action_experiment_interval).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_to_main).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_to_stats).setVisible(false);
+                App.state.webView.loadUrl("javascript:showStatsPage()");
+                App.state.menu.findItem(R.id.action_experiment_interval).setVisible(true);
+                App.state.menu.findItem(R.id.action_to_main).setVisible(true);
+                App.state.menu.findItem(R.id.action_to_stats).setVisible(false);
                 break;
             case R.id.action_to_main:
-                App.state().getWebView().loadUrl("javascript:showMainPage()");
-                App.state().getMenu().findItem(R.id.action_experiment_interval).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_to_main).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_to_stats).setVisible(true);
+                App.state.webView.loadUrl("javascript:showMainPage()");
+                App.state.menu.findItem(R.id.action_experiment_interval).setVisible(false);
+                App.state.menu.findItem(R.id.action_to_main).setVisible(false);
+                App.state.menu.findItem(R.id.action_to_stats).setVisible(true);
                 break;
             case R.id.action_start_recording:
-                App.state().getTemporaryStorage().startRecording();
-                App.state().getWebView().loadUrl("javascript:isRecording(true)");
+                App.state.temporaryStorage.startRecording();
+                App.state.webView.loadUrl("javascript:isRecording(true)");
 
-                App.state().getMenu().findItem(R.id.action_experiments).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_start_recording).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_stop_recording).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_persist_recording).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_clear_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_experiments).setVisible(false);
+                App.state.menu.findItem(R.id.action_start_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_stop_recording).setVisible(true);
+                App.state.menu.findItem(R.id.action_persist_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
             case R.id.action_stop_recording:
-                App.state().getTemporaryStorage().stopRecording();
-                App.state().getWebView().loadUrl("javascript:isRecording(false)");
+                App.state.temporaryStorage.stopRecording();
+                App.state.webView.loadUrl("javascript:isRecording(false)");
 
-                App.state().getMenu().findItem(R.id.action_experiments).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_start_recording).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_stop_recording).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_persist_recording).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_clear_recording).setVisible(true);
+                App.state.menu.findItem(R.id.action_experiments).setVisible(false);
+                App.state.menu.findItem(R.id.action_start_recording).setVisible(true);
+                App.state.menu.findItem(R.id.action_stop_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_persist_recording).setVisible(true);
+                App.state.menu.findItem(R.id.action_clear_recording).setVisible(true);
                 break;
             case R.id.action_persist_recording:
                 createExperimentDialog().show();
-                App.state().getMenu().findItem(R.id.action_experiments).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_persist_recording).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_clear_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_experiments).setVisible(true);
+                App.state.menu.findItem(R.id.action_persist_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
             case R.id.action_clear_recording:
-                App.state().getTemporaryStorage().clear();
-                App.state().getWebView().loadUrl("javascript:clear()");
+                App.state.temporaryStorage.clear();
+                App.state.webView.loadUrl("javascript:clear()");
 
-                App.state().getMenu().findItem(R.id.action_experiments).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_persist_recording).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_clear_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_experiments).setVisible(true);
+                App.state.menu.findItem(R.id.action_persist_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
             case R.id.action_experiment_interval:
                 final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
                 state.nextCurrentInterval();
-                App.state().getMenu().findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
+                App.state.menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
                 for (final SensorTypes type : SensorTypes.values()) {
                     if (type.getName().equalsIgnoreCase(state.currentStatsChart)) {
-                        App.state().getAppSensorManager().getLocalSensorsManager().setSleepTime(type, state.getCurrentInterval());
+                        App.state.appSensorsManager.localSensorsManager.setSleepTime(type, state.getCurrentInterval());
                         break;
                     }
                 }
@@ -201,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                App.state().getTemporaryStorage().persist(new Experiment(input.getText().toString().trim()));
+                App.state.temporaryStorage.persist(new Experiment(input.getText().toString().trim()));
             }
         });
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -229,12 +230,12 @@ public class MainActivity extends AppCompatActivity {
 
                 final String stats = new Gson().toJson(Dao.findByExperiment(experiment));
 
-                App.state().getWebView().loadUrl(String.format("javascript:loadExperiment('%s', %s)", experiment.name, stats));
+                App.state.webView.loadUrl(String.format("javascript:loadExperiment('%s', %s)", experiment.name, stats));
 
-                App.state().getMenu().findItem(R.id.action_to_main).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_repeat).setVisible(true);
-                App.state().getMenu().findItem(R.id.action_to_stats).setVisible(false);
-                App.state().getMenu().findItem(R.id.action_start_recording).setVisible(false);
+                App.state.menu.findItem(R.id.action_to_main).setVisible(true);
+                App.state.menu.findItem(R.id.action_repeat).setVisible(true);
+                App.state.menu.findItem(R.id.action_to_stats).setVisible(false);
+                App.state.menu.findItem(R.id.action_start_recording).setVisible(false);
             }
         });
         return builder;
@@ -255,10 +256,10 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
-                App.state().getAppSensorManager().init(broadcastReceiver);
+                App.state.appSensorsManager.init(broadcastReceiver);
 
                 final String state = App.Preferences.readMainWebViewStateAsJson();
-                App.state().getWebView().loadUrl(String.format("javascript:init(%s)", state));
+                App.state.webView.loadUrl(String.format("javascript:init(%s)", state));
             }
         });
         webView.loadUrl("file:///android_asset/web/index.html");

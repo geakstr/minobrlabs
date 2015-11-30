@@ -14,7 +14,7 @@ public class SensorsService extends Service {
     private final Intent intent = new Intent(BROADCAST_ACTION);
     private final Runnable runnable = new Runnable() {
         public void run() {
-            App.state().getAppSensorManager().getLocalSensorsManager().update();
+            App.state.appSensorsManager.localSensorsManager.update();
 
             sendBroadcast(intent);
 

@@ -24,15 +24,15 @@ import ru.edu.asu.minobrlabs.db.entities.params.Voltage;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class App extends Application {
-    private static App singleton;
-
-    private static State state;
+    public static App instance;
+    public static State state;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        singleton = this;
+        instance = this;
+        state = new State();
 
         Dao.deleteAll(Experiment.class);
         Dao.deleteAll(Accel.class);
@@ -46,17 +46,6 @@ public class App extends Application {
         Dao.deleteAll(Ph.class);
         Dao.deleteAll(SoluteTemperature.class);
         Dao.deleteAll(Voltage.class);
-    }
-
-    public static App getInstance() {
-        return singleton;
-    }
-
-    public static State state() {
-        if (null == state) {
-            state = new State();
-        }
-        return state;
     }
 
     public static class Preferences {
@@ -97,7 +86,7 @@ public class App extends Application {
         }
 
         public static SharedPreferences getPreferences() {
-            return App.getInstance().getApplicationContext().getSharedPreferences(PREF_NAME, MODE);
+            return App.instance.getApplicationContext().getSharedPreferences(PREF_NAME, MODE);
         }
 
         public static SharedPreferences.Editor getEditor() {

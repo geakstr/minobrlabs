@@ -8,7 +8,6 @@ import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 
 public class TemporaryStorage {
-    private final static String TAG = TemporaryStorage.class.getSimpleName();
     private List<GenericParam> data;
 
     private boolean recording = false;

@@ -8,21 +8,22 @@ import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.BluetoothSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
 
-public class AppSensorManager {
-    private final Intent sensorsServiceIntent;
-    private final LocalSensorsManager localSensorsManager;
-    private final BluetoothSensorsManager bluetoothSensorsManager;
+public class AppSensorsManager {
+    public final LocalSensorsManager localSensorsManager;
+    public final BluetoothSensorsManager bluetoothSensorsManager;
 
-    public AppSensorManager() {
-        this.sensorsServiceIntent = new Intent(App.state().getActivity(), SensorsService.class);
+    private final Intent sensorsServiceIntent;
+
+    public AppSensorsManager() {
+        this.sensorsServiceIntent = new Intent(App.instance.getApplicationContext(), SensorsService.class);
 
         this.localSensorsManager = new LocalSensorsManager();
         this.bluetoothSensorsManager = new BluetoothSensorsManager();
     }
 
     public void init(final BroadcastReceiver broadcastReceiver) {
-        App.state().getActivity().startService(sensorsServiceIntent);
-        App.state().getActivity().registerReceiver(broadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
+        App.state.activity.startService(sensorsServiceIntent);
+        App.state.activity.registerReceiver(broadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
 
         localSensorsManager.registerListeners();
     }
@@ -30,16 +31,8 @@ public class AppSensorManager {
     public void destroy(final BroadcastReceiver broadcastReceiver) {
         localSensorsManager.unregisterListeners();
 
-        App.state().getActivity().unregisterReceiver(broadcastReceiver);
-        App.state().getActivity().stopService(sensorsServiceIntent);
-    }
-
-    public LocalSensorsManager getLocalSensorsManager() {
-        return localSensorsManager;
-    }
-
-    public BluetoothSensorsManager getBluetoothSensorsManager() {
-        return bluetoothSensorsManager;
+        App.state.activity.unregisterReceiver(broadcastReceiver);
+        App.state.activity.stopService(sensorsServiceIntent);
     }
 
     public static float[] lowPass(final float[] input, final float[] output, final float alpha) {

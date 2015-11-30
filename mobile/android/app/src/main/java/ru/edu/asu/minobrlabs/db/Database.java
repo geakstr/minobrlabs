@@ -41,7 +41,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public Database() {
-        super(App.getInstance().getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
+        super(App.instance.getApplicationContext(), DATABASE_NAME, null, DATABASE_VERSION);
 
         this.conn = getWritableDatabase();
     }

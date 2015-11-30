@@ -19,7 +19,7 @@ public class LocalSensorsManager implements SensorEventListener {
     private final Map<SensorTypes, BuiltinSensorManager> sensorManagers;
 
     public LocalSensorsManager() {
-        sensorManager = (SensorManager) App.getInstance().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) App.instance.getSystemService(Context.SENSOR_SERVICE);
 
         sensorManagers = new HashMap<SensorTypes, BuiltinSensorManager>() {{
             put(SensorTypes.MICROPHONE_DB, new MicrophoneSensorManager());
@@ -55,7 +55,7 @@ public class LocalSensorsManager implements SensorEventListener {
             }
         }
 
-        App.state().getSensorsState().wantReInit = true;
+        App.state.sensors.wantReInit = true;
     }
 
     public void unregisterListeners() {

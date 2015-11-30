@@ -39,7 +39,7 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
         int db = (int) (20 * Math.log10(pressure / 0.00002)); // Convert pressure to dB (SPL)
         db = db < 0 ? 40 : db;
 
-        App.state().getSensorsState().update(SensorTypes.MICROPHONE_DB, new Microphone(new float[]{db}));
+        App.state.sensors.update(SensorTypes.MICROPHONE_DB, new Microphone(new float[]{db}));
     }
 
     private boolean startMediaRecorder() {
@@ -70,7 +70,7 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
             return false;
         } finally {
             App.Preferences.writeMainWebViewState(state);
-            App.state().getSensorsState().wantReInit = true;
+            App.state.sensors.wantReInit = true;
         }
         return true;
     }

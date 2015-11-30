@@ -14,7 +14,7 @@ public class LightSensorManager extends BuiltinSensorManager {
     @Override
     public boolean update(final float[] val) {
         if (super.update(val)) {
-            App.state().getSensorsState().update(SensorTypes.LIGHT, new Light(prevVal));
+            App.state.sensors.update(SensorTypes.LIGHT, new Light(prevVal));
             return true;
         }
         return false;

@@ -8,7 +8,7 @@ import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 public class SensorsState implements Serializable {
     public boolean wantReInit = false;
 
-    private final LinkedList<Update> updates;
+    public final LinkedList<Update> updates;
 
     public SensorsState() {
         this.updates = new LinkedList<>();
@@ -26,9 +26,5 @@ public class SensorsState implements Serializable {
             this.type = type;
             this.param = param;
         }
-    }
-
-    public LinkedList<Update> getUpdates() {
-        return updates;
     }
 }

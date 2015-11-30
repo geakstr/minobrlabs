@@ -20,10 +20,10 @@ public class MainWebViewJavascriptInterface {
         state.currentStatsChart = chartName;
         App.Preferences.writeMainWebViewState(state);
 
-        App.state().getActivity().runOnUiThread(new Runnable() {
+        App.state.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                App.state().getMenu().findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
+                App.state.menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
             }
         });
     }
