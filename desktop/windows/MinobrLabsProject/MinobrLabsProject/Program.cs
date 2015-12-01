@@ -16,7 +16,7 @@ namespace MinobrLabsProject
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new gaugeForm());
+            Application.Run(new MainForm());
         }
     }
 }
