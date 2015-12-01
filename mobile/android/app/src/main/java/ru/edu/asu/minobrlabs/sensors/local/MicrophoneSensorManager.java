@@ -11,7 +11,7 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
     private MediaRecorder mediaRecorder;
 
     public MicrophoneSensorManager() {
-        super(SensorTypes.MICROPHONE_DB);
+        super(100, 1);
     }
 
     @Override
@@ -24,13 +24,10 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
         return true;
     }
 
-    public void unregisterListener() {
-        stopMediaRecorder();
-    }
-
-    public void update() {
+    @Override
+    public boolean update() {
         if (!period() || null == mediaRecorder) {
-            return;
+            return false;
         }
 
         // Thanks Lukas Ruge for pressure and decibel formulas
@@ -40,6 +37,12 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
         db = db < 0 ? 40 : db;
 
         App.state.sensors.update(SensorTypes.MICROPHONE_DB, new Microphone(new float[]{db}));
+
+        return true;
+    }
+
+    public void unregisterListener() {
+        stopMediaRecorder();
     }
 
     private boolean startMediaRecorder() {

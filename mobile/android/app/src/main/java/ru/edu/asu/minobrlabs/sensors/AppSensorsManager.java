@@ -35,6 +35,10 @@ public class AppSensorsManager {
         App.state.activity.stopService(sensorsServiceIntent);
     }
 
+    public void setSleepTime(final long time) {
+        localSensorsManager.setSleepTime(time);
+    }
+
     public static float[] lowPass(final float[] input, final float[] output, final float alpha) {
         if (output == null) {
             return input;

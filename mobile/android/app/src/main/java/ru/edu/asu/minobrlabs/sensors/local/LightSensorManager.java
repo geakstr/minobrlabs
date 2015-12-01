@@ -8,13 +8,14 @@ import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 public class LightSensorManager extends BuiltinSensorManager {
     public LightSensorManager(final SensorManager sensorManager) {
-        super(sensorManager, SensorTypes.LIGHT);
+        super(sensorManager, SensorTypes.LIGHT, 100, 1);
     }
 
     @Override
-    public boolean update(final float[] val) {
+    public boolean update(float[] val) {
+        val = new float[]{val[0]};
         if (super.update(val)) {
-            App.state.sensors.update(SensorTypes.LIGHT, new Light(prevVal));
+            App.state.sensors.update(SensorTypes.LIGHT, new Light(this.val));
             return true;
         }
         return false;

@@ -30,11 +30,15 @@ public class LocalSensorsManager implements SensorEventListener {
     }
 
     public void update() {
-        ((MicrophoneSensorManager) sensorManagers.get(SensorTypes.MICROPHONE_DB)).update();
+        for (final BuiltinSensorManager sensorManager : sensorManagers.values()) {
+            sensorManager.update();
+        }
     }
 
-    public void setSleepTime(final SensorTypes type, final long time) {
-        sensorManagers.get(type).setSleepTime(time);
+    public void setSleepTime(final long time) {
+        for (final BuiltinSensorManager sensorManager : sensorManagers.values()) {
+            sensorManager.setSleepTime(time);
+        }
     }
 
     public void registerListeners() {
@@ -55,6 +59,8 @@ public class LocalSensorsManager implements SensorEventListener {
             }
         }
 
+        App.Preferences.writeMainWebViewState(state);
+
         App.state.sensors.wantReInit = true;
     }
 
@@ -71,7 +77,7 @@ public class LocalSensorsManager implements SensorEventListener {
         }
         for (final SensorTypes type : SensorTypes.values()) {
             if (type.getAndroidVal() == event.sensor.getType()) {
-                sensorManagers.get(type).update(val);
+                sensorManagers.get(type).setVal(val);
                 break;
             }
         }

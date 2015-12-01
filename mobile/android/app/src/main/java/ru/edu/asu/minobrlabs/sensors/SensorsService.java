@@ -18,7 +18,7 @@ public class SensorsService extends Service {
 
             sendBroadcast(intent);
 
-            handler.postDelayed(this, 50L);
+            handler.postDelayed(this, 20L);
         }
     };
 

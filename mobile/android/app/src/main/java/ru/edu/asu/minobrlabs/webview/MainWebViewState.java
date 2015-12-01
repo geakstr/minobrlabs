@@ -27,59 +27,21 @@ public class MainWebViewState implements Serializable {
         put(SensorTypes.PH.getName(), -1);
     }};
 
-    public final Map<String, Interval> intervals = new HashMap<String, Interval>() {{
-        put(SensorTypes.MICROPHONE_DB.getName(), new Interval(300, 500, 1000));
-        put(SensorTypes.ACCEL.getName(), new Interval(100, 200, 300, 500, 1000));
-        put(SensorTypes.GYRO.getName(), new Interval(100, 200, 300, 500, 1000));
-        put(SensorTypes.AIR_TEMPERATURE.getName(), new Interval(300, 500, 1000));
-        put(SensorTypes.HUMIDITY.getName(), new Interval(200, 300, 500, 1000));
-        put(SensorTypes.ATMO_PRESSURE.getName(), new Interval(100, 200, 300, 500, 1000));
-        put(SensorTypes.LIGHT.getName(), new Interval(100, 200, 300, 500, 1000));
-        put(SensorTypes.SOLUTE_TEMPERATURE.getName(), new Interval(100, 200, 300));
-        put(SensorTypes.VOLTAGE.getName(), new Interval(100, 200, 300));
-        put(SensorTypes.AMPERAGE.getName(), new Interval(100, 200, 300));
-        put(SensorTypes.PH.getName(), new Interval(100, 200, 300));
-    }};
+    public int intervalIdx = 1;
+    public final long[] intervals = new long[]{40, 100, 1000, 60000};
 
-    public int getCurrentInterval() {
-        return intervals.get(currentStatsChart).cur();
+    public long getCurrentInterval() {
+        return intervals[intervalIdx];
     }
 
     public String getFormattedCurrentInterval() {
         return String.valueOf(getCurrentInterval() + " мс");
     }
 
-    public int nextCurrentInterval() {
-        return intervals.get(currentStatsChart).next();
-    }
-
-    public static class Interval {
-        public int idx;
-        public final int[] intervals;
-
-        public Interval(final int... intervals) {
-            this.intervals = intervals;
+    public long nextCurrentInterval() {
+        if (++intervalIdx >= intervals.length) {
+            intervalIdx = 0;
         }
-
-        public int next() {
-            if (++idx >= intervals.length) {
-                idx = 0;
-            }
-            return cur();
-        }
-
-        public int cur() {
-            return intervals[idx];
-        }
-
-        @Override
-        public String toString() {
-            return "Idx : " + idx + "; " + Arrays.toString(intervals);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Charts : \n" + charts.toString() + "\nIntervals : " + intervals.toString();
+        return intervals[intervalIdx];
     }
 }

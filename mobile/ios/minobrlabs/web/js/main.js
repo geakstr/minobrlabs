@@ -51,6 +51,7 @@ charts = {
       },
       min : 40,
       max : 90,
+      valueRange : [0, 120],
       color : {
         pattern : ['#0000FF'],
         threshold : []
@@ -72,11 +73,9 @@ charts = {
       width: function(val) {
         return Math.min(Math.abs(val * 100.0 / charts.accel.opts.max), 100.0);
       },
-      normalize: function(val) {
-        return val / 9.8;
-      },
       min: -2,
-      max: 2
+      max: 2,
+      valueRange : [-4, 4]
     },
     state : {
       curIndex : 2,
@@ -95,7 +94,8 @@ charts = {
         return Math.min(Math.abs(val * 100.0 / charts.gyro.opts.max), 100.0);
       },
       min: -1,
-      max: 1      
+      max: 1,
+      valueRange : [-3, 3],
     },
     state : {
       curIndex : 2,
@@ -118,6 +118,7 @@ charts = {
       },
       min : -70,
       max : 70,
+      valueRange : [-100, 100],
       color : {
         pattern: ['#0000FF', '#00FF00', '#FFFF00', '#FFA500', '#FF0000'],
         threshold: [1, 20, 30, 40]
@@ -144,6 +145,7 @@ charts = {
       },
       min: 0,
       max: 100,
+      valueRange : [-10, 110],
       color : {
         pattern: ['#0000FF'],
         threshold: []
@@ -170,6 +172,7 @@ charts = {
       },
       min: 0,
       max: 300,
+      valueRange : [-20, 320],
       color : {
         pattern: ['#0000FF'],
         threshold: []
@@ -196,6 +199,7 @@ charts = {
       },
       min: 0,
       max: 1000,
+      valueRange : [-50, 1050],
       color : {
         pattern: ['#FFC107'],
         threshold: []
@@ -222,6 +226,7 @@ charts = {
       },
       min: -50,
       max: 1500,
+      valueRange : [-100, 1600],
       color : {
         pattern: ['#0000FF', '#00FF00', '#FFFF00', '#FFA500', '#FF0000'],
         threshold: [1, 400, 800, 1200]
@@ -248,6 +253,7 @@ charts = {
       },
       min: -30,
       max: 30,
+      valueRange : [-50, 50],
       color : {
         pattern: ['#0000FF'],
         threshold: []
@@ -274,6 +280,7 @@ charts = {
       },
       min: -1,
       max: 1,
+      valueRange : [-3, 3],
       color : {
         pattern: ['#0000FF'],
         threshold: []
@@ -300,6 +307,7 @@ charts = {
       },
       min: 0,
       max: 14,
+      valueRange : [-5, 20],
       color : {
         pattern: ['#0000FF'],
         threshold: []
@@ -320,6 +328,8 @@ stats = {
   mode: 'realtime', // "realtime" or "experiment"
   plotter : null,
   wasInteract: false,
+  window: [30000, 4000],
+  windowIdx: 0,
   dom: {
     params: document.getElementById("params"),
     chart: document.getElementById("chart-stats")
@@ -442,7 +452,7 @@ function createDygraph() {
       labels: stats.opts[stats.currentChart].labels,
       includeZero: true,
       plotter: stats.plotter,
-      //dateWindow: getStatsChartDateWindow(charts[stats.currentChart]),
+      valueRange: charts[stats.currentChart].opts.valueRange,
       axes: {
         x: {
           axisLabelFormatter: function (d, gran) {
@@ -465,12 +475,17 @@ function createDygraph() {
       }
     };
 
-    if (os === 'android') {
-      opts.interactionModel = {
-        touchstart: CustomDygraphsInteractionModel.startTouch.bind(stats), 
-        touchend: CustomDygraphsInteractionModel.endTouch.bind(stats), 
-        touchmove: CustomDygraphsInteractionModel.moveTouch.bind(stats)
-      };
+    if (stats.mode === 'experiment') {
+      if (os === 'android') {
+        opts.interactionModel = {
+          touchstart: CustomDygraphsInteractionModel.startTouch.bind(stats), 
+          touchend: CustomDygraphsInteractionModel.endTouch.bind(stats), 
+          touchmove: CustomDygraphsInteractionModel.moveTouch.bind(stats)
+        };
+      }
+    } else {
+      opts.interactionModel = {};
+      opts.dateWindow = getStatsChartDateWindow(charts[stats.currentChart]);
     }
 
     stats.chart = new Dygraph(
@@ -486,7 +501,7 @@ function createDygraph() {
 function getStatsChartDateWindow(chart) {
   var data = stats.data[chart.name];
   var lastDate = data[data.length - 1][0].getTime();
-  var startDate = new Date(lastDate - 60000);
+  var startDate = new Date(lastDate - stats.window[stats.windowIdx]);
   return [startDate, new Date(lastDate)];
 }
 function createParamsState() {
@@ -810,12 +825,9 @@ function loadCurrentChartState(chart, mills) {
           createDygraph();
         } else {
           var opts = {
-            'file': stats.data[chart.name]
+            'file': stats.data[chart.name],
+            'dateWindow': getStatsChartDateWindow(chart)
           };
-
-          if (!stats.wasInteract) {
-            //opts.dateWindow = getStatsChartDateWindow(chart);
-          }
 
           stats.chart.updateOptions(opts);
         }
@@ -896,7 +908,7 @@ function microphone(v, mills) {
 }
 
 function accel(v, mills) {
-  charts.accel.val = v.map(charts.accel.opts.normalize).map(utils.normalizeVal);
+  charts.accel.val = v.map(utils.normalizeVal);
   loadCurrentChartState(charts.accel, mills);
 }
 
@@ -949,6 +961,8 @@ function stringStartsWith(string, prefix) {
   return string.slice(0, prefix.length) == prefix;
 }
 
+
+var dataCleanerInterval;
 function init(config) {
   var chartOnClick, paramOnClick, chartTypesRadioOnClick, chart, idx, i, l;
 
@@ -1007,14 +1021,37 @@ function init(config) {
     var type = e.target.value;
     stats.plotter = type === 'line' ? null : barChartPlotter;
 
+    stats.windowIdx  = type === 'line'? 0 : 1;
+
     stats.chart.updateOptions({
-      'plotter' : stats.plotter
+      'plotter' : stats.plotter,
+      'dateWindow' : getStatsChartDateWindow(charts[stats.currentChart])
     });
   };
   var chartTypesRadio = document.getElementsByName("chart-stats-type");
   for (i = 0, l = chartTypesRadio.length; i < l; i++) {
     chartTypesRadio[i].onclick = chartTypesRadioOnClick;
   }
+
+  clearInterval(dataCleanerInterval);
+  dataCleanerInterval = setInterval(function() {
+    var i, l, stat;
+    if (stats.mode === 'realtime') {
+      for (stat in stats.data) {
+        if (stats.data.hasOwnProperty(stat)) {
+          var time = new Date().getTime();
+          for (i = 0, l = stats.data[stat].length; i < l; i++) {
+            if (time - stats.data[stat][i][0].getTime() > 20000) {
+              stats.data[stat].shift();
+              l--;
+            } else {
+              break;
+            }
+          }
+        }
+      }
+    }    
+  }, 5000);
 }
 
 //init({"os":"browser","charts":{"microphone":1,"accel":-1,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});

@@ -24,7 +24,6 @@ import java.util.List;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
-import ru.edu.asu.minobrlabs.State;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
@@ -35,7 +34,7 @@ import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 public class MainActivity extends AppCompatActivity {
     private boolean wasOnPause;
 
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver sensorsBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (App.state.sensors.wantReInit) {
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (wasOnPause) {
-            App.state.appSensorsManager.init(broadcastReceiver);
+            App.state.appSensorsManager.init(sensorsBroadcastReceiver);
         }
 
         wasOnPause = false;
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         wasOnPause = true;
 
-        App.state.appSensorsManager.destroy(broadcastReceiver);
+        App.state.appSensorsManager.destroy(sensorsBroadcastReceiver);
     }
 
     @Override
@@ -179,12 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
                 state.nextCurrentInterval();
                 App.state.menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
-                for (final SensorTypes type : SensorTypes.values()) {
-                    if (type.getName().equalsIgnoreCase(state.currentStatsChart)) {
-                        App.state.appSensorsManager.localSensorsManager.setSleepTime(type, state.getCurrentInterval());
-                        break;
-                    }
-                }
+                App.state.appSensorsManager.setSleepTime(state.getCurrentInterval());
                 App.Preferences.writeMainWebViewState(state);
                 break;
             default:
@@ -256,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
-                App.state.appSensorsManager.init(broadcastReceiver);
+                App.state.appSensorsManager.init(sensorsBroadcastReceiver);
 
                 final String state = App.Preferences.readMainWebViewStateAsJson();
                 App.state.webView.loadUrl(String.format("javascript:init(%s)", state));

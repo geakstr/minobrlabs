@@ -9,16 +9,27 @@ import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 public class AccelSensorManager extends BuiltinSensorManager {
     public AccelSensorManager(final SensorManager sensorManager) {
-        super(sensorManager, SensorTypes.ACCEL);
+        super(sensorManager, SensorTypes.ACCEL, 40, 3);
+    }
+
+    public void setVal(float[] val) {
+        this.val = normalize(val);
     }
 
     @Override
-    public boolean update(final float[] val) {
+    public boolean update(float[] val) {
         if (super.update(val)) {
-            prevVal = AppSensorsManager.lowPass(val, prevVal, 0.75f);
-            App.state.sensors.update(SensorTypes.ACCEL, new Accel(prevVal));
+            this.val = AppSensorsManager.lowPass(val, this.val, 0.75f);
+            App.state.sensors.update(SensorTypes.ACCEL, new Accel(this.val));
             return true;
         }
         return false;
+    }
+
+    private float[] normalize(final float[] val) {
+        for (int i = 0; i < 3; i++) {
+            val[i] /= 9.81f;
+        }
+        return val;
     }
 }
