@@ -5,7 +5,7 @@ import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 public class Humidity extends GenericParam {
     public Humidity() {}
 
-    public Humidity(final float[] vals) {
-        super(vals);
+    public Humidity(final long date, final String vals, final long experimentId) {
+        super(date, vals, experimentId);
     }
 }

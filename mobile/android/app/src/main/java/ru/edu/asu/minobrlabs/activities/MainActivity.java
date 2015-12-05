@@ -19,15 +19,12 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
-import ru.edu.asu.minobrlabs.sensors.SensorTypes;
-import ru.edu.asu.minobrlabs.sensors.SensorsState;
 import ru.edu.asu.minobrlabs.webview.MainWebViewJavascriptInterface;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
@@ -37,26 +34,18 @@ public class MainActivity extends AppCompatActivity {
     private final BroadcastReceiver sensorsBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (App.state.sensors.wantReInit) {
-                App.state.sensors.wantReInit = false;
+            if (App.state.storage.wantReInit) {
+                App.state.storage.wantReInit = false;
 
                 final String state = App.Preferences.readMainWebViewStateAsJson();
                 App.state.webView.loadUrl(String.format("javascript:init(%s)", state));
                 return;
             }
 
-
-            final LinkedList<SensorsState.Update> updates = App.state.sensors.updates;
-            for (final SensorsState.Update update : updates) {
-                App.state.temporaryStorage.add(update.param);
-                App.state.webView.loadUrl(String.format("javascript:%s(%s, %s)",
-                                update.type.getName(),
-                                update.param.vals,
-                                update.param.date
-                        )
-                );
+            final String updates = App.state.storage.updatesToString();
+            if (null != updates) {
+                App.state.webView.loadUrl("javascript:update(" + updates + ")");
             }
-            updates.clear();
         }
     };
 
@@ -98,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         App.state.menu = menu;
 
         final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
-        menu.findItem(R.id.action_experiment_interval).setVisible(false);
+        menu.findItem(R.id.action_experiment_interval).setVisible(true);
         menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
 
         menu.findItem(R.id.action_experiments).setVisible(true);
@@ -136,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_to_main:
                 App.state.webView.loadUrl("javascript:showMainPage()");
-                App.state.menu.findItem(R.id.action_experiment_interval).setVisible(false);
+                App.state.menu.findItem(R.id.action_experiment_interval).setVisible(true);
                 App.state.menu.findItem(R.id.action_to_main).setVisible(false);
                 App.state.menu.findItem(R.id.action_to_stats).setVisible(true);
                 break;
             case R.id.action_start_recording:
-                App.state.temporaryStorage.startRecording();
+                App.state.storage.startRecording();
                 App.state.webView.loadUrl("javascript:isRecording(true)");
 
                 App.state.menu.findItem(R.id.action_experiments).setVisible(false);
@@ -151,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 App.state.menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
             case R.id.action_stop_recording:
-                App.state.temporaryStorage.stopRecording();
+                App.state.storage.stopRecording();
                 App.state.webView.loadUrl("javascript:isRecording(false)");
 
                 App.state.menu.findItem(R.id.action_experiments).setVisible(false);
@@ -167,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                 App.state.menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
             case R.id.action_clear_recording:
-                App.state.temporaryStorage.clear();
+                App.state.storage.clear();
                 App.state.webView.loadUrl("javascript:clear()");
 
                 App.state.menu.findItem(R.id.action_experiments).setVisible(true);
@@ -196,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                App.state.temporaryStorage.persist(new Experiment(input.getText().toString().trim()));
+                App.state.storage.persist(new Experiment(input.getText().toString().trim()));
             }
         });
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

@@ -5,7 +5,7 @@ import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 public class SoluteTemperature extends GenericParam {
     public SoluteTemperature() {}
 
-    public SoluteTemperature(final float[] vals) {
-        super(vals);
+    public SoluteTemperature(final long date, final String vals, final long experimentId) {
+        super(date, vals, experimentId);
     }
 }

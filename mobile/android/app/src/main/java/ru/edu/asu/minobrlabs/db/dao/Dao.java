@@ -34,9 +34,9 @@ public class Dao {
         final String id = experiment._id.toString();
 
         final Map<String, List<Object>> map = new HashMap<>();
-        for (final SensorTypes sensorType : SensorTypes.values()) {
-            final String name = sensorType.getName();
-            final Class clazz = sensorType.getClazz();
+        for (final SensorTypes.Type sensorType : SensorTypes.values) {
+            final String name = sensorType.name;
+            final Class clazz = sensorType.clazz;
 
             map.put(name, cupboard().withDatabase(db().conn())
                     .query(clazz)

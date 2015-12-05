@@ -5,7 +5,7 @@ import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 public class AtmoPressure extends GenericParam {
     public AtmoPressure() {}
 
-    public AtmoPressure(final float[] vals) {
-        super(vals);
+    public AtmoPressure(final long date, final String vals, final long experimentId) {
+        super(date, vals, experimentId);
     }
 }

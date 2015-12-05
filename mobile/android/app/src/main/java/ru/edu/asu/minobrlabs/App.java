@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
-import ru.edu.asu.minobrlabs.db.Database;
-import ru.edu.asu.minobrlabs.db.TemporaryStorage;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.db.entities.params.Accel;

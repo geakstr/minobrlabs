@@ -5,7 +5,7 @@ import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 public class Ph extends GenericParam {
     public Ph() {}
 
-    public Ph(final float[] vals) {
-        super(vals);
+    public Ph(final long date, final String vals, final long experimentId) {
+        super(date, vals, experimentId);
     }
 }

@@ -8,6 +8,8 @@ import android.os.IBinder;
 import ru.edu.asu.minobrlabs.App;
 
 public class SensorsService extends Service {
+    public static final String TAG = SensorsService.class.getSimpleName();
+
     public static final String BROADCAST_ACTION = "ru.edu.asu.minobrlabs.sensors.SensorsService";
 
     private final Handler handler = new Handler();
@@ -17,8 +19,7 @@ public class SensorsService extends Service {
             App.state.appSensorsManager.localSensorsManager.update();
 
             sendBroadcast(intent);
-
-            handler.postDelayed(this, 20L);
+            handler.postDelayed(this, App.state.storage.sleepTime);
         }
     };
 

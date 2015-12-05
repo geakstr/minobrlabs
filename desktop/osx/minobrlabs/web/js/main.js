@@ -8,7 +8,7 @@
 // state = 4 - horizontal bar
 // state = 5 - vertical bar
 
-var pages, charts, chartsOrder, stats, xyzAxises, utils, os;
+var pages, charts, charts_ids, chartsOrder, stats, xyzAxises, utils, os;
 
 var i = 0;
 
@@ -33,6 +33,20 @@ pages = {
 };
 
 chartsOrder = ['microphone', 'accel', 'gyro', 'light', 'airTemperature', 'humidity', 'atmoPressure', 'soluteTemperature', 'voltage', 'amperage', 'ph'];
+
+charts_ids = {
+  15: "humidity",
+  11: "airTemperature",
+  5: "light",
+  4: "gyro",
+  1: "accel",
+  14: "atmoPressure",
+  12: "amperage",
+  16: "ph",
+  17: "soluteTemperature",
+  13: "voltage",
+  18: "microphone"
+};
 
 charts = {
   'microphone': {
@@ -328,7 +342,7 @@ stats = {
   mode: 'realtime', // "realtime" or "experiment"
   plotter : null,
   wasInteract: false,
-  window: [30000, 4000],
+  window: [20000, 4000],
   windowIdx: 0,
   dom: {
     params: document.getElementById("params"),
@@ -957,6 +971,24 @@ function ph(v, mills) {
   loadCurrentChartState(charts.ph, mills);
 }
 
+
+
+function update(data) {
+  var i, l, d, c;
+
+  for (i = 0, l = data.length; i < l; i++) {
+    d = data[i];
+    c = charts[charts_ids[d[0]]];
+    c.val = d[2];
+    loadCurrentChartState(c, d[1]);
+  }
+}
+
+
+
+
+
+
 function stringStartsWith(string, prefix) {
   return string.slice(0, prefix.length) == prefix;
 }
@@ -1041,7 +1073,7 @@ function init(config) {
         if (stats.data.hasOwnProperty(stat)) {
           var time = new Date().getTime();
           for (i = 0, l = stats.data[stat].length; i < l; i++) {
-            if (time - stats.data[stat][i][0].getTime() > 20000) {
+            if (time - stats.data[stat][i][0].getTime() > stats.window[0]) {
               stats.data[stat].shift();
               l--;
             } else {

@@ -3,7 +3,6 @@ package ru.edu.asu.minobrlabs.sensors.local;
 import android.media.MediaRecorder;
 
 import ru.edu.asu.minobrlabs.App;
-import ru.edu.asu.minobrlabs.db.entities.params.Microphone;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
@@ -11,7 +10,7 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
     private MediaRecorder mediaRecorder;
 
     public MicrophoneSensorManager() {
-        super(100, 1);
+        super(1);
     }
 
     @Override
@@ -26,7 +25,7 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
 
     @Override
     public boolean update() {
-        if (!period() || null == mediaRecorder) {
+        if (null == mediaRecorder) {
             return false;
         }
 
@@ -36,7 +35,7 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
         int db = (int) (20 * Math.log10(pressure / 0.00002)); // Convert pressure to dB (SPL)
         db = db < 0 ? 40 : db;
 
-        App.state.sensors.update(SensorTypes.MICROPHONE_DB, new Microphone(new float[]{db}));
+        App.state.storage.push(SensorTypes.MICROPHONE_DB.id, new float[]{db});
 
         return true;
     }
@@ -64,16 +63,16 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
             mediaRecorder.prepare();
             mediaRecorder.start();
 
-            if (state.charts.get(SensorTypes.MICROPHONE_DB.getName()) == -1) {
-                state.charts.put(SensorTypes.MICROPHONE_DB.getName(), 1);
+            if (state.charts.get(SensorTypes.MICROPHONE_DB.name) == -1) {
+                state.charts.put(SensorTypes.MICROPHONE_DB.name, 1);
             }
         } catch (Exception e) {
             // Log.e(tag, e.getMessage(), e);
-            state.charts.put(SensorTypes.MICROPHONE_DB.getName(), -1);
+            state.charts.put(SensorTypes.MICROPHONE_DB.name, -1);
             return false;
         } finally {
             App.Preferences.writeMainWebViewState(state);
-            App.state.sensors.wantReInit = true;
+            App.state.storage.wantReInit = true;
         }
         return true;
     }

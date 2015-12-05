@@ -16,52 +16,57 @@ import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 public class LocalSensorsManager implements SensorEventListener {
     private final SensorManager sensorManager;
 
-    private final Map<SensorTypes, BuiltinSensorManager> sensorManagers;
+    private final Map<SensorTypes.Type, BuiltinSensorManager> sensorManagers;
+
+    private final MicrophoneSensorManager microphoneSensorManager;
+    private final LightSensorManager lightSensorManager;
+    private final AccelSensorManager accelSensorManager;
+    private final GyroSensorManager gyroSensorManager;
 
     public LocalSensorsManager() {
-        sensorManager = (SensorManager) App.instance.getSystemService(Context.SENSOR_SERVICE);
+        this.sensorManager = (SensorManager) App.instance.getSystemService(Context.SENSOR_SERVICE);
 
-        sensorManagers = new HashMap<SensorTypes, BuiltinSensorManager>() {{
-            put(SensorTypes.MICROPHONE_DB, new MicrophoneSensorManager());
-            put(SensorTypes.LIGHT, new LightSensorManager(sensorManager));
-            put(SensorTypes.ACCEL, new AccelSensorManager(sensorManager));
-            put(SensorTypes.GYRO, new GyroSensorManager(sensorManager));
+        this.microphoneSensorManager = new MicrophoneSensorManager();
+        this.lightSensorManager = new LightSensorManager(sensorManager);
+        this.accelSensorManager = new AccelSensorManager(sensorManager);
+        this.gyroSensorManager = new GyroSensorManager(sensorManager);
+
+        this.sensorManagers = new HashMap<SensorTypes.Type, BuiltinSensorManager>() {{
+            put(SensorTypes.MICROPHONE_DB, microphoneSensorManager);
+            put(SensorTypes.LIGHT, lightSensorManager);
+            put(SensorTypes.ACCEL, accelSensorManager);
+            put(SensorTypes.GYRO, gyroSensorManager);
         }};
     }
 
     public void update() {
-        for (final BuiltinSensorManager sensorManager : sensorManagers.values()) {
-            sensorManager.update();
-        }
-    }
-
-    public void setSleepTime(final long time) {
-        for (final BuiltinSensorManager sensorManager : sensorManagers.values()) {
-            sensorManager.setSleepTime(time);
-        }
+        microphoneSensorManager.update();
+        lightSensorManager.update();
+        accelSensorManager.update();
+        gyroSensorManager.update();
     }
 
     public void registerListeners() {
         final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
 
-        for (Map.Entry<SensorTypes, BuiltinSensorManager> e : sensorManagers.entrySet()) {
-            final SensorTypes type = e.getKey();
+        for (Map.Entry<SensorTypes.Type, BuiltinSensorManager> e : sensorManagers.entrySet()) {
+            final SensorTypes.Type type = e.getKey();
             final BuiltinSensorManager sensor = e.getValue();
             if (sensor.available()) {
                 if (null != sensor.getSensor()) {
                     sensorManager.registerListener(this, sensor.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
                 }
-                if (state.charts.get(type.getName()) == -1) {
-                    state.charts.put(type.getName(), 1);
+                if (state.charts.get(type.name) == -1) {
+                    state.charts.put(type.name, 1);
                 }
             } else {
-                state.charts.put(type.getName(), -1);
+                state.charts.put(type.name, -1);
             }
         }
 
         App.Preferences.writeMainWebViewState(state);
 
-        App.state.sensors.wantReInit = true;
+        App.state.storage.wantReInit = true;
     }
 
     public void unregisterListeners() {
@@ -75,11 +80,14 @@ public class LocalSensorsManager implements SensorEventListener {
         if (null == val) {
             return;
         }
-        for (final SensorTypes type : SensorTypes.values()) {
-            if (type.getAndroidVal() == event.sensor.getType()) {
-                sensorManagers.get(type).setVal(val);
-                break;
-            }
+
+        final int type = event.sensor.getType();
+        if (SensorTypes.LIGHT.id == type) {
+            lightSensorManager.setVal(val);
+        } else if (SensorTypes.ACCEL.id == type) {
+            accelSensorManager.setVal(val);
+        } else if (SensorTypes.GYRO.id == type) {
+            gyroSensorManager.setVal(val);
         }
     }
 

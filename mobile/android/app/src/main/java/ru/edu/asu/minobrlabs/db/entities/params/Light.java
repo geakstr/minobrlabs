@@ -5,7 +5,7 @@ import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 public class Light extends GenericParam {
     public Light() {}
 
-    public Light(final float[] vals) {
-        super(vals);
+    public Light(final long date, final String vals, final long experimentId) {
+        super(date, vals, experimentId);
     }
 }

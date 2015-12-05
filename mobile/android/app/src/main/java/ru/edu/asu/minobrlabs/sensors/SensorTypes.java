@@ -31,6 +31,35 @@ public class SensorTypes {
             HUMIDITY, AIR_TEMPERATURE, LIGHT, GYRO, ACCEL, ATMO_PRESSURE, AMPERAGE, PH, SOLUTE_TEMPERATURE, VOLTAGE, MICROPHONE_DB
     };
 
+    public static Type byId(final int id) {
+        switch (id) {
+            case 15:
+                return HUMIDITY;
+            case 11:
+                return AIR_TEMPERATURE;
+            case Sensor.TYPE_LIGHT:
+                return LIGHT;
+            case Sensor.TYPE_GYROSCOPE:
+                return GYRO;
+            case Sensor.TYPE_ACCELEROMETER:
+                return ACCEL;
+            case 14:
+                return ATMO_PRESSURE;
+            case 12:
+                return AMPERAGE;
+            case 16:
+                return PH;
+            case 17:
+                return SOLUTE_TEMPERATURE;
+            case 13:
+                return VOLTAGE;
+            case 18:
+                return MICROPHONE_DB;
+            default:
+                return null;
+        }
+    }
+
     public static class Type {
         public final int id;
         public final String name;

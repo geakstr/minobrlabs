@@ -5,7 +5,7 @@ import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 public class Amperage extends GenericParam {
     public Amperage() {}
 
-    public Amperage(final float[] vals) {
-        super(vals);
+    public Amperage(final long date, final String vals, final long experimentId) {
+        super(date, vals, experimentId);
     }
 }
