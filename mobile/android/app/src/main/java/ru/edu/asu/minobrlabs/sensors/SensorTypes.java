@@ -2,7 +2,6 @@ package ru.edu.asu.minobrlabs.sensors;
 
 import android.hardware.Sensor;
 
-import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 import ru.edu.asu.minobrlabs.db.entities.params.Accel;
 import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
 import ru.edu.asu.minobrlabs.db.entities.params.Amperage;
@@ -15,38 +14,32 @@ import ru.edu.asu.minobrlabs.db.entities.params.Ph;
 import ru.edu.asu.minobrlabs.db.entities.params.SoluteTemperature;
 import ru.edu.asu.minobrlabs.db.entities.params.Voltage;
 
-public enum SensorTypes {
-    HUMIDITY("humidity", Humidity.class, -1),
-    AIR_TEMPERATURE("airTemperature", AirTemperature.class, -1),
-    LIGHT("light", Light.class, Sensor.TYPE_LIGHT),
-    GYRO("gyro", Gyro.class, Sensor.TYPE_GYROSCOPE),
-    ACCEL("accel", Accel.class, Sensor.TYPE_ACCELEROMETER),
-    ATMO_PRESSURE("atmoPressure", AtmoPressure.class, -1),
-    AMPERAGE("amperage", Amperage.class, -1),
-    PH("ph", Ph.class, -1),
-    SOLUTE_TEMPERATURE("soluteTemperature", SoluteTemperature.class, -1),
-    VOLTAGE("voltage", Voltage.class, -1),
-    MICROPHONE_DB("microphone", Microphone.class, -1);
+public class SensorTypes {
+    public static final Type HUMIDITY = new Type(15, "humidity", Humidity.class);
+    public static final Type AIR_TEMPERATURE = new Type(11, "airTemperature", AirTemperature.class);
+    public static final Type LIGHT = new Type(Sensor.TYPE_LIGHT, "light", Light.class);
+    public static final Type GYRO = new Type(Sensor.TYPE_GYROSCOPE, "gyro", Gyro.class);
+    public static final Type ACCEL = new Type(Sensor.TYPE_ACCELEROMETER, "accel", Accel.class);
+    public static final Type ATMO_PRESSURE = new Type(14, "atmoPressure", AtmoPressure.class);
+    public static final Type AMPERAGE = new Type(12, "amperage", Amperage.class);
+    public static final Type PH = new Type(16, "ph", Ph.class);
+    public static final Type SOLUTE_TEMPERATURE = new Type(17, "soluteTemperature", SoluteTemperature.class);
+    public static final Type VOLTAGE = new Type(13, "voltage", Voltage.class);
+    public static final Type MICROPHONE_DB = new Type(18, "microphone", Microphone.class);
 
-    private final String name;
-    private final Class<? extends GenericParam> clazz;
-    private final int androidVal;
+    public static final SensorTypes.Type[] values = new SensorTypes.Type[]{
+            HUMIDITY, AIR_TEMPERATURE, LIGHT, GYRO, ACCEL, ATMO_PRESSURE, AMPERAGE, PH, SOLUTE_TEMPERATURE, VOLTAGE, MICROPHONE_DB
+    };
 
-    SensorTypes(final String name, final Class<? extends GenericParam> clazz, final int androidVal) {
-        this.name = name;
-        this.clazz = clazz;
-        this.androidVal = androidVal;
-    }
+    public static class Type {
+        public final int id;
+        public final String name;
+        public final Class clazz;
 
-    public String getName() {
-        return name;
-    }
-
-    public Class<? extends GenericParam> getClazz() {
-        return clazz;
-    }
-
-    public int getAndroidVal() {
-        return androidVal;
+        public Type(final int id, final String name, final Class clazz) {
+            this.id = id;
+            this.name = name;
+            this.clazz = clazz;
+        }
     }
 }
