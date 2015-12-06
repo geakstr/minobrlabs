@@ -7,7 +7,6 @@ import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
-import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class Storage implements Serializable {
     private boolean recording = false;
@@ -16,7 +15,7 @@ public class Storage implements Serializable {
     public boolean wantReInit = false;
     public long sleepTime;
 
-    private int idx;
+    private int updateIdx;
     private final String[] updates;
 
     private final static int MAX_EXPERIMENT_SIZE = 1000000;
@@ -26,14 +25,13 @@ public class Storage implements Serializable {
     private int persistIdx;
 
     public Storage() {
-        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
-
         this.recording = false;
         this.wasRecording = false;
 
-        this.idx = 0;
+        this.sleepTime = App.Preferences.readMainWebViewStateAsObject().getCurrentInterval();
+
+        this.updateIdx = 0;
         this.updates = new String[255];
-        this.sleepTime = state.getCurrentInterval();
 
         this.persistIdx = 0;
         this.ids = new int[MAX_EXPERIMENT_SIZE];
@@ -61,16 +59,13 @@ public class Storage implements Serializable {
     }
 
     public void persist(final Experiment experiment) {
-        if (wasRecording) {
+        if (wasRecording && persistIdx > 0) {
             final long experimentId = Dao.put(experiment);
-
             final GenericParam[] data = new GenericParam[persistIdx];
             for (int i = 0; i < persistIdx; i++) {
                 data[i] = GenericParam.createById(ids[i], times[i], vals[i], experimentId);
             }
-            if (persistIdx > 0) {
-                Dao.put(data);
-            }
+            Dao.put(data);
             clear();
         }
     }
@@ -80,24 +75,24 @@ public class Storage implements Serializable {
         final String strVal = Arrays.toString(val);
 
         if (recording) {
-            persist(id, time, Arrays.toString(val));
+            persist(id, time, strVal);
         }
 
-        if (idx >= 255) {
-            idx = 0;
+        if (updateIdx >= 255) {
+            updateIdx = 0;
         }
 
         final String[] data = new String[3];
         data[0] = String.valueOf(id);
         data[1] = String.valueOf(time);
         data[2] = strVal;
-        updates[idx++] = Arrays.toString(data);
+        updates[updateIdx++] = Arrays.toString(data);
     }
 
     public String updatesToString() {
-        final int l = idx;
+        final int l = updateIdx;
 
-        idx = 0;
+        updateIdx = 0;
 
         return l == 0 ? null : Arrays.toString(Arrays.copyOf(updates, l));
     }

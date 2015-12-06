@@ -28,14 +28,18 @@ public class MainWebViewState implements Serializable {
     }};
 
     public int intervalIdx = 1;
-    public final long[] intervals = new long[]{40, 100, 1000, 60000};
+    public final long[] intervals = new long[]{40, 100, 250, 500, 1000, 60000};
 
     public long getCurrentInterval() {
         return intervals[intervalIdx];
     }
 
     public String getFormattedCurrentInterval() {
-        return String.valueOf(1000 / getCurrentInterval() + "/сек");
+        final long interval = getCurrentInterval();
+        final int divider = interval <= 1000 ? 1000 : 60000;
+        final String metrics = divider == 1000 ? "сек" : "мин";
+
+        return String.valueOf(divider / getCurrentInterval() + ("/" + metrics));
     }
 
     public long nextCurrentInterval() {

@@ -27,7 +27,7 @@ public class AppSensorsManager {
         this.initiated = false;
     }
 
-    public void init(final BroadcastReceiver broadcastReceiver) {
+    public void start(final BroadcastReceiver broadcastReceiver) {
         if (!initiated) {
             App.state.activity.startService(sensorsServiceIntent);
             App.state.activity.registerReceiver(broadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
@@ -40,12 +40,13 @@ public class AppSensorsManager {
         }
     }
 
-    public void destroy(final BroadcastReceiver broadcastReceiver) {
+    public void stop(final BroadcastReceiver broadcastReceiver) {
         if (initiated) {
             localSensorsManager.unregisterListeners();
 
             App.state.activity.unregisterReceiver(broadcastReceiver);
             App.state.activity.stopService(sensorsServiceIntent);
+            App.state.appSensorsThread.stop();
 
             initiated = false;
 

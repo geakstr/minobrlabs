@@ -33,7 +33,7 @@ public class MicrophoneSensorManager extends BuiltinSensorManager {
         // http://stackoverflow.com/questions/10655703/what-does-androids-getmaxamplitude-function-for-the-mediarecorder-actually-gi
         final double pressure = mediaRecorder.getMaxAmplitude() / 51805.5336; // 51805.5336 = 32767 / 0.6325 where 0.6325 Pa equals 90 dB;
         int db = (int) (20 * Math.log10(pressure / 0.00002)); // Convert pressure to dB (SPL)
-        db = db < 0 ? 40 : db;
+        db = db < 0 ? 20 : db;
 
         App.state.storage.push(SensorTypes.MICROPHONE_DB.id, new float[]{db});
 

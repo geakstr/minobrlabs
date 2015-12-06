@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (wasOnPause) {
-            App.state.appSensorsManager.init(sensorsBroadcastReceiver);
+            App.state.appSensorsManager.start(sensorsBroadcastReceiver);
         }
 
         wasOnPause = false;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         wasOnPause = true;
 
-        App.state.appSensorsManager.destroy(sensorsBroadcastReceiver);
+        App.state.appSensorsManager.stop(sensorsBroadcastReceiver);
     }
 
     @Override
@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 state.nextCurrentInterval();
                 App.state.menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
                 App.state.appSensorsManager.setSleepTime(state.getCurrentInterval());
+                App.state.appSensorsThread.restart();
                 App.Preferences.writeMainWebViewState(state);
                 break;
             default:
@@ -239,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
-                App.state.appSensorsManager.init(sensorsBroadcastReceiver);
+                App.state.appSensorsManager.start(sensorsBroadcastReceiver);
 
                 final String state = App.Preferences.readMainWebViewStateAsJson();
                 App.state.webView.loadUrl(String.format("javascript:init(%s)", state));

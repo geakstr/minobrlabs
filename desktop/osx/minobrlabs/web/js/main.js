@@ -8,9 +8,10 @@
 // state = 4 - horizontal bar
 // state = 5 - vertical bar
 
-var pages, charts, charts_ids, chartsOrder, stats, xyzAxises, utils, os;
+var pages, charts, updates, charts_ids, chartsOrder, stats, xyzAxises, utils, os;
 
 var i = 0;
+updates = {};
 
 xyzAxises = ['x', 'y', 'z'];
 
@@ -63,7 +64,7 @@ charts = {
       formatFunction: function(value, ratio) {
         return value + ' дб';
       },
-      min : 40,
+      min : 20,
       max : 90,
       valueRange : [0, 120],
       color : {
@@ -800,31 +801,63 @@ function loadLabelChart(chart) {
   chart.container.textContent = chart.opts.formatFunction(chart.val);
 }
 
+// Delay between each chart update on main page
+setInterval(function() {
+  var chartName, chart;
+
+  for (chartName in updates) {
+    if (updates.hasOwnProperty(chartName)) {
+      chart = updates[chartName];
+
+      switch (chart.state.states[chart.state.curIndex]) {
+        case 1:
+          loadGaugeChart(chart);
+          break;
+        case 2:
+          loadLabelChart(chart);
+          break;
+        case 3:
+          loadAxisesChart(chart);
+          break;
+        case 4:
+          loadAxisChart(chart, 'x');
+          break;
+        case 5:
+          loadAxisChart(chart, 'y');
+          break;
+        default:
+          break;
+      }
+    }
+  }
+}, 100);
+
 function loadCurrentChartState(chart, mills) {
   if (chart.state.curIndex <= 0) {
     return;
   }
 
-  if (pages.active === 'mainPage') {
-    switch (chart.state.states[chart.state.curIndex]) {
-      case 1:
-        loadGaugeChart(chart);
-        break;
-      case 2:
-        loadLabelChart(chart);
-        break;
-      case 3:
-        loadAxisesChart(chart);
-        break;
-      case 4:
-        loadAxisChart(chart, 'x');
-        break;
-      case 5:
-        loadAxisChart(chart, 'y');
-        break;
-      default:
-        break;
-    }
+  if (pages.active === 'mainPage') {    
+    updates[chart.name] = chart;
+    // switch (chart.state.states[chart.state.curIndex]) {
+    //   case 1:
+    //     loadGaugeChart(chart);
+    //     break;
+    //   case 2:
+    //     loadLabelChart(chart);
+    //     break;
+    //   case 3:
+    //     loadAxisesChart(chart);
+    //     break;
+    //   case 4:
+    //     loadAxisChart(chart, 'x');
+    //     break;
+    //   case 5:
+    //     loadAxisChart(chart, 'y');
+    //     break;
+    //   default:
+    //     break;
+    // }
   }
 
   if (stats.mode === 'realtime') {
