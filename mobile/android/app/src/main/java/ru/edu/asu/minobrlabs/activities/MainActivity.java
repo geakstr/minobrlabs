@@ -29,6 +29,8 @@ import ru.edu.asu.minobrlabs.webview.MainWebViewJavascriptInterface;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String TAG = MainActivity.class.getSimpleName();
+
     private boolean wasOnPause;
 
     private final BroadcastReceiver sensorsBroadcastReceiver = new BroadcastReceiver() {
@@ -48,6 +50,17 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+//    private final BroadcastReceiver bluetoothBroadcastReceiver = new BroadcastReceiver() {
+//        public void onReceive(Context context, Intent intent) {
+//            String action = intent.getAction();
+//            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//                bluetoothDevices.add(device.getName() + "   " + device.getAddress());
+//                System.out.println(bluetoothDevices);
+//            }
+//        }
+//    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +85,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        App.state.appSensorsManager.stop(sensorsBroadcastReceiver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.state.appSensorsManager.stop(sensorsBroadcastReceiver);
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
         wasOnPause = true;
 
         App.state.appSensorsManager.stop(sensorsBroadcastReceiver);
+
+//        btThreadRunning = false;
     }
 
     @Override
@@ -168,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                 state.nextCurrentInterval();
                 App.state.menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
                 App.state.appSensorsManager.setSleepTime(state.getCurrentInterval());
-                App.state.appSensorsThread.restart();
+                App.state.localSensorsWorker.restart();
                 App.Preferences.writeMainWebViewState(state);
                 break;
             default:

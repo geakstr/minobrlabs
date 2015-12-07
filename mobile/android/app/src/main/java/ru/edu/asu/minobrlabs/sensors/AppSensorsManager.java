@@ -6,14 +6,15 @@ import android.content.IntentFilter;
 import android.util.Log;
 
 import ru.edu.asu.minobrlabs.App;
-import ru.edu.asu.minobrlabs.sensors.bluetooth.BluetoothSensorsManager;
+import ru.edu.asu.minobrlabs.sensors.bluetooth.BluetoothSensorsWorker;
 import ru.edu.asu.minobrlabs.sensors.local.LocalSensorsManager;
 
 public class AppSensorsManager {
     public static final String TAG = AppSensorsManager.class.getSimpleName();
 
     public final LocalSensorsManager localSensorsManager;
-    public final BluetoothSensorsManager bluetoothSensorsManager;
+
+    public final BluetoothSensorsWorker bluetoothSensorsWorker;
 
     private final Intent sensorsServiceIntent;
     private boolean initiated;
@@ -22,13 +23,15 @@ public class AppSensorsManager {
         this.sensorsServiceIntent = new Intent(App.instance.getApplicationContext(), SensorsService.class);
 
         this.localSensorsManager = new LocalSensorsManager();
-        this.bluetoothSensorsManager = new BluetoothSensorsManager();
+        this.bluetoothSensorsWorker = new BluetoothSensorsWorker();
 
         this.initiated = false;
     }
 
     public void start(final BroadcastReceiver broadcastReceiver) {
         if (!initiated) {
+            bluetoothSensorsWorker.start();
+
             App.state.activity.startService(sensorsServiceIntent);
             App.state.activity.registerReceiver(broadcastReceiver, new IntentFilter(SensorsService.BROADCAST_ACTION));
 
@@ -46,7 +49,7 @@ public class AppSensorsManager {
 
             App.state.activity.unregisterReceiver(broadcastReceiver);
             App.state.activity.stopService(sensorsServiceIntent);
-            App.state.appSensorsThread.stop();
+            App.state.localSensorsWorker.stop();
 
             initiated = false;
 

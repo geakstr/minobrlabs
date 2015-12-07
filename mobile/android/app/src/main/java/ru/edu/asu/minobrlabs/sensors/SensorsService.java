@@ -18,13 +18,13 @@ public class SensorsService extends Service {
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        App.state.appSensorsThread.restart();
+        App.state.localSensorsWorker.restart();
 
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        App.state.appSensorsThread.stop();
+        App.state.localSensorsWorker.stop();
     }
 }
