@@ -23,9 +23,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".sensors.SensorsService"
-            android:exported="false" />
     </application>
 
 </manifest>

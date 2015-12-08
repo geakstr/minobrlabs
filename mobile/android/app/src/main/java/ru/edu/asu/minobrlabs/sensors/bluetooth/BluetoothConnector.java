@@ -16,10 +16,10 @@ import java.util.UUID;
 public class BluetoothConnector {
     public static final String TAG = BluetoothConnector.class.getSimpleName();
 
+    private final BluetoothAdapter adapter;
+    private final BluetoothDevice device;
     private BluetoothSocketWrapper bluetoothSocket;
-    private BluetoothDevice device;
     private boolean secure;
-    private BluetoothAdapter adapter;
     private List<UUID> uuidCandidates;
     private int candidate;
 
@@ -35,37 +35,41 @@ public class BluetoothConnector {
         }
     }
 
-    public BluetoothSocketWrapper connect() throws IOException {
-        boolean success = false;
+    public BluetoothSocketWrapper connect() {
+        try {
+            boolean success = false;
 
-        adapter.cancelDiscovery();
-        while (selectSocket()) {
-            try {
-                bluetoothSocket.connect();
-                success = true;
-                break;
-            } catch (IOException e) {
+            adapter.cancelDiscovery();
+            while (selectSocket()) {
                 try {
-                    bluetoothSocket = new FallbackBluetoothSocket(bluetoothSocket.getUnderlyingSocket());
-                    Thread.sleep(500);
                     bluetoothSocket.connect();
                     success = true;
                     break;
-                } catch (FallbackException e1) {
-                    Log.e(TAG, "Could not initialize FallbackBluetoothSocket classes.", e1);
-                } catch (InterruptedException e1) {
-                    Log.e(TAG, e1.getMessage(), e1);
-                } catch (IOException e1) {
-                    Log.e(TAG, "Fallback failed. Cancelling.", e1);
+                } catch (IOException e) {
+                    try {
+                        bluetoothSocket = new FallbackBluetoothSocket(bluetoothSocket.getUnderlyingSocket());
+                        Thread.sleep(500);
+                        bluetoothSocket.connect();
+                        success = true;
+                        break;
+                    } catch (FallbackException e1) {
+                        Log.e(TAG, "Could not initialize FallbackBluetoothSocket classes.", e1);
+                    } catch (InterruptedException e1) {
+                        Log.e(TAG, e1.getMessage(), e1);
+                    } catch (IOException e1) {
+                        Log.e(TAG, "Fallback failed. Cancelling.", e1);
+                    }
                 }
             }
-        }
 
-        if (!success) {
-            throw new IOException("Could not connect to device: " + device.getAddress());
-        }
+            if (!success) {
+                throw new IOException("Could not connect to device: " + device.getAddress());
+            }
 
-        Log.d(TAG, "Connected!");
+            Log.d(TAG, "Connected!");
+        } catch (IOException e) {
+            Log.e(TAG, "Could not select socket", e);
+        }
 
         return bluetoothSocket;
     }

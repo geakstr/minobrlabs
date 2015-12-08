@@ -88,8 +88,8 @@ charts = {
       width: function(val) {
         return Math.min(Math.abs(val * 100.0 / charts.accel.opts.max), 100.0);
       },
-      min: -2,
-      max: 2,
+      min: -4,
+      max: 4,
       valueRange : [-4, 4]
     },
     state : {
@@ -108,9 +108,9 @@ charts = {
       width: function(val) {
         return Math.min(Math.abs(val * 100.0 / charts.gyro.opts.max), 100.0);
       },
-      min: -1,
-      max: 1,
-      valueRange : [-3, 3],
+      min: -7,
+      max: 7,
+      valueRange : [-10, 10],
     },
     state : {
       curIndex : 2,
@@ -404,8 +404,8 @@ function showMainPage() {
 
   pages.active = 'mainPage';
 
-  pages.mainPage.style.display = 'block';
-  pages.statsPage.style.display = 'none';
+  pages.mainPage.style.visibility = 'visible';
+  pages.statsPage.style.visibility = 'hidden';
 
   for (chart in charts) {
     if (charts.hasOwnProperty(chart)) {
@@ -417,8 +417,8 @@ function showMainPage() {
 function showStatsPage() {
   pages.active = 'statsPage';
 
-  pages.mainPage.style.display = 'none';
-  pages.statsPage.style.display = 'block';
+  pages.mainPage.style.visibility = 'hidden';
+  pages.statsPage.style.visibility = 'visible';
 
   createDygraph();
 }
@@ -803,6 +803,10 @@ function loadLabelChart(chart) {
 
 // Delay between each chart update on main page
 setInterval(function() {
+  if (pages.active !== 'mainPage') { 
+    return;
+  }
+
   var chartName, chart;
 
   for (chartName in updates) {
@@ -839,25 +843,6 @@ function loadCurrentChartState(chart, mills) {
 
   if (pages.active === 'mainPage') {    
     updates[chart.name] = chart;
-    // switch (chart.state.states[chart.state.curIndex]) {
-    //   case 1:
-    //     loadGaugeChart(chart);
-    //     break;
-    //   case 2:
-    //     loadLabelChart(chart);
-    //     break;
-    //   case 3:
-    //     loadAxisesChart(chart);
-    //     break;
-    //   case 4:
-    //     loadAxisChart(chart, 'x');
-    //     break;
-    //   case 5:
-    //     loadAxisChart(chart, 'y');
-    //     break;
-    //   default:
-    //     break;
-    // }
   }
 
   if (stats.mode === 'realtime') {

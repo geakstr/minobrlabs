@@ -1,14 +1,12 @@
 package ru.edu.asu.minobrlabs.activities;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,86 +23,77 @@ import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
+import ru.edu.asu.minobrlabs.sensors.AppSensorsWorker;
+import ru.edu.asu.minobrlabs.sensors.bluetooth.BluetoothSensorsManager;
+import ru.edu.asu.minobrlabs.sensors.builtin.BuiltinSensorsManager;
 import ru.edu.asu.minobrlabs.webview.MainWebViewJavascriptInterface;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private boolean wasOnPause;
+    private boolean interrupt;
 
-    private final BroadcastReceiver sensorsBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (App.state.storage.wantReInit) {
-                App.state.storage.wantReInit = false;
-
-                final String state = App.Preferences.readMainWebViewStateAsJson();
-                App.state.webView.loadUrl(String.format("javascript:init(%s)", state));
-                return;
-            }
-
-            final String updates = App.state.storage.updatesToString();
-            if (null != updates) {
-                App.state.webView.loadUrl("javascript:update(" + updates + ")");
-            }
-        }
-    };
-
-//    private final BroadcastReceiver bluetoothBroadcastReceiver = new BroadcastReceiver() {
-//        public void onReceive(Context context, Intent intent) {
-//            String action = intent.getAction();
-//            if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-//                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-//                bluetoothDevices.add(device.getName() + "   " + device.getAddress());
-//                System.out.println(bluetoothDevices);
-//            }
-//        }
-//    };
+    private BuiltinSensorsManager builtinSensors;
+    private BluetoothSensorsManager bluetoothSensors;
+    private AppSensorsWorker appSensors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "onCreate()");
+
         setContentView(R.layout.activity_main);
 
         App.state.activity = this;
         App.state.webView = createWebView();
 
-        wasOnPause = false;
+        interrupt = false;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (wasOnPause) {
-            App.state.appSensorsManager.start(sensorsBroadcastReceiver);
-        }
+        Log.d(TAG, "onResume()");
 
-        wasOnPause = false;
+        builtinSensors = new BuiltinSensorsManager();
+        bluetoothSensors = new BluetoothSensorsManager();
+        appSensors = new AppSensorsWorker(builtinSensors, bluetoothSensors);
+
+        if (interrupt) {
+            resume();
+
+            interrupt = false;
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        App.state.appSensorsManager.stop(sensorsBroadcastReceiver);
+
+        Log.d(TAG, "onStop()");
+
+        exit();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        App.state.appSensorsManager.stop(sensorsBroadcastReceiver);
+
+        Log.d(TAG, "onDestroy()");
+
+        exit();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        wasOnPause = true;
+        Log.d(TAG, "onPause()");
 
-        App.state.appSensorsManager.stop(sensorsBroadcastReceiver);
-
-//        btThreadRunning = false;
+        exit();
     }
 
     @Override
@@ -194,9 +183,9 @@ public class MainActivity extends AppCompatActivity {
                 final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
                 state.nextCurrentInterval();
                 App.state.menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
-                App.state.appSensorsManager.setSleepTime(state.getCurrentInterval());
-                App.state.localSensorsWorker.restart();
+                App.state.storage.sleepTime = state.getCurrentInterval();
                 App.Preferences.writeMainWebViewState(state);
+                restart();
                 break;
             default:
                 break;
@@ -267,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(final WebView view, final String url) {
-                App.state.appSensorsManager.start(sensorsBroadcastReceiver);
+                resume();
 
                 final String state = App.Preferences.readMainWebViewStateAsJson();
                 App.state.webView.loadUrl(String.format("javascript:init(%s)", state));
@@ -276,5 +265,39 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl("file:///android_asset/web/index.html");
 
         return webView;
+    }
+
+    private void resume() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                builtinSensors.start();
+                bluetoothSensors.start();
+                appSensors.start();
+            }
+        }).start();
+    }
+
+    private void exit() {
+        interrupt = true;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                appSensors.kill();
+                builtinSensors.kill();
+                bluetoothSensors.kill();
+            }
+        }).start();
+    }
+
+    private void restart() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                appSensors.kill();
+                appSensors = new AppSensorsWorker(builtinSensors, bluetoothSensors);
+                appSensors.start();
+            }
+        }).start();
     }
 }

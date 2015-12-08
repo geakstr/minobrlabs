@@ -1,12 +1,13 @@
-package ru.edu.asu.minobrlabs.sensors.local;
+package ru.edu.asu.minobrlabs.sensors.builtin.impl;
 
 import android.hardware.SensorManager;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
+import ru.edu.asu.minobrlabs.sensors.builtin.BuiltinSensor;
 
-public class GyroSensorManager extends BuiltinSensorManager {
-    public GyroSensorManager(final SensorManager sensorManager) {
+public class GyroSensor extends BuiltinSensor {
+    public GyroSensor(final SensorManager sensorManager) {
         super(sensorManager, SensorTypes.GYRO, 3);
     }
 
@@ -14,7 +15,6 @@ public class GyroSensorManager extends BuiltinSensorManager {
     public boolean update(final float[] val) {
         super.update(val);
 
-        //this.val = AppSensorsManager.lowPass(val, this.val, 0.5f);
         App.state.storage.push(SensorTypes.GYRO.id, this.val);
 
         return true;

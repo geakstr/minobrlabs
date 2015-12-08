@@ -26,6 +26,8 @@ body {
     -ms-user-select: none;
     user-select: none;
     cursor: default;
+
+    overflow: hidden;
 }
 
 .cf:before,
@@ -54,6 +56,13 @@ body {
     height: 100%;
 }
 
+.page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 
 /* Main page */
 #main-page .charts-table td {
@@ -313,9 +322,7 @@ body {
 
 /* Stats page */
 #stats-page {
-    width: 100%;
-    height: 100%;
-    display: none;
+    visibility: hidden;
 }
 
 #stats-page .charts-table {

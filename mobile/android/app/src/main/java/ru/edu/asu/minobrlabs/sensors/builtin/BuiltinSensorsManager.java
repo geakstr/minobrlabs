@@ -1,4 +1,4 @@
-package ru.edu.asu.minobrlabs.sensors.local;
+package ru.edu.asu.minobrlabs.sensors.builtin;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -11,27 +11,32 @@ import java.util.Map;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
+import ru.edu.asu.minobrlabs.sensors.common.ISensorsManager;
+import ru.edu.asu.minobrlabs.sensors.builtin.impl.AccelSensor;
+import ru.edu.asu.minobrlabs.sensors.builtin.impl.GyroSensor;
+import ru.edu.asu.minobrlabs.sensors.builtin.impl.LightSensor;
+import ru.edu.asu.minobrlabs.sensors.builtin.impl.MicrophoneSensor;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
-public class LocalSensorsManager implements SensorEventListener {
+public class BuiltinSensorsManager implements SensorEventListener, ISensorsManager {
     private final SensorManager sensorManager;
 
-    private final Map<SensorTypes.Type, BuiltinSensorManager> sensorManagers;
+    private final Map<SensorTypes.Type, BuiltinSensor> sensorManagers;
 
-    private final MicrophoneSensorManager microphoneSensorManager;
-    private final LightSensorManager lightSensorManager;
-    private final AccelSensorManager accelSensorManager;
-    private final GyroSensorManager gyroSensorManager;
+    private final MicrophoneSensor microphoneSensorManager;
+    private final LightSensor lightSensorManager;
+    private final AccelSensor accelSensorManager;
+    private final GyroSensor gyroSensorManager;
 
-    public LocalSensorsManager() {
+    public BuiltinSensorsManager() {
         this.sensorManager = (SensorManager) App.instance.getSystemService(Context.SENSOR_SERVICE);
 
-        this.microphoneSensorManager = new MicrophoneSensorManager();
-        this.lightSensorManager = new LightSensorManager(sensorManager);
-        this.accelSensorManager = new AccelSensorManager(sensorManager);
-        this.gyroSensorManager = new GyroSensorManager(sensorManager);
+        this.microphoneSensorManager = new MicrophoneSensor();
+        this.lightSensorManager = new LightSensor(sensorManager);
+        this.accelSensorManager = new AccelSensor(sensorManager);
+        this.gyroSensorManager = new GyroSensor(sensorManager);
 
-        this.sensorManagers = new HashMap<SensorTypes.Type, BuiltinSensorManager>() {{
+        this.sensorManagers = new HashMap<SensorTypes.Type, BuiltinSensor>() {{
             put(SensorTypes.MICROPHONE_DB, microphoneSensorManager);
             put(SensorTypes.LIGHT, lightSensorManager);
             put(SensorTypes.ACCEL, accelSensorManager);
@@ -39,6 +44,7 @@ public class LocalSensorsManager implements SensorEventListener {
         }};
     }
 
+    @Override
     public void update() {
         microphoneSensorManager.update();
         lightSensorManager.update();
@@ -46,15 +52,16 @@ public class LocalSensorsManager implements SensorEventListener {
         gyroSensorManager.update();
     }
 
-    public void registerListeners() {
+    @Override
+    public void start() {
         final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
 
-        for (Map.Entry<SensorTypes.Type, BuiltinSensorManager> e : sensorManagers.entrySet()) {
+        for (Map.Entry<SensorTypes.Type, BuiltinSensor> e : sensorManagers.entrySet()) {
             final SensorTypes.Type type = e.getKey();
-            final BuiltinSensorManager sensor = e.getValue();
+            final BuiltinSensor sensor = e.getValue();
             if (sensor.available()) {
                 if (null != sensor.getSensor()) {
-                    sensorManager.registerListener(this, sensor.getSensor(), SensorManager.SENSOR_DELAY_NORMAL);
+                    sensorManager.registerListener(this, sensor.getSensor(), SensorManager.SENSOR_DELAY_GAME);
                 }
                 if (state.charts.get(type.name) == -1) {
                     state.charts.put(type.name, 1);
@@ -69,8 +76,9 @@ public class LocalSensorsManager implements SensorEventListener {
         App.state.storage.wantReInit = true;
     }
 
-    public void unregisterListeners() {
-        ((MicrophoneSensorManager) sensorManagers.get(SensorTypes.MICROPHONE_DB)).unregisterListener();
+    @Override
+    public void kill() {
+        ((MicrophoneSensor) sensorManagers.get(SensorTypes.MICROPHONE_DB)).unregisterListener();
         sensorManager.unregisterListener(this);
     }
 

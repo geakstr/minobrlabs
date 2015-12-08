@@ -1,9 +1,9 @@
-package ru.edu.asu.minobrlabs.sensors;
+package ru.edu.asu.minobrlabs.sensors.common;
 
-public abstract class AbstractSensorsWorker extends Thread implements Runnable {
+public abstract class AbstractWorker extends Thread implements Runnable {
     protected volatile boolean running;
 
-    public AbstractSensorsWorker() {
+    public AbstractWorker() {
         this.running = false;
     }
 

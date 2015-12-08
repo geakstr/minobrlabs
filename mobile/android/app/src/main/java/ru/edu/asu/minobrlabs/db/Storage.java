@@ -9,20 +9,20 @@ import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 
 public class Storage implements Serializable {
-    private volatile boolean recording = false;
-    private volatile boolean wasRecording = false;
+    private boolean recording = false;
+    private boolean wasRecording = false;
 
-    public volatile boolean wantReInit = false;
-    public volatile long sleepTime;
+    public boolean wantReInit = false;
+    public long sleepTime;
 
-    private volatile int updateIdx;
+    private int updateIdx;
     private final String[] updates;
 
     private final static int MAX_EXPERIMENT_SIZE = 1000000;
     private final int[] ids;
     private final long[] times;
     private final String[] vals;
-    private volatile int persistIdx;
+    private int persistIdx;
 
     public Storage() {
         this.recording = false;
