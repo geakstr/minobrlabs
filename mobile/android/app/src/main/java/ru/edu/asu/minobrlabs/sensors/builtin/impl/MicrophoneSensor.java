@@ -30,7 +30,7 @@ public class MicrophoneSensor extends BuiltinSensor {
             return false;
         }
 
-        // Thanks Lukas Ruge for pressure and decibel formulas
+        // Thanks Lukas Ruge for formulas
         // http://stackoverflow.com/questions/10655703/what-does-androids-getmaxamplitude-function-for-the-mediarecorder-actually-gi
         // 51805.5336 = 32767 / 0.6325 where 0.6325 Pa equals 90 dB;
         final int db = (int) (20 * Math.log10(mediaRecorder.getMaxAmplitude() / 51805.5336 / 0.00002)); // Convert pressure to dB (SPL)
@@ -67,7 +67,6 @@ public class MicrophoneSensor extends BuiltinSensor {
                 state.charts.put(SensorTypes.MICROPHONE_DB.name, 1);
             }
         } catch (Exception e) {
-            // Log.e(tag, e.getMessage(), e);
             state.charts.put(SensorTypes.MICROPHONE_DB.name, -1);
             return false;
         } finally {

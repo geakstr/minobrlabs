@@ -101,6 +101,12 @@ public class Storage implements Serializable {
         return l == 0 ? null : Arrays.toString(Arrays.copyOf(updates, l));
     }
 
+    public void unexpectedPersist() {
+        if (wasRecording) {
+            persist(new Experiment("Автоматически сохраненный"));
+        }
+    }
+
     private void persist(final int id, final long time, final String val) {
         ids[persistIdx] = id;
         times[persistIdx] = time;

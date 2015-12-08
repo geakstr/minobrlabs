@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         if (interrupt) {
             resume();
 
+            initMenu(App.state.menu);
+
             interrupt = false;
         }
     }
@@ -102,19 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         App.state.menu = menu;
 
-        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
-        menu.findItem(R.id.action_experiment_interval).setVisible(true);
-        menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
-
-        menu.findItem(R.id.action_experiments).setVisible(true);
-
-        menu.findItem(R.id.action_repeat).setVisible(false);
-
-        menu.findItem(R.id.action_clear_recording).setVisible(false);
-        menu.findItem(R.id.action_persist_recording).setVisible(false);
-
-        menu.findItem(R.id.action_start_recording).setVisible(true);
-        menu.findItem(R.id.action_stop_recording).setVisible(false);
+        initMenu(menu);
 
         menu.findItem(R.id.action_to_main).setVisible(false);
         menu.findItem(R.id.action_to_stats).setVisible(true);
@@ -267,6 +257,22 @@ public class MainActivity extends AppCompatActivity {
         return webView;
     }
 
+    private void initMenu(final Menu menu) {
+        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+        menu.findItem(R.id.action_experiment_interval).setVisible(true);
+        menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
+
+        menu.findItem(R.id.action_experiments).setVisible(true);
+
+        menu.findItem(R.id.action_repeat).setVisible(false);
+
+        menu.findItem(R.id.action_clear_recording).setVisible(false);
+        menu.findItem(R.id.action_persist_recording).setVisible(false);
+
+        menu.findItem(R.id.action_start_recording).setVisible(true);
+        menu.findItem(R.id.action_stop_recording).setVisible(false);
+    }
+
     private void resume() {
         new Thread(new Runnable() {
             @Override
@@ -280,6 +286,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void exit() {
         interrupt = true;
+
+        App.state.storage.unexpectedPersist();
+        App.state.storage.clear();
+
         new Thread(new Runnable() {
             @Override
             public void run() {

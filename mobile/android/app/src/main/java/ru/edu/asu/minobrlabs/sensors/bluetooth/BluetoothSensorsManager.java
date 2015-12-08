@@ -44,9 +44,7 @@ public class BluetoothSensorsManager implements ISensorsManager {
             if (null != socket) {
                 socket.getOutputStream().close();
                 socket.getInputStream().close();
-                if (socket.getUnderlyingSocket().isConnected()) {
-                    socket.close();
-                }
+                socket.close();
             }
         } catch (IOException e) {
             Log.e(TAG, "Bluetooth killing data", e);

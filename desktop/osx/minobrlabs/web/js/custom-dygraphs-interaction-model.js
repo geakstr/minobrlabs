@@ -79,7 +79,7 @@ CustomDygraphsInteractionModel = {
       var now = new Date().getTime();
       var t = event.changedTouches[0];
       if (context.startTimeForDoubleTapMs &&
-          now - context.startTimeForDoubleTapMs < 500 &&
+          now - context.startTimeForDoubleTapMs <= 250 &&
           context.doubleTapX && Math.abs(context.doubleTapX - t.screenX) < 50 &&
           context.doubleTapY && Math.abs(context.doubleTapY - t.screenY) < 50) {
         g.resetZoom();
