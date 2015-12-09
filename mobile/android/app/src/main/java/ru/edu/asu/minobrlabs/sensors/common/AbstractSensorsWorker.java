@@ -18,8 +18,6 @@ public abstract class AbstractSensorsWorker<T extends ISensorsManager> extends A
 
     @Override
     public void start() {
-        sensors.start();
-
         super.start();
     }
 

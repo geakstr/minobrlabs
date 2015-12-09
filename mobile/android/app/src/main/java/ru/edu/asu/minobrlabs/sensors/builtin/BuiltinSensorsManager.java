@@ -54,7 +54,7 @@ public class BuiltinSensorsManager implements SensorEventListener, ISensorsManag
 
     @Override
     public void start() {
-        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+        final MainWebViewState state = App.state.webViewState;
 
         for (Map.Entry<SensorTypes.Type, BuiltinSensor> e : sensorManagers.entrySet()) {
             final SensorTypes.Type type = e.getKey();
@@ -71,7 +71,7 @@ public class BuiltinSensorsManager implements SensorEventListener, ISensorsManag
             }
         }
 
-        App.Preferences.writeMainWebViewState(state);
+        App.state.setWebViewState(state);
 
         App.state.storage.wantReInit = true;
     }

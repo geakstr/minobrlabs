@@ -32,7 +32,7 @@ import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    private boolean interrupt;
+    private boolean pause;
 
     private BuiltinSensorsManager builtinSensors;
     private BluetoothSensorsManager bluetoothSensors;
@@ -41,15 +41,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d(TAG, "onCreate()");
-
         setContentView(R.layout.activity_main);
 
-        App.state.activity = this;
-        App.state.webView = createWebView();
+        Log.d(TAG, "onCreate()");
+        pause = false;
 
-        interrupt = false;
+        App.state.activity = this;
     }
 
     @Override
@@ -58,17 +55,30 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "onResume()");
 
-        builtinSensors = new BuiltinSensorsManager();
-        bluetoothSensors = new BluetoothSensorsManager();
-        appSensors = new AppSensorsWorker(builtinSensors, bluetoothSensors);
-
-        if (interrupt) {
-            resume();
-
-            initMenu(App.state.menu);
-
-            interrupt = false;
+        if (!pause) {
+            builtinSensors = new BuiltinSensorsManager();
+            bluetoothSensors = new BluetoothSensorsManager();
+            appSensors = new AppSensorsWorker(builtinSensors, bluetoothSensors);
+            App.state.webView = createWebView();
         }
+
+        pause = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        Log.d(TAG, "onPause()");
+
+        pause = true;
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        Log.d(TAG, "onRestart()");
     }
 
     @Override
@@ -78,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onStop()");
 
         exit();
+
+        finish();
     }
 
     @Override
@@ -85,17 +97,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
 
         Log.d(TAG, "onDestroy()");
-
-        exit();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        Log.d(TAG, "onPause()");
-
-        exit();
     }
 
     @Override
@@ -170,11 +171,11 @@ public class MainActivity extends AppCompatActivity {
                 App.state.menu.findItem(R.id.action_clear_recording).setVisible(false);
                 break;
             case R.id.action_experiment_interval:
-                final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+                final MainWebViewState state = App.state.webViewState;
                 state.nextCurrentInterval();
                 App.state.menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
                 App.state.storage.sleepTime = state.getCurrentInterval();
-                App.Preferences.writeMainWebViewState(state);
+                App.state.setWebViewState(state);
                 restart();
                 break;
             default:
@@ -248,8 +249,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageFinished(final WebView view, final String url) {
                 resume();
 
-                final String state = App.Preferences.readMainWebViewStateAsJson();
-                App.state.webView.loadUrl(String.format("javascript:init(%s)", state));
+                App.state.webView.loadUrl(String.format("javascript:init(%s)", new Gson().toJson(App.state.webViewState)));
             }
         });
         webView.loadUrl("file:///android_asset/web/index.html");
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initMenu(final Menu menu) {
-        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+        final MainWebViewState state = App.state.webViewState;
         menu.findItem(R.id.action_experiment_interval).setVisible(true);
         menu.findItem(R.id.action_experiment_interval).setTitle(state.getFormattedCurrentInterval());
 
@@ -274,30 +274,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resume() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                builtinSensors.start();
-                bluetoothSensors.start();
-                appSensors.start();
-            }
-        }).start();
+        builtinSensors.start();
+        bluetoothSensors.start();
+        appSensors.start();
     }
 
     private void exit() {
-        interrupt = true;
-
         App.state.storage.unexpectedPersist();
         App.state.storage.clear();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                appSensors.kill();
-                builtinSensors.kill();
-                bluetoothSensors.kill();
-            }
-        }).start();
+        appSensors.kill();
+        builtinSensors.kill();
+        bluetoothSensors.kill();
     }
 
     private void restart() {

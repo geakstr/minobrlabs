@@ -16,4 +16,6 @@
     <string name="select">Выбрать</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отменить</string>
+
+    <string name="bt_offed">Bluetooth выключен. Включите его и перезапустите приложение</string>
 </resources>

@@ -1,10 +1,15 @@
 package ru.edu.asu.minobrlabs;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.google.gson.Gson;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
@@ -22,6 +27,8 @@ import ru.edu.asu.minobrlabs.db.entities.params.Voltage;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class App extends Application {
+    public static final String TAG = App.class.getSimpleName();
+
     public static App instance;
     public static State state;
 
@@ -29,8 +36,12 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        Log.d(TAG, "App.onCreate()");
+
         instance = this;
         state = new State();
+
+        Dexter.initialize(this.getApplicationContext());
 
         Dao.deleteAll(Experiment.class);
         Dao.deleteAll(Accel.class);

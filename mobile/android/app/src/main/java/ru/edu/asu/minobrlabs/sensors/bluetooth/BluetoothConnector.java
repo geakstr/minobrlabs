@@ -16,27 +16,42 @@ import java.util.UUID;
 public class BluetoothConnector {
     public static final String TAG = BluetoothConnector.class.getSimpleName();
 
-    private final BluetoothAdapter adapter;
-    private final BluetoothDevice device;
+    private String address;
+    private BluetoothAdapter adapter;
+    private BluetoothDevice device;
     private BluetoothSocketWrapper bluetoothSocket;
     private boolean secure;
     private List<UUID> uuidCandidates;
     private int candidate;
 
-    public BluetoothConnector(String address, boolean secure, List<UUID> uuidCandidates) {
-        this.adapter = BluetoothAdapter.getDefaultAdapter();
-        this.device = this.adapter.getRemoteDevice(address);
+    public BluetoothConnector(final String address, final boolean secure) {
+        this.address = address;
         this.secure = secure;
-        this.uuidCandidates = uuidCandidates;
 
-        if (this.uuidCandidates == null || this.uuidCandidates.isEmpty()) {
-            this.uuidCandidates = new ArrayList<>();
-            this.uuidCandidates.add(device.getUuids()[0].getUuid());
+        this.adapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (!isEnabled()) {
+            enable();
         }
+    }
+
+    public void enable() {
+        this.adapter.enable();
+    }
+
+    public boolean isEnabled() {
+        return this.adapter.isEnabled();
     }
 
     public BluetoothSocketWrapper connect() {
         try {
+            this.device = this.adapter.getRemoteDevice(address);
+
+            if (this.uuidCandidates == null || this.uuidCandidates.isEmpty()) {
+                this.uuidCandidates = new ArrayList<>();
+                this.uuidCandidates.add(device.getUuids()[0].getUuid());
+            }
+
             boolean success = false;
 
             adapter.cancelDiscovery();

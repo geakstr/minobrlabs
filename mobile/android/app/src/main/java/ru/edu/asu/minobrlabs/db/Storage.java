@@ -24,11 +24,11 @@ public class Storage implements Serializable {
     private final String[] vals;
     private int persistIdx;
 
-    public Storage() {
+    public Storage(final long sleepTime) {
         this.recording = false;
         this.wasRecording = false;
 
-        this.sleepTime = App.Preferences.readMainWebViewStateAsObject().getCurrentInterval();
+        this.sleepTime = sleepTime;
 
         this.updateIdx = 0;
         this.updates = new String[255];

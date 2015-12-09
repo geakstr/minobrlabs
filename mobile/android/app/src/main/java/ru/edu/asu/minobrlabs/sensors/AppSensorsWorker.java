@@ -5,6 +5,8 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.BluetoothSensorsManager;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.BluetoothSensorsWorker;
@@ -83,8 +85,7 @@ public class AppSensorsWorker extends AbstractWorker {
             if (App.state.storage.wantReInit) {
                 App.state.storage.wantReInit = false;
 
-                final String state = App.Preferences.readMainWebViewStateAsJson();
-                App.state.webView.loadUrl(String.format("javascript:init(%s)", state));
+                App.state.webView.loadUrl(String.format("javascript:init(%s)", new Gson().toJson(App.state.webViewState)));
                 return;
             }
 

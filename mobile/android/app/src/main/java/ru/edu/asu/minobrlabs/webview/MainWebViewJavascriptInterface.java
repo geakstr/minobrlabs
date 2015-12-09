@@ -9,16 +9,16 @@ public class MainWebViewJavascriptInterface {
     @JavascriptInterface
     public void updateState(final String chartName, final int chartState) {
         System.out.println(chartName);
-        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+        final MainWebViewState state = App.state.webViewState;
         state.charts.put(chartName, chartState);
-        App.Preferences.writeMainWebViewState(state);
+        App.state.setWebViewState(state);
     }
 
     @JavascriptInterface
     public void selectStatsChart(final String chartName) {
-        final MainWebViewState state = App.Preferences.readMainWebViewStateAsObject();
+        final MainWebViewState state = App.state.webViewState;
         state.currentStatsChart = chartName;
-        App.Preferences.writeMainWebViewState(state);
+        App.state.setWebViewState(state);
 
         App.state.activity.runOnUiThread(new Runnable() {
             @Override
