@@ -1,16 +1,14 @@
-﻿using System;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using System.Windows.Forms;
-using System.Linq;
-using System.Threading.Tasks;
 using System.IO;
 
 namespace MinobrLabsProject.db
 {
-    class Connection
+    public class Connection
     {
         private static SQLiteConnection connection;
         private static string path = Path.GetDirectoryName(Application.ExecutablePath) + "/database";
+
         public static SQLiteConnection getConnection()
         {
             System.IO.Directory.CreateDirectory(path);

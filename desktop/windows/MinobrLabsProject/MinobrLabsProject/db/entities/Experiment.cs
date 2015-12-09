@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinobrLabsProject.db.entities
 {
-    class Experiment
+    public class Experiment
     {
         public string name;
         public long date;
@@ -26,7 +22,7 @@ namespace MinobrLabsProject.db.entities
             return dateTime;
         }
 
-        public string ToString() {
+        public override string ToString() {
             return string.Format("%s [%s]", name, date.ToString("dd.MM.yyyy HH:ss"));
         }
     }

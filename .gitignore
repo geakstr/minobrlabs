@@ -1,6 +1,9 @@
 mobile/android/gradle
 mobile/android/gradlew
 mobile/android/gradlew.bat
+mobile/android/app/src/main/assets/web/
+mobile/ios/minobrlabs/web/
+desktop/osx/minobrlabs/web/
 
 
 

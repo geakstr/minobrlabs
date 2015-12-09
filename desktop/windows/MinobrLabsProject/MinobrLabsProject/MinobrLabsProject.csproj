@@ -61,6 +61,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\JSCore.dll</HintPath>
     </Reference>
+    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OpenWebKitSharp, Version=3.0.1.23, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\OpenWebKitSharp.dll</HintPath>
@@ -104,11 +108,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="sensors\MicrophoneSensor.cs" />
     <Compile Include="sensors\SensorsManager.cs" />
     <Compile Include="sensors\ISensorCallback.cs" />
     <Compile Include="sensors\SensorCallback.cs" />
     <Compile Include="sensors\RemoteSensors.cs" />
-    <Compile Include="webViewDelegate.cs" />
     <Compile Include="webview\Preferences.cs" />
     <Compile Include="webview\WebViewDelegate.cs" />
     <EmbeddedResource Include="MainForm.resx">

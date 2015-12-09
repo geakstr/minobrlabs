@@ -1,25 +1,24 @@
-﻿using MinobrLabsProject.sensors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading;
 using WebKit;
 
 namespace MinobrLabsProject.sensors
 {
-    class SensorsManager
+    public class SensorsManager
     {
         private volatile bool running;
         private int sleepTime;
         private SensorCallback callback;
         private Thread thread;
+        private RemoteSensors remoteSensors;
+        private MicrophoneSensor microphoneSensor;
 
         public SensorsManager()
         {
-            this.running = false;
+            running = false;
             sleepTime = 300;
+            remoteSensors = new RemoteSensors();
+            microphoneSensor = new MicrophoneSensor();
+            microphoneSensor.open();
         }
 
         public void setCallback(SensorCallback callback, WebKitBrowser webView)
@@ -36,7 +35,8 @@ namespace MinobrLabsProject.sensors
             {
                 if (callback != null)
                 {
-                    callback.onReceiveResult(RemoteSensors.getData());
+                    callback.onReceiveResult(remoteSensors.getVals());
+                    callback.onReceiveResult(microphoneSensor.getVals());
                 }
                 sleep();
             }
@@ -51,13 +51,9 @@ namespace MinobrLabsProject.sensors
             }
         }
 
-        public void stop()
-        {
-            running = false;
-        }
-
         public void abort()
         {
+            running = false;
             thread.Abort();
         }
 
@@ -91,14 +87,7 @@ namespace MinobrLabsProject.sensors
 
         protected void sleep()
         {
-            try
-            {
-                Thread.Sleep(sleepTime);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message, e);
-            }
+            Thread.Sleep(sleepTime);
         }
 
     }

@@ -30,6 +30,10 @@
         {
             this.webView = new WebKit.WebKitBrowser();
             this.statButton = new System.Windows.Forms.Button();
+            this.recordingButton = new System.Windows.Forms.Button();
+            this.experimentButton = new System.Windows.Forms.Button();
+            this.persistButton = new System.Windows.Forms.Button();
+            this.intervalButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // webView
@@ -47,13 +51,50 @@
             // 
             // statButton
             // 
-            this.statButton.Location = new System.Drawing.Point(782, 12);
+            this.statButton.Location = new System.Drawing.Point(12, 12);
             this.statButton.Name = "statButton";
-            this.statButton.Size = new System.Drawing.Size(90, 23);
+            this.statButton.Size = new System.Drawing.Size(107, 23);
             this.statButton.TabIndex = 1;
             this.statButton.Text = "СТАТИСТИКА";
             this.statButton.UseVisualStyleBackColor = true;
             this.statButton.Click += new System.EventHandler(this.statButton_Click);
+            // 
+            // recordingButton
+            // 
+            this.recordingButton.Location = new System.Drawing.Point(125, 12);
+            this.recordingButton.Name = "recordingButton";
+            this.recordingButton.Size = new System.Drawing.Size(107, 23);
+            this.recordingButton.TabIndex = 2;
+            this.recordingButton.Text = "ЗАПИСЫВАТЬ";
+            this.recordingButton.UseVisualStyleBackColor = true;
+            this.recordingButton.Click += new System.EventHandler(this.recordingButton_Click);
+            // 
+            // experimentButton
+            // 
+            this.experimentButton.Location = new System.Drawing.Point(238, 12);
+            this.experimentButton.Name = "experimentButton";
+            this.experimentButton.Size = new System.Drawing.Size(107, 23);
+            this.experimentButton.TabIndex = 3;
+            this.experimentButton.Text = "ЭКСПЕРЕМЕНТЫ";
+            this.experimentButton.UseVisualStyleBackColor = true;
+            // 
+            // persistButton
+            // 
+            this.persistButton.Location = new System.Drawing.Point(351, 12);
+            this.persistButton.Name = "persistButton";
+            this.persistButton.Size = new System.Drawing.Size(107, 23);
+            this.persistButton.TabIndex = 4;
+            this.persistButton.Text = "СОХРАНИТЬ";
+            this.persistButton.UseVisualStyleBackColor = true;
+            // 
+            // intervalButton
+            // 
+            this.intervalButton.Location = new System.Drawing.Point(464, 12);
+            this.intervalButton.Name = "intervalButton";
+            this.intervalButton.Size = new System.Drawing.Size(107, 23);
+            this.intervalButton.TabIndex = 5;
+            this.intervalButton.Text = "100 МС";
+            this.intervalButton.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -61,6 +102,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(884, 511);
+            this.Controls.Add(this.intervalButton);
+            this.Controls.Add(this.persistButton);
+            this.Controls.Add(this.experimentButton);
+            this.Controls.Add(this.recordingButton);
             this.Controls.Add(this.statButton);
             this.Controls.Add(this.webView);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -77,6 +122,10 @@
 
         private WebKit.WebKitBrowser webView;
         private System.Windows.Forms.Button statButton;
+        private System.Windows.Forms.Button recordingButton;
+        private System.Windows.Forms.Button experimentButton;
+        private System.Windows.Forms.Button persistButton;
+        private System.Windows.Forms.Button intervalButton;
     }
 }
 

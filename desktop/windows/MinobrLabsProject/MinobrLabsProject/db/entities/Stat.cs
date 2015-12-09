@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinobrLabsProject.db.entities
 {
-    class Stat
+    public class Stat
     {
         public string vals;
         public long date;
@@ -39,7 +36,7 @@ namespace MinobrLabsProject.db.entities
         }
 
         public string toString() {
-            return String.Format(
+            return string.Format(
                     "%s : [\n  vals : %s\n  date : %s\n  experimentId : %s\n]",
                     vals,
                     getDateTime().ToString("dd.MM.yyyy HH:mm"),

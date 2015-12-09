@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Threading.Tasks;
-using System.Data.Linq;
 using MinobrLabsProject.db.entities;
 using System.Data;
 
 namespace MinobrLabsProject.db
 {
-    class DataManager
+    public class DataManager
     {
         public static void createDatabase(SQLiteConnection connection)
         {

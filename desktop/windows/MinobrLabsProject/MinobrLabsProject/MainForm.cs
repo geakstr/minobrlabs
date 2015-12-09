@@ -1,36 +1,36 @@
 ﻿using MinobrLabsProject.db;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Text;
 using System.Linq;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 using MinobrLabsProject.sensors;
-using MinobrLabsProject.db.entities;
 using MinobrLabsProject.webview;
 
 namespace MinobrLabsProject
-{  
+{
     public partial class MainForm : Form
     {
-        private SensorsManager sensorManager;
         public WebViewDelegate webViewDelegate;
+        private SensorsManager sensorManager;
+        public TemporaryStorage temporaryStorage;
         private Preferences preferences;
+        private bool isMainScreen;
+        private bool isRecording;
+        private bool isExperimentNow;
 
         public MainForm()
         {
             InitializeComponent();
             webViewDelegate = new WebViewDelegate(updateWebView);
+            temporaryStorage = new TemporaryStorage();
             loadPreferences();
         }
 
         private void loadPreferences()
         {
             preferences = new Preferences();
-            preferences.os = "android";
+            preferences.os = "browser";
             preferences.charts.accel = 0;
             preferences.charts.airTemperature = 0;
             preferences.charts.amperage = 0;
@@ -46,7 +46,11 @@ namespace MinobrLabsProject
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            isMainScreen = true;
+            isRecording = false;
+            isExperimentNow = true;
             Enabled = false;
+            persistButton.Enabled = false;
             webView.UseJavaScript = true;
             string path = Path.GetDirectoryName(Application.ExecutablePath);
             webView.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(documentCompleted);
@@ -58,15 +62,10 @@ namespace MinobrLabsProject
             sensorManager.setCallback(webViewCallback, webView);
         }
 
-        void documentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void documentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             Enabled = true;
             sensorManager.start();
-        }
-
-        private void statButton_CheckedChanged(object sender, EventArgs e)
-        {
-            webView.GetScriptManager.CallFunction("init", new object[] {  });
         }
 
         private void updateWebView(string type, float[] vals, long date)
@@ -76,25 +75,47 @@ namespace MinobrLabsProject
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            sensorManager.stop();
             sensorManager.abort();
             Connection.close();
         }
 
         private void statButton_Click(object sender, EventArgs e)
         {
-            if (preferences.os.Equals("android"))
+            if (isMainScreen)
             {
-                statButton.Text = "ПОКАЗАТЕЛИ";
-                preferences.os = "browser";
                 webView.GetScriptManager.CallFunction("showStatsPage", new object[] { });
+
+                statButton.Text = "ПОКАЗАТЕЛИ";
+                isMainScreen = false;
+                
+                return;
             }
-            else
+            webView.GetScriptManager.CallFunction("showMainPage", new object[] { });
+
+            statButton.Text = "СТАТИСТИКА";
+            isMainScreen = true;
+        }
+
+        private void recordingButton_Click(object sender, EventArgs e)
+        {
+            if (isRecording)
             {
-                statButton.Text = "СТАТИСТИКА";
-                preferences.os = "android";
-                webView.GetScriptManager.CallFunction("showMainPage", new object[] { });
+                temporaryStorage.stopRecording();
+                webView.GetScriptManager.CallFunction("isRecording", new object[] { false });
+
+                isRecording = false;
+                experimentButton.Enabled = true;
+                persistButton.Enabled = false;
+                recordingButton.Text = "ЗАПИСЫВАТЬ";
+                return;
             }
+            temporaryStorage.startRecording();
+            webView.GetScriptManager.CallFunction("isRecording", new object[] { true });
+
+            isRecording = true;
+            experimentButton.Enabled = false;
+            persistButton.Enabled = false;
+            recordingButton.Text = "ОСТАНОВИТЬ";
         }
     }
 }

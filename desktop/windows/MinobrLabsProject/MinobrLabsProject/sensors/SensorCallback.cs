@@ -1,14 +1,9 @@
 ﻿using MinobrLabsProject.db.entities;
-using MinobrLabsProject.sensors;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinobrLabsProject.sensors
 {
-    class SensorCallback
+    public class SensorCallback
     {
         MainForm mainForm;
         Random rnd;
@@ -26,8 +21,8 @@ namespace MinobrLabsProject.sensors
                 return;
             }
 
-            //App.temporaryStorage().add(stat);
-            mainForm.Invoke(mainForm.webViewDelegate, new Object[] {stat.type, stat.getFloatVals(), stat.date});
+            mainForm.temporaryStorage.add(stat);
+            mainForm.Invoke(mainForm.webViewDelegate, new object[] {stat.type, stat.getFloatVals(), stat.date});
         }
     }
 }
