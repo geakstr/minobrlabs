@@ -14,6 +14,12 @@ public abstract class AbstractSensor {
         System.arraycopy(val, 0, this.val, 0, size);
     }
 
+    public boolean update(final float val) {
+        this.val[0] = val;
+
+        return true;
+    }
+
     public boolean update(final float[] val) {
         setVal(val);
         return true;

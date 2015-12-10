@@ -43,7 +43,9 @@ public class BluetoothConnector {
         return this.adapter.isEnabled();
     }
 
-    public BluetoothSocketWrapper connect() {
+    public BluetoothSocketWrapper connect() throws IOException {
+        boolean success = false;
+
         try {
             this.device = this.adapter.getRemoteDevice(address);
 
@@ -51,9 +53,6 @@ public class BluetoothConnector {
                 this.uuidCandidates = new ArrayList<>();
                 this.uuidCandidates.add(device.getUuids()[0].getUuid());
             }
-
-            boolean success = false;
-
             adapter.cancelDiscovery();
             while (selectSocket()) {
                 try {
@@ -76,14 +75,13 @@ public class BluetoothConnector {
                     }
                 }
             }
-
-            if (!success) {
-                throw new IOException("Could not connect to device: " + device.getAddress());
-            }
-
             Log.d(TAG, "Connected!");
         } catch (IOException e) {
             Log.e(TAG, "Could not select socket", e);
+        }
+
+        if (!success) {
+            throw new IOException("Could not connect to device: " + device.getAddress());
         }
 
         return bluetoothSocket;

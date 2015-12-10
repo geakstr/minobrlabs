@@ -3,7 +3,6 @@ package ru.edu.asu.minobrlabs.sensors.builtin.impl;
 import android.Manifest;
 import android.media.MediaRecorder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;

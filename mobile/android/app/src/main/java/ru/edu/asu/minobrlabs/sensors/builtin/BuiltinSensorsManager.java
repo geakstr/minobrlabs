@@ -23,33 +23,33 @@ public class BuiltinSensorsManager implements SensorEventListener, ISensorsManag
 
     private final Map<SensorTypes.Type, BuiltinSensor> sensorManagers;
 
-    private final MicrophoneSensor microphoneSensorManager;
-    private final LightSensor lightSensorManager;
-    private final AccelSensor accelSensorManager;
-    private final GyroSensor gyroSensorManager;
+    private final MicrophoneSensor microphoneSensor;
+    private final LightSensor lightSensor;
+    private final AccelSensor accelSensor;
+    private final GyroSensor gyroSensor;
 
     public BuiltinSensorsManager() {
         this.sensorManager = (SensorManager) App.instance.getSystemService(Context.SENSOR_SERVICE);
 
-        this.microphoneSensorManager = new MicrophoneSensor();
-        this.lightSensorManager = new LightSensor(sensorManager);
-        this.accelSensorManager = new AccelSensor(sensorManager);
-        this.gyroSensorManager = new GyroSensor(sensorManager);
+        this.microphoneSensor = new MicrophoneSensor();
+        this.lightSensor = new LightSensor(sensorManager);
+        this.accelSensor = new AccelSensor(sensorManager);
+        this.gyroSensor = new GyroSensor(sensorManager);
 
         this.sensorManagers = new HashMap<SensorTypes.Type, BuiltinSensor>() {{
-            put(SensorTypes.MICROPHONE_DB, microphoneSensorManager);
-            put(SensorTypes.LIGHT, lightSensorManager);
-            put(SensorTypes.ACCEL, accelSensorManager);
-            put(SensorTypes.GYRO, gyroSensorManager);
+            put(SensorTypes.MICROPHONE_DB, microphoneSensor);
+            put(SensorTypes.LIGHT, lightSensor);
+            put(SensorTypes.ACCEL, accelSensor);
+            put(SensorTypes.GYRO, gyroSensor);
         }};
     }
 
     @Override
     public void update() {
-        microphoneSensorManager.update();
-        lightSensorManager.update();
-        accelSensorManager.update();
-        gyroSensorManager.update();
+        microphoneSensor.update();
+        lightSensor.update();
+        accelSensor.update();
+        gyroSensor.update();
     }
 
     @Override
@@ -91,11 +91,11 @@ public class BuiltinSensorsManager implements SensorEventListener, ISensorsManag
 
         final int type = event.sensor.getType();
         if (SensorTypes.LIGHT.id == type) {
-            lightSensorManager.setVal(val);
+            lightSensor.setVal(val);
         } else if (SensorTypes.ACCEL.id == type) {
-            accelSensorManager.setVal(val);
+            accelSensor.setVal(val);
         } else if (SensorTypes.GYRO.id == type) {
-            gyroSensorManager.setVal(val);
+            gyroSensor.setVal(val);
         }
     }
 

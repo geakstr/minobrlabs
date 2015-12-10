@@ -36,19 +36,23 @@ function send {
 }
 
 function randomize {
-  data=''
-  for sensor in "${sensors[@]}"
+  while true
   do
-    left=$(((RANDOM % 10) + 1))
-    
-    right=$[(100 + (RANDOM % 100))]$[1000 + (RANDOM % 1000)]
-    right=${right:1:2}${right:4:3}
+    data=''
+    for sensor in "${sensors[@]}"
+    do
+      left=$(((RANDOM % 10) + 1))
+      
+      right=$[(100 + (RANDOM % 100))]$[1000 + (RANDOM % 1000)]
+      right=${right:1:2}${right:4:3}
 
-    num="${left}.${right}"
+      num="${left}.${right}"
 
-    data="$data${sensor}${num}"
+      data="$data${sensor}${num}"
+    done
+    send ${data}
+    sleep 0.04
   done
-  send ${data}
 }
 
 if [ "${args[0]}" = '-d' ]; then
