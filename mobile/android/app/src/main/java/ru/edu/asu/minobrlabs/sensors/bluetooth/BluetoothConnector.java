@@ -51,7 +51,8 @@ public class BluetoothConnector {
 
             if (this.uuidCandidates == null || this.uuidCandidates.isEmpty()) {
                 this.uuidCandidates = new ArrayList<>();
-                this.uuidCandidates.add(device.getUuids()[0].getUuid());
+                //this.uuidCandidates.add(device.getUuids()[0].getUuid());
+                this.uuidCandidates.add(UUID.fromString("00001101-0000-1000-8000-00805f9b34fb"));
             }
             adapter.cancelDiscovery();
             while (selectSocket()) {
@@ -75,13 +76,14 @@ public class BluetoothConnector {
                     }
                 }
             }
-            Log.d(TAG, "Connected!");
         } catch (IOException e) {
             Log.e(TAG, "Could not select socket", e);
         }
 
         if (!success) {
             throw new IOException("Could not connect to device: " + device.getAddress());
+        } else {
+            Log.d(TAG, "Connected!");
         }
 
         return bluetoothSocket;

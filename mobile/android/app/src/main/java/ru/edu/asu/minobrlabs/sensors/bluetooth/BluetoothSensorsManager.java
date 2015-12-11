@@ -72,7 +72,7 @@ public class BluetoothSensorsManager implements ISensorsManager {
     @Override
     public void start() {
         if (!checkSocket()) {
-            bluetooth = new BluetoothConnector("7C:C3:A1:51:31:64", true);
+            bluetooth = new BluetoothConnector("2C:D0:5A:A7:05:A3", true);
             if (!bluetooth.isEnabled()) {
                 new Thread(new Runnable() {
                     @Override
