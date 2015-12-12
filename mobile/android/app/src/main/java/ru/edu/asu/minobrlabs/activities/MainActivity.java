@@ -232,6 +232,22 @@ public class MainActivity extends AppCompatActivity {
         return builder;
     }
 
+    private AlertDialog.Builder createBluetoothDevicesDialog() {
+        final ArrayAdapter<Object> adapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_singlechoice);
+        adapter.addAll(BluetoothSensorsManager.getPairedDevices());
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.bt_devices));
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final BluetoothSensorsManager.BluetoothDeviceItem device = (BluetoothSensorsManager.BluetoothDeviceItem) adapter.getItem(which);
+                bluetoothSensors.start(device.address);
+            }
+        });
+        return builder;
+    }
+
     private WebView createWebView() {
         final WebView webView = (WebView) findViewById(R.id.mainWebView);
 
@@ -275,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void resume() {
         builtinSensors.start();
-        bluetoothSensors.start();
+        createBluetoothDevicesDialog().show();
         appSensors.start();
     }
 

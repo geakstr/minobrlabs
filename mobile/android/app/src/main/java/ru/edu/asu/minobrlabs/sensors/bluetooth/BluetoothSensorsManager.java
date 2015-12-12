@@ -1,19 +1,20 @@
 package ru.edu.asu.minobrlabs.sensors.bluetooth;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
-import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.impl.AirTemperatureSensor;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.impl.AmperageSensor;
@@ -22,7 +23,6 @@ import ru.edu.asu.minobrlabs.sensors.bluetooth.impl.HumiditySensor;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.impl.PhSensor;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.impl.SoluteTemperatureSensor;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.impl.VoltageSensor;
-import ru.edu.asu.minobrlabs.sensors.builtin.BuiltinSensor;
 import ru.edu.asu.minobrlabs.sensors.common.AbstractSensor;
 import ru.edu.asu.minobrlabs.sensors.common.ISensorsManager;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
@@ -30,6 +30,7 @@ import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 public class BluetoothSensorsManager implements ISensorsManager {
     public static final String TAG = BluetoothSensorsManager.class.getSimpleName();
 
+    private String address;
     private BluetoothConnector bluetooth;
     private BluetoothConnector.BluetoothSocketWrapper socket;
 
@@ -47,6 +48,8 @@ public class BluetoothSensorsManager implements ISensorsManager {
 
     public BluetoothSensorsManager() {
         this.bytes = new byte[1024];
+
+        this.address = null;
 
         this.humiditySensor = new HumiditySensor();
         this.airTemperatureSensor = new AirTemperatureSensor();
@@ -69,10 +72,42 @@ public class BluetoothSensorsManager implements ISensorsManager {
         this.sb = new StringBuilder();
     }
 
+    public static class BluetoothDeviceItem {
+        public String name;
+        public String address;
+
+        public BluetoothDeviceItem(final String name, final String address) {
+            this.name = name;
+            this.address = address;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    public static List<BluetoothDeviceItem> getPairedDevices() {
+        final List<BluetoothDeviceItem> ret = new ArrayList<>();
+        for (final BluetoothDevice bt : BluetoothAdapter.getDefaultAdapter().getBondedDevices()) {
+            ret.add(new BluetoothDeviceItem(bt.getName(), bt.getAddress()));
+        }
+        return ret;
+    }
+
+    public void start(final String address) {
+        if (checkSocket() && null != address && address.equalsIgnoreCase(this.address)) {
+            return;
+        }
+        this.address = address;
+        kill();
+        start();
+    }
+
     @Override
     public void start() {
-        if (!checkSocket()) {
-            bluetooth = new BluetoothConnector("2C:D0:5A:A7:05:A3", true);
+        if (!checkSocket() && null != address) {
+            bluetooth = new BluetoothConnector(this.address, true);
             if (!bluetooth.isEnabled()) {
                 new Thread(new Runnable() {
                     @Override
@@ -101,14 +136,10 @@ public class BluetoothSensorsManager implements ISensorsManager {
                                 init();
                             } catch (IOException e) {
                                 deinit();
+                                makeToast();
                             }
                         } else {
-                            App.state.activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(App.instance.getApplicationContext(), R.string.bt_offed, Toast.LENGTH_LONG).show();
-                                }
-                            });
+                            makeToast();
                         }
                     }
                 }).start();
@@ -118,8 +149,11 @@ public class BluetoothSensorsManager implements ISensorsManager {
                     init();
                 } catch (IOException e) {
                     deinit();
+                    makeToast();
                 }
             }
+        } else if (null == address) {
+            deinit();
         }
     }
 
@@ -133,6 +167,28 @@ public class BluetoothSensorsManager implements ISensorsManager {
         } catch (IOException e) {
             Log.e(TAG, "Bluetooth receiving data problems", e);
         }
+    }
+
+    @Override
+    public void kill() {
+        try {
+            if (null != socket) {
+                socket.getOutputStream().close();
+                socket.getInputStream().close();
+                socket.close();
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Bluetooth killing data", e);
+        }
+    }
+
+    private void makeToast() {
+        App.state.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(App.instance.getApplicationContext(), R.string.bt_offed, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void init() {
@@ -201,25 +257,12 @@ public class BluetoothSensorsManager implements ISensorsManager {
                         break;
                 }
             }
-        } catch (Exception e) {
-            Log.e(TAG, "Parse data from BT error", e);
+        } catch (Exception ignored) {
+
         }
     }
 
     private boolean checkSocket() {
         return socket != null && socket.getUnderlyingSocket() != null && socket.getUnderlyingSocket().isConnected();
-    }
-
-    @Override
-    public void kill() {
-        try {
-            if (null != socket) {
-                socket.getOutputStream().close();
-                socket.getInputStream().close();
-                socket.close();
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Bluetooth killing data", e);
-        }
     }
 }
