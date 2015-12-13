@@ -24,11 +24,11 @@ public class BluetoothConnector {
     private List<UUID> uuidCandidates;
     private int candidate;
 
-    public BluetoothConnector(final String address, final boolean secure) {
+    public BluetoothConnector(final String address, final BluetoothAdapter adapter, final boolean secure) {
         this.address = address;
         this.secure = secure;
 
-        this.adapter = BluetoothAdapter.getDefaultAdapter();
+        this.adapter = adapter;
 
         if (!isEnabled()) {
             enable();

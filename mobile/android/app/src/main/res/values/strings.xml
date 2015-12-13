@@ -3,6 +3,7 @@
 
     <string name="stats">Статистика</string>
     <string name="params">Показатели</string>
+    <string name="devices">Устройства</string>
     <string name="experiments">Эксперименты</string>
     <string name="bt_devices">Устройства</string>
 
@@ -18,5 +19,8 @@
     <string name="save">Сохранить</string>
     <string name="cancel">Отменить</string>
 
+    <string name="bt_unsuccessful">Не удалось подключиться к устройству</string>
     <string name="bt_offed">Bluetooth выключен. Включите его и перезапустите приложение</string>
+    <string name="bt_enabling">Включаем Bluetooth</string>
+    <string name="bt_connecting">Соединяемся с устройством</string>
 </resources>

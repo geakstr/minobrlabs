@@ -1,6 +1,7 @@
 'use strict';
 
 // About states
+// state =-1 - unavailable
 // state = 0 - disabled
 // state = 1 - gauge
 // state = 2 - label
@@ -73,8 +74,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 1, 2, 4, 5, 0]
     }
   },
   'accel': {
@@ -93,8 +94,8 @@ charts = {
       valueRange : [-4, 4]
     },
     state : {
-      curIndex : 2,
-      states : [-1, 0, 3]
+      curIndex : 1,
+      states : [-1, 3, 0]
     }
   },
   'gyro': {
@@ -113,8 +114,8 @@ charts = {
       valueRange : [-10, 10],
     },
     state : {
-      curIndex : 2,
-      states : [-1, 0, 3]
+      curIndex : 1,
+      states : [-1, 3, 0]
     }
   },
   'airTemperature': {
@@ -140,8 +141,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 5, 4, 2, 1, 0]
     }
   },
   'humidity': {
@@ -167,8 +168,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 4, 5, 2, 1, 0]
     }
   },    
   'atmoPressure': {
@@ -194,8 +195,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 5, 4, 2, 1, 0]
     }
   },
   'light': {
@@ -221,8 +222,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 1, 2, 4, 5, 0]
     }
   },
   'soluteTemperature': {
@@ -248,8 +249,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 5, 4, 2, 1, 0]
     }
   },
   'voltage': {
@@ -275,8 +276,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 2, 4, 5, 1, 0]
     }
   },
   'amperage': {
@@ -302,8 +303,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 2, 4, 5, 1, 0]
     }
   },
   'ph': {
@@ -329,8 +330,8 @@ charts = {
       }
     }, 
     state : {
-      curIndex : 2,
-      states : [-1, 0, 1, 2, 4, 5]
+      curIndex : 1,
+      states : [-1, 1, 2, 4, 5, 0]
     }
   }
 };
@@ -767,11 +768,11 @@ function loadAxisesChart(chart) {
   }
 }
 function loadAxisChart(chart, axis) {
-  chart.container.val.textContent = chart.opts.formatFunction(chart.val);
+  chart.container.val.textContent = chart.opts.formatFunction(chart.val[0].toFixed(2));
   chart.container.axis.style[axis === 'x' ? 'width' : 'height'] = chart.opts.width(chart.val) + '%';
 
   chart.container.axis.style.backgroundColor = (function() {
-      var val = chart.val;
+      var val = chart.val[0];
       var pattern = chart.opts.color.pattern;
       var threshold = chart.opts.color.threshold;
 
@@ -794,14 +795,13 @@ function loadAxisChart(chart, axis) {
 }
 function loadGaugeChart(chart) {
   chart.container.load({
-    columns: [['data', chart.val]]
+    columns: [['data', chart.val[0].toFixed(2)]]
   });
 }
 function loadLabelChart(chart) {
-  chart.container.textContent = chart.opts.formatFunction(chart.val);
+  chart.container.textContent = chart.opts.formatFunction(chart.val[0].toFixed(2));
 }
 
-// Delay between each chart update on main page
 setInterval(function() {
   if (pages.active !== 'mainPage') { 
     return;
@@ -836,28 +836,35 @@ setInterval(function() {
   }
 }, 100);
 
-function loadCurrentChartState(chart, mills) {
-  if (chart.state.curIndex <= 0) {
+function loadCurrentChartState(name, data) {
+  var chart, i, l, n, mills;
+
+  chart = charts[name];
+
+  if (!chart || chart.state.curIndex <= 0) {
     return;
   }
 
   if (pages.active === 'mainPage') {    
-    updates[chart.name] = chart;
+    updates[name] = chart;
   }
 
   if (stats.mode === 'realtime') {
-    if (typeof mills === 'undefined') {
-      return;
-    }
+    for (i = 0, l = data.length; i < l; i++) {
+      mills = data[i][0];
+      if (typeof mills === 'undefined') {
+        continue;
+      }
 
-    stats.data[chart.name].push([new Date(mills)].concat(chart.val));
+      stats.data[name].push([new Date(mills)].concat(data[i][1]));
+    }
     if (pages.active === 'statsPage') {
       if (chart.name === stats.currentChart) {
         if (null === stats.chart) {
           createDygraph();
         } else {
           var opts = {
-            'file': stats.data[chart.name],
+            'file': stats.data[name],
             'dateWindow': getStatsChartDateWindow(chart)
           };
 
@@ -989,23 +996,28 @@ function ph(v, mills) {
   loadCurrentChartState(charts.ph, mills);
 }
 
-
-
 function update(data) {
-  var i, l, d, c;
+  var i, l, d, c, name, grouped;
 
+  grouped = {};
   for (i = 0, l = data.length; i < l; i++) {
     d = data[i];
     c = charts[charts_ids[d[0]]];
     c.val = d[2];
-    loadCurrentChartState(c, d[1]);
+
+    if (!grouped.hasOwnProperty(c.name)) {
+      grouped[c.name] = [[d[1], c.val]];
+    } else {
+      grouped[c.name].push([d[1], c.val]);
+    }    
+  }
+
+  for (name in grouped) {
+    if (grouped.hasOwnProperty(name)) {
+      loadCurrentChartState(name, grouped[name]);
+    }
   }
 }
-
-
-
-
-
 
 function stringStartsWith(string, prefix) {
   return string.slice(0, prefix.length) == prefix;
@@ -1051,7 +1063,7 @@ function init(config) {
     chart = chartsOrder[i];
     if (config.charts.hasOwnProperty(chart)) {
       idx = charts[chart].state.states.indexOf(config.charts[chart]);
-      charts[chart].state.curIndex = idx === -1 ? charts[chart].state.curIndex : idx;
+      charts[chart].state.curIndex = idx === -1 ? 0 : idx;
       createCurrentChartState(charts[chart]);
 
       charts[chart].dom.onclick = chartOnClick;

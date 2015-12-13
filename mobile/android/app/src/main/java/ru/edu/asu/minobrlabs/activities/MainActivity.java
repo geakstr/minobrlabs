@@ -107,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
 
         initMenu(menu);
 
-        menu.findItem(R.id.action_to_main).setVisible(false);
-        menu.findItem(R.id.action_to_stats).setVisible(true);
+        menu.findItem(R.id.action_to_main).setVisible(!App.state.webViewState.isMainPage);
+        menu.findItem(R.id.action_to_stats).setVisible(App.state.webViewState.isMainPage);
 
         return true;
     }
@@ -116,6 +116,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_devices:
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        bluetoothSensors.enable();
+                        App.state.activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                createBluetoothDevicesDialog().show();
+                            }
+                        });
+                    }
+                }).start();
+                break;
             case R.id.action_experiments:
                 createExperimentsListDialog().show();
                 break;
@@ -125,12 +139,14 @@ public class MainActivity extends AppCompatActivity {
                 App.state.menu.findItem(R.id.action_start_recording).setVisible(true);
                 break;
             case R.id.action_to_stats:
+                App.state.webViewState.setMainPage(false);
                 App.state.webView.loadUrl("javascript:showStatsPage()");
                 App.state.menu.findItem(R.id.action_experiment_interval).setVisible(true);
                 App.state.menu.findItem(R.id.action_to_main).setVisible(true);
                 App.state.menu.findItem(R.id.action_to_stats).setVisible(false);
                 break;
             case R.id.action_to_main:
+                App.state.webViewState.setMainPage(true);
                 App.state.webView.loadUrl("javascript:showMainPage()");
                 App.state.menu.findItem(R.id.action_experiment_interval).setVisible(true);
                 App.state.menu.findItem(R.id.action_to_main).setVisible(false);
@@ -266,6 +282,9 @@ public class MainActivity extends AppCompatActivity {
                 resume();
 
                 App.state.webView.loadUrl(String.format("javascript:init(%s)", new Gson().toJson(App.state.webViewState)));
+
+                final String page = App.state.webViewState.isMainPage ? "javascript:showMainPage()" : "javascript:showStatsPage()";
+                App.state.webView.loadUrl(page);
             }
         });
         webView.loadUrl("file:///android_asset/web/index.html");
@@ -290,8 +309,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resume() {
+        bluetoothSensors.deinit();
         builtinSensors.start();
-        createBluetoothDevicesDialog().show();
         appSensors.start();
     }
 

@@ -63,11 +63,11 @@ public class BuiltinSensorsManager implements SensorEventListener, ISensorsManag
                 if (null != sensor.getSensor()) {
                     sensorManager.registerListener(this, sensor.getSensor(), SensorManager.SENSOR_DELAY_GAME);
                 }
-                if (state.charts.get(type.name) == -1) {
-                    state.charts.put(type.name, 1);
+                if (state.charts.get(type.name) < 0) {
+                    state.charts.put(type.name, Math.abs(state.charts.get(type.name)));
                 }
             } else {
-                state.charts.put(type.name, -1);
+                state.charts.put(type.name, -(Math.abs(state.charts.get(type.name))));
             }
         }
 

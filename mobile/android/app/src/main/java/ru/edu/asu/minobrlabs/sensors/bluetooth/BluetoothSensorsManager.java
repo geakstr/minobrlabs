@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
@@ -106,55 +105,25 @@ public class BluetoothSensorsManager implements ISensorsManager {
 
     @Override
     public void start() {
-        if (!checkSocket() && null != address) {
-            bluetooth = new BluetoothConnector(this.address, true);
-            if (!bluetooth.isEnabled()) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int attempts = 0;
-
-                        while (!bluetooth.isEnabled()) {
-                            Log.d(TAG, "Bluetooth not enabled");
-
-                            bluetooth.enable();
-
-                            if (++attempts == 30) {
-                                break;
-                            }
-
-                            try {
-                                Thread.sleep(500L);
-                            } catch (InterruptedException e) {
-                                Log.d(TAG, "Bluetooth was not enable", e);
-                            }
-                        }
-
-                        if (bluetooth.isEnabled()) {
-                            try {
-                                socket = bluetooth.connect();
-                                init();
-                            } catch (IOException e) {
-                                deinit();
-                                makeToast();
-                            }
-                        } else {
-                            makeToast();
-                        }
-                    }
-                }).start();
-            } else {
-                try {
-                    socket = bluetooth.connect();
-                    init();
-                } catch (IOException e) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (null == address) {
                     deinit();
-                    makeToast();
+                    return;
+                }
+
+                final BluetoothAdapter adapter = enable();
+
+                bluetooth = new BluetoothConnector(address, adapter, true);
+                if (bluetooth.isEnabled()) {
+                    connect();
+                } else {
+                    makeDisabledToast();
+                    deinit();
                 }
             }
-        } else if (null == address) {
-            deinit();
-        }
+        }).start();
     }
 
     @Override
@@ -182,7 +151,56 @@ public class BluetoothSensorsManager implements ISensorsManager {
         }
     }
 
-    private void makeToast() {
+    public BluetoothAdapter enable() {
+        final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+
+        if (null != adapter && !adapter.isEnabled()) {
+            makeEnablingToast();
+            int attempts = 0;
+            while (!adapter.isEnabled()) {
+                Log.d(TAG, "Bluetooth not enabled");
+
+                adapter.enable();
+
+                if (++attempts == 30) {
+                    break;
+                }
+
+                try {
+                    Thread.sleep(500L);
+                } catch (InterruptedException e) {
+                    Log.d(TAG, "Bluetooth was not enable", e);
+                }
+            }
+            if (!adapter.isEnabled()) {
+                makeDisabledToast();
+            }
+        }
+
+        return adapter;
+    }
+
+    private void connect() {
+        try {
+            makeConnectingToast();
+            socket = bluetooth.connect();
+            init();
+        } catch (IOException e) {
+            deinit();
+            makeUnsuccessfulToast();
+        }
+    }
+
+    private void makeUnsuccessfulToast() {
+        App.state.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(App.instance.getApplicationContext(), R.string.bt_unsuccessful, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void makeDisabledToast() {
         App.state.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -191,12 +209,30 @@ public class BluetoothSensorsManager implements ISensorsManager {
         });
     }
 
-    private void init() {
+    private void makeEnablingToast() {
+        App.state.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(App.instance.getApplicationContext(), R.string.bt_enabling, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void makeConnectingToast() {
+        App.state.activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(App.instance.getApplicationContext(), R.string.bt_connecting, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void init() {
         final MainWebViewState state = App.state.webViewState;
 
         for (final SensorTypes.Type type : sensorManagers.keySet()) {
-            if (state.charts.get(type.name) == -1) {
-                state.charts.put(type.name, 1);
+            if (state.charts.get(type.name) < 0) {
+                state.charts.put(type.name, Math.abs(state.charts.get(type.name)));
             }
         }
 
@@ -204,11 +240,11 @@ public class BluetoothSensorsManager implements ISensorsManager {
         App.state.storage.wantReInit = true;
     }
 
-    private void deinit() {
+    public void deinit() {
         final MainWebViewState state = App.state.webViewState;
 
         for (final SensorTypes.Type type : sensorManagers.keySet()) {
-            state.charts.put(type.name, -1);
+            state.charts.put(type.name, -(Math.abs(state.charts.get(type.name))));
         }
 
         App.state.setWebViewState(state);

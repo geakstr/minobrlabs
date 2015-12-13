@@ -8,7 +8,6 @@ import ru.edu.asu.minobrlabs.R;
 public class MainWebViewJavascriptInterface {
     @JavascriptInterface
     public void updateState(final String chartName, final int chartState) {
-        System.out.println(chartName);
         final MainWebViewState state = App.state.webViewState;
         state.charts.put(chartName, chartState);
         App.state.setWebViewState(state);

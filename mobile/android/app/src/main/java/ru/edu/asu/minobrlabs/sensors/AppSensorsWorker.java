@@ -40,7 +40,8 @@ public class AppSensorsWorker extends AbstractWorker {
         try {
             while (running) {
                 handler.obtainMessage().sendToTarget();
-                sleep(App.state.storage.sleepTime);
+                final long time = App.state.webViewState.isMainPage ? 100L : 200L;
+                sleep(Math.max(App.state.storage.sleepTime, time));
             }
         } catch (InterruptedException e) {
             Log.e(TAG, "App sensors manager worker problems", e);

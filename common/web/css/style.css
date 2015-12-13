@@ -146,12 +146,15 @@ body {
     border-radius: 3px 0 0 3px;
 }
 #main-page .chart-axises .chart-x-axis {
+    width: 0;
     background: red;
 }
 #main-page .chart-axises .chart-y-axis {
+    width: 0;
     background: green;
 }
 #main-page .chart-axises .chart-z-axis {
+    width: 0;
     background: blue;
 }
 #main-page .chart-axises .chart-axis-val {
