@@ -814,14 +814,33 @@ setInterval(function() {
       chart = updates[chartName];
 
       switch (chart.state.states[chart.state.curIndex]) {
+        case 3:
+          loadAxisesChart(chart);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+}, 100);
+
+setInterval(function() {
+  if (pages.active !== 'mainPage') { 
+    return;
+  }
+
+  var chartName, chart;
+
+  for (chartName in updates) {
+    if (updates.hasOwnProperty(chartName)) {
+      chart = updates[chartName];
+
+      switch (chart.state.states[chart.state.curIndex]) {
         case 1:
           loadGaugeChart(chart);
           break;
         case 2:
           loadLabelChart(chart);
-          break;
-        case 3:
-          loadAxisesChart(chart);
           break;
         case 4:
           loadAxisChart(chart, 'x');
@@ -834,7 +853,7 @@ setInterval(function() {
       }
     }
   }
-}, 100);
+}, 200);
 
 function loadCurrentChartState(name, data) {
   var chart, i, l, n, mills;
