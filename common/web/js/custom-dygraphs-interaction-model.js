@@ -6,6 +6,7 @@ CustomDygraphsInteractionModel = {
     if (event.touches.length > 1) {
       // If the user ever puts two fingers down, it's not a double tap.
       context.startTimeForDoubleTapMs = null;
+      context.startObjForAnnotation = null;
     }
 
     var touches = [];
@@ -31,7 +32,14 @@ CustomDygraphsInteractionModel = {
       var closestTouchP = g.findClosestPoint(touches[0].pageX - width, touches[0].pageY); 
       if (closestTouchP) { 
         var selectionChanged = g.setSelection(closestTouchP.row, closestTouchP.seriesName); 
-      } 
+
+        context.startObjForAnnotation = {
+          time: new Date().getTime(),
+          point: closestTouchP.point,
+          x: touches[0].pageX,
+          y: touches[0].pageY
+        };
+      }       
     } else if (touches.length >= 2) {
       // It's become a pinch!
       // In case there are 3+ touches, we ignore all but the "first" two.
@@ -121,6 +129,20 @@ CustomDygraphsInteractionModel = {
         pageX: 0.5 * (touches[0].pageX + touches[1].pageX),
         pageY: 0.5 * (touches[0].pageY + touches[1].pageY)
       };
+    }
+
+    var start = context.startObjForAnnotation;
+    if (start) {
+      if (Math.abs(c_now.pageX - start.x) > 30 || Math.abs(c_now.pageY - start.y) > 30) {
+        context.startObjForAnnotation = null;
+      } else {
+        var now = new Date().getTime();
+        if (now - start.time >= 500 && Math.abs(c_now.pageX - start.x) <= 30) {
+          Android.setAnnotation(start.point.xval);
+
+          context.startObjForAnnotation = null;
+        }
+      }
     }
 
     // this is the "swipe" component

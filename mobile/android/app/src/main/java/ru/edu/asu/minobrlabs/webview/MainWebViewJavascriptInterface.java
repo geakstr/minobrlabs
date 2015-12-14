@@ -26,4 +26,9 @@ public class MainWebViewJavascriptInterface {
             }
         });
     }
+
+    @JavascriptInterface
+    public void setAnnotation(final long time) {
+        System.out.println(time);
+    }
 }

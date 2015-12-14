@@ -802,59 +802,6 @@ function loadLabelChart(chart) {
   chart.container.textContent = chart.opts.formatFunction(chart.val[0].toFixed(2));
 }
 
-setInterval(function() {
-  if (pages.active !== 'mainPage') { 
-    return;
-  }
-
-  var chartName, chart;
-
-  for (chartName in updates) {
-    if (updates.hasOwnProperty(chartName)) {
-      chart = updates[chartName];
-
-      switch (chart.state.states[chart.state.curIndex]) {
-        case 3:
-          loadAxisesChart(chart);
-          break;
-        default:
-          break;
-      }
-    }
-  }
-}, 100);
-
-setInterval(function() {
-  if (pages.active !== 'mainPage') { 
-    return;
-  }
-
-  var chartName, chart;
-
-  for (chartName in updates) {
-    if (updates.hasOwnProperty(chartName)) {
-      chart = updates[chartName];
-
-      switch (chart.state.states[chart.state.curIndex]) {
-        case 1:
-          loadGaugeChart(chart);
-          break;
-        case 2:
-          loadLabelChart(chart);
-          break;
-        case 4:
-          loadAxisChart(chart, 'x');
-          break;
-        case 5:
-          loadAxisChart(chart, 'y');
-          break;
-        default:
-          break;
-      }
-    }
-  }
-}, 200);
-
 function loadCurrentChartState(name, data) {
   var chart, i, l, n, mills;
 
@@ -960,61 +907,6 @@ function createCurrentChartState(chart) {
   loadCurrentChartState(chart);
 }
 
-function microphone(v, mills) {
-  charts.microphone.val = v[0];
-  loadCurrentChartState(charts.microphone, mills);
-}
-
-function accel(v, mills) {
-  charts.accel.val = v.map(utils.normalizeVal);
-  loadCurrentChartState(charts.accel, mills);
-}
-
-function gyro(v, mills) {
-  charts.gyro.val = v.map(utils.normalizeVal);
-  loadCurrentChartState(charts.gyro, mills);
-}
-
-function airTemperature(v, mills) {
-  charts.airTemperature.val = v[0];
-  loadCurrentChartState(charts.airTemperature, mills);
-}
-
-function humidity(v, mills) {
-  charts.humidity.val = v[0];
-  loadCurrentChartState(charts.humidity, mills);
-}
-
-function atmoPressure(v, mills) {
-  charts.atmoPressure.val = v[0];
-  loadCurrentChartState(charts.atmoPressure, mills);
-}
-
-function light(v, mills) {
-  charts.light.val = v[0];
-  loadCurrentChartState(charts.light, mills);
-}
-
-function soluteTemperature(v, mills) {
-  charts.soluteTemperature.val = v[0];
-  loadCurrentChartState(charts.soluteTemperature, mills);
-}
-
-function voltage(v, mills) {
-  charts.voltage.val = v[0];
-  loadCurrentChartState(charts.voltage, mills);
-}
-
-function amperage(v, mills) {
-  charts.amperage.val = v[0];
-  loadCurrentChartState(charts.amperage, mills);
-}
-
-function ph(v, mills) {
-  charts.ph.val = v[0];
-  loadCurrentChartState(charts.ph, mills);
-}
-
 function update(data) {
   var i, l, d, c, name, grouped;
 
@@ -1043,7 +935,7 @@ function stringStartsWith(string, prefix) {
 }
 
 
-var dataCleanerInterval;
+var dataCleanerInterval, updateMainPage1, updateMainPage2;
 function init(config) {
   var chartOnClick, paramOnClick, chartTypesRadioOnClick, chart, idx, i, l;
 
@@ -1089,7 +981,7 @@ function init(config) {
 
       var param = addParamToParamsState(chart);
       param.onclick = paramOnClick;
-      if (config.charts[chart] === -1) {
+      if (config.charts[chart] < 0) {
         param.disabled = true;
       }
       if (chart === stats.currentChart) {
@@ -1116,33 +1008,78 @@ function init(config) {
 
   clearInterval(dataCleanerInterval);
   dataCleanerInterval = setInterval(function() {
-    var i, l, stat;
+    var i, l, stat, time;
+    time = new Date().getTime();
     if (stats.mode === 'realtime') {
       for (stat in stats.data) {
-        if (stats.data.hasOwnProperty(stat)) {
-          var time = new Date().getTime();
-          for (i = 0, l = stats.data[stat].length; i < l; i++) {
-            if (time - stats.data[stat][i][0].getTime() > stats.window[0]) {
-              stats.data[stat].shift();
-              l--;
-            } else {
-              break;
-            }
+        if (stats.data.hasOwnProperty(stat)) {          
+          l = stats.data[stat].length;
+          while (l-- > 0 && time - stats.data[stat][0][0].getTime() > stats.window[0]) {
+            stats.data[stat].shift();
           }
         }
       }
     }    
   }, 5000);
+
+  clearInterval(updateMainPage1);
+  updateMainPage1 = setInterval(function() {
+    if (pages.active !== 'mainPage') { 
+      return;
+    }
+
+    var chartName, chart;
+
+    for (chartName in updates) {
+      if (updates.hasOwnProperty(chartName)) {
+        chart = updates[chartName];
+
+        switch (chart.state.states[chart.state.curIndex]) {
+          case 1:
+            loadGaugeChart(chart);
+            break;
+          case 2:
+            loadLabelChart(chart);
+            break;
+          case 4:
+            loadAxisChart(chart, 'x');
+            break;
+          case 5:
+            loadAxisChart(chart, 'y');
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }, 200);
+
+  clearInterval(updateMainPage2);
+  updateMainPage2 = setInterval(function() {
+    if (pages.active !== 'mainPage') { 
+      return;
+    }
+
+    var chartName, chart;
+
+    for (chartName in updates) {
+      if (updates.hasOwnProperty(chartName)) {
+        chart = updates[chartName];
+
+        switch (chart.state.states[chart.state.curIndex]) {
+          case 3:
+            loadAxisesChart(chart);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }, 100);
 }
 
 //init({"os":"browser","charts":{"microphone":1,"accel":-1,"gyro":3,"airTemperature":4,"humidity":1,"atmoPressure":0,"light":2,"soluteTemperature":1,"voltage":5,"amperage":1,"ph":1}});
 
 if (os === 'browser') {
-  showStatsPage();
-  microphone([40], 87400000);
-  microphone([50], 97500000);
-  microphone([60], 107600200);
-  microphone([10], 117700300);
-  // accel([1, 2, 3]);
-  // accel([5, 1, 2]);
+  // showStatsPage();
 }

@@ -43,18 +43,18 @@ public class App extends Application {
 
         Dexter.initialize(this.getApplicationContext());
 
-        Dao.deleteAll(Experiment.class);
-        Dao.deleteAll(Accel.class);
-        Dao.deleteAll(AtmoPressure.class);
-        Dao.deleteAll(AirTemperature.class);
-        Dao.deleteAll(Amperage.class);
-        Dao.deleteAll(Gyro.class);
-        Dao.deleteAll(Humidity.class);
-        Dao.deleteAll(Light.class);
-        Dao.deleteAll(Microphone.class);
-        Dao.deleteAll(Ph.class);
-        Dao.deleteAll(SoluteTemperature.class);
-        Dao.deleteAll(Voltage.class);
+//        Dao.deleteAll(Experiment.class);
+//        Dao.deleteAll(Accel.class);
+//        Dao.deleteAll(AtmoPressure.class);
+//        Dao.deleteAll(AirTemperature.class);
+//        Dao.deleteAll(Amperage.class);
+//        Dao.deleteAll(Gyro.class);
+//        Dao.deleteAll(Humidity.class);
+//        Dao.deleteAll(Light.class);
+//        Dao.deleteAll(Microphone.class);
+//        Dao.deleteAll(Ph.class);
+//        Dao.deleteAll(SoluteTemperature.class);
+//        Dao.deleteAll(Voltage.class);
     }
 
     public static class Preferences {
