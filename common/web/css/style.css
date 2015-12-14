@@ -414,6 +414,16 @@ body {
     color: #ddd;
 }
 
+.stats-annotation {
+    display: inline!important;
+    padding: 0 3px!important;
+    margin: 0!important;
+    font-family: monospace!important;
+    font-size: 11px!important;
+    line-height: 16px!important;
+    text-align: center!important;
+    border-radius: 2px!important;
+}
 
 @media (max-height: 520px) {
   #main-page .chart-title {

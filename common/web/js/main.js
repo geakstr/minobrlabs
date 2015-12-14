@@ -9,9 +9,9 @@
 // state = 4 - horizontal bar
 // state = 5 - vertical bar
 
-var pages, charts, updates, charts_ids, chartsOrder, stats, xyzAxises, utils, os;
+var pages, charts, updates, annotations, charts_ids, chartsOrder, stats, xyzAxises, utils, os;
 
-var i = 0;
+annotations = {};
 updates = {};
 
 xyzAxises = ['x', 'y', 'z'];
@@ -509,15 +509,39 @@ function createDygraph() {
         stats.data[stats.currentChart],
         opts
     );    
+    if (annotations[stats.currentChart]) {
+      stats.chart.setAnnotations(annotations[stats.currentChart]);
+    }    
   } else {
     stats.chart = null;
     stats.dom.chart.innerHTML = '<div class="message">Нет данных</div>';
   }
 }
+
+function setAnnotation(chartName, time, text, series) {
+  if (!annotations[chartName]) {
+    annotations[chartName] = [];
+  }
+
+  annotations[chartName].push({
+    series: series,
+    width: text.length * 9,
+    height: 16,
+    x: time,
+    shortText: text,
+    text: text,
+    tickHeight: 33,
+    attachAtBottom: false,
+    cssClass: 'stats-annotation'
+  });
+
+  stats.chart.setAnnotations(annotations[chartName]);
+}
+
 function getStatsChartDateWindow(chart) {
   var data = stats.data[chart.name];
   var lastDate = data[data.length - 1][0].getTime();
-  var startDate = new Date(lastDate - stats.window[stats.windowIdx]);
+  var startDate = new Date(lastDate - stats.window[stats.mode === 'realtime' ? stats.windowIdx : 0]);
   return [startDate, new Date(lastDate)];
 }
 function createParamsState() {
@@ -996,10 +1020,7 @@ function init(config) {
 
     stats.windowIdx  = type === 'line'? 0 : 1;
 
-    stats.chart.updateOptions({
-      'plotter' : stats.plotter,
-      'dateWindow' : getStatsChartDateWindow(charts[stats.currentChart])
-    });
+    createDygraph();
   };
   var chartTypesRadio = document.getElementsByName("chart-stats-type");
   for (i = 0, l = chartTypesRadio.length; i < l; i++) {

@@ -1,9 +1,6 @@
 package ru.edu.asu.minobrlabs.db.entities;
 
-import android.hardware.Sensor;
-
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 
 import ru.edu.asu.minobrlabs.db.entities.params.Accel;
@@ -25,6 +22,7 @@ public class GenericParam implements Serializable {
     public String vals;
     public Long date;
     public Long experimentId;
+    public String annotation;
 
     public GenericParam() {}
 
@@ -32,6 +30,7 @@ public class GenericParam implements Serializable {
         this.vals = vals;
         this.date = date;
         this.experimentId = experimentId;
+        this.annotation = null;
     }
 
     public static GenericParam createById(final int id, final long date, final String val, final long experimentId) {
@@ -70,11 +69,12 @@ public class GenericParam implements Serializable {
         final String tag = clazz != null ? clazz.getName() : getClass().getName();
 
         return String.format(
-                tag + " : [\n  _id : %s\n  vals : %s\n  date : %s\n  experimentId : %s\n]",
+                tag + " : [\n  _id : %s\n  vals : %s\n  date : %s\n  experimentId : %s\n  annotation: %s\n]",
                 _id,
                 vals,
                 new Date(date).toString(),
-                experimentId
+                experimentId,
+                annotation
         );
     }
 }
