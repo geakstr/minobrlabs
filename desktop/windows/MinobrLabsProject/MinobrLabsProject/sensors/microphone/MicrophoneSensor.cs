@@ -1,40 +1,42 @@
-﻿using MinobrLabsProject.db.entities;
+﻿using MinobrLabsProject.sensors.common;
 using NAudio.Wave;
 using System;
-using System.Collections.Generic;
 
-namespace MinobrLabsProject.sensors
+namespace MinobrLabsProject.sensors.microphone
 {
-    public class MicrophoneSensor
+    public class MicrophoneSensor : AbstractSensor
     {
+        private double lastPressure;
         private WaveIn waveIn;
-        private double val;
 
-        public MicrophoneSensor()
+        public MicrophoneSensor() : base()
         {
+            lastPressure = 0d;
             waveIn = new WaveIn();
         }
 
-        public Stat getVals()
+        public double getPressure()
         {
-            return new Stat(new float[] { (float) val }, "microphone");
+            return lastPressure;
         }
 
-        public void open()
+        public bool start()
         {
             if (WaveIn.DeviceCount > 0)
             {
                 int diviceId = 0;
                 waveIn.DeviceNumber = diviceId;
-                waveIn.DataAvailable += waveIn_DataAvailable;
+                waveIn.DataAvailable += update;
                 int sampleRate = 44100;
                 int channels = WaveIn.GetCapabilities(diviceId).Channels;
                 waveIn.WaveFormat = new WaveFormat(sampleRate, channels);
                 waveIn.StartRecording();
+                return true;
             }
+            return false;
         }
 
-        private void waveIn_DataAvailable(object sender, WaveInEventArgs e)
+        private void update(object sender, WaveInEventArgs e)
         {
             byte[] buffer = e.Buffer;
             double sum = .0;
@@ -44,8 +46,7 @@ namespace MinobrLabsProject.sensors
                 sum += sample * sample;
             }
             double rms = Math.Sqrt(sum / buffer.Length / 2d);
-            double decibel = 92.8 + 20d * Math.Log10(rms);
-            val = decibel;
+            lastPressure = 92.8 + 20d * Math.Log10(rms);
         }
 
         public void stop()

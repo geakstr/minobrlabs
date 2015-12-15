@@ -97,6 +97,7 @@
   <ItemGroup>
     <Compile Include="db\Connection.cs" />
     <Compile Include="db\DataManager.cs" />
+    <Compile Include="db\entities\Annotation.cs" />
     <Compile Include="db\entities\Experiment.cs" />
     <Compile Include="db\entities\Stat.cs" />
     <Compile Include="db\TemporaryStorage.cs" />
@@ -108,11 +109,16 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="sensors\MicrophoneSensor.cs" />
+    <Compile Include="sensors\common\AbstractSensor.cs" />
+    <Compile Include="sensors\common\AbstractSensorsWorker.cs" />
+    <Compile Include="sensors\common\AbstractWorker.cs" />
+    <Compile Include="sensors\common\ISensorsManager.cs" />
+    <Compile Include="sensors\microphone\MicrophoneSensor.cs" />
     <Compile Include="sensors\SensorsManager.cs" />
     <Compile Include="sensors\ISensorCallback.cs" />
     <Compile Include="sensors\SensorCallback.cs" />
     <Compile Include="sensors\RemoteSensors.cs" />
+    <Compile Include="sensors\SensorType.cs" />
     <Compile Include="webview\Preferences.cs" />
     <Compile Include="webview\WebViewDelegate.cs" />
     <EmbeddedResource Include="MainForm.resx">

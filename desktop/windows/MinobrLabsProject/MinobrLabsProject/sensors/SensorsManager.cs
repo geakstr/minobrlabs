@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using MinobrLabsProject.sensors.microphone;
+using System.Threading;
 using WebKit;
 
 namespace MinobrLabsProject.sensors
@@ -18,7 +19,7 @@ namespace MinobrLabsProject.sensors
             sleepTime = 300;
             remoteSensors = new RemoteSensors();
             microphoneSensor = new MicrophoneSensor();
-            microphoneSensor.open();
+            microphoneSensor.start();
         }
 
         public void setCallback(SensorCallback callback, WebKitBrowser webView)
@@ -35,8 +36,8 @@ namespace MinobrLabsProject.sensors
             {
                 if (callback != null)
                 {
-                    callback.onReceiveResult(remoteSensors.getVals());
-                    callback.onReceiveResult(microphoneSensor.getVals());
+                    //callback.onReceiveResult(remoteSensors.getVals());
+                    callback.onReceiveResult(microphoneSensor.getPressure());
                 }
                 sleep();
             }

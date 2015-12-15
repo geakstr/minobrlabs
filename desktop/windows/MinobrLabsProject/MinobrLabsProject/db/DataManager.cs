@@ -10,17 +10,18 @@ namespace MinobrLabsProject.db
         public static void createDatabase(SQLiteConnection connection)
         {
             string sql = "CREATE TABLE experiment (_id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, date INTEGER);";
-            sql += "CREATE TABLE accel(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE atmopressure(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE airtemperature(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE amperage(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE gyro(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE humidity(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE light(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE microphone(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE ph(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE solutetemperature(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
-            sql += "CREATE TABLE voltage(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experimentId INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id))";
+            sql += "CREATE TABLE accel(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE atmopressure(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE airtemperature(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE amperage(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE gyro(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE humidity(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE light(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE microphone(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE ph(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE solutetemperature(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE voltage(_id INTEGER PRIMARY KEY AUTOINCREMENT, vals TEXT, date INTEGER, experiment INTEGER, FOREIGN KEY(experimentId) REFERENCES experiment(_id));";
+            sql += "CREATE TABLE annotation(_id INTEGER PRIMARY KEY AUTOINCREMENT, experiment INTEGER, param INTEGER, date INTEGER, text TEXT, FOREIGN KEY(experimentId) REFERENCES experiment(_id))";
             SQLiteCommand command = new SQLiteCommand(sql, connection);
             command.ExecuteNonQuery();
         }
@@ -59,7 +60,7 @@ namespace MinobrLabsProject.db
                 command.Parameters.Add("@sdate", DbType.Int64);
                 command.Parameters["@sdate"].Value = stat.date;
                 command.Parameters.Add("@experimentId", DbType.Int64);
-                command.Parameters["@experimentId"].Value = stat.experimentId;
+                command.Parameters["@experimentId"].Value = stat.experiment;
                 command.ExecuteNonQuery();
             }
         }

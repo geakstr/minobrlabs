@@ -68,9 +68,10 @@ namespace MinobrLabsProject
             sensorManager.start();
         }
 
-        private void updateWebView(string type, float[] vals, long date)
+        private void updateWebView(string type, string vals, long date)
         {
-            webView.StringByEvaluatingJavaScriptFromString(type + "([" + string.Join(", ", vals.Select(x => x.ToString()).ToArray()) + "]," + date + ')');
+            string command = "update([[" + 18 + "," + date + "," + vals + "]])";
+            webView.StringByEvaluatingJavaScriptFromString(command);
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)

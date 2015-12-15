@@ -14,15 +14,15 @@ namespace MinobrLabsProject.sensors
             rnd = new Random();
         }
 
-        public void onReceiveResult(Stat stat)
+        public void onReceiveResult(double val)
         {
-            if (null == stat)
-            {
-                return;
-            }
-
+            Stat stat = new Stat();
+            stat.setDate(DateTime.Now);
+            stat.type = "microphone";
+            stat.vals = "[" + val + "]";
+            stat.experiment = -1;
             mainForm.temporaryStorage.add(stat);
-            mainForm.Invoke(mainForm.webViewDelegate, new object[] {stat.type, stat.getFloatVals(), stat.date});
+            mainForm.Invoke(mainForm.webViewDelegate, new object[] { stat.type, stat.vals, stat.date });
         }
     }
 }

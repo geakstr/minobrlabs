@@ -11,11 +11,16 @@ namespace MinobrLabsProject.db.entities
 
         public Experiment(string name) {
             this.name = name;
-            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1);
-            date = (long)ts.TotalMilliseconds;
+            setDate(DateTime.Now);
         }
 
-        private DateTime getDateTime()
+        public void setDate(DateTime date)
+        {
+            TimeSpan ts = date.ToUniversalTime() - new DateTime(1970, 1, 1);
+            this.date = (long)ts.TotalMilliseconds;
+        }
+
+        public DateTime getDateTime()
         {
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dateTime = dateTime.AddSeconds(Math.Round(date / 1000d)).ToLocalTime();

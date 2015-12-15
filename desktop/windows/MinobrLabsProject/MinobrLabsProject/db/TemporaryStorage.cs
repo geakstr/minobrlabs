@@ -40,7 +40,7 @@ namespace MinobrLabsProject.db
             if (wasRecording) {
                 long id = DataManager.put(experiment);
                 foreach (Stat stat in data) {
-                    stat.experimentId = id;
+                    stat.experiment = id;
                 }
                 DataManager.put(data);
                 clear();
