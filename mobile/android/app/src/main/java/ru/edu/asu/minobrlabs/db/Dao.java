@@ -57,6 +57,12 @@ public class Dao {
                 .query().list();
     }
 
+    public static void deleteAnnotation(final Annotation annotation) {
+        cupboard().withDatabase(db().conn())
+                .delete(Annotation.class, "experiment = ? and param = ? and time = ?",
+                        annotation.experiment.toString(), annotation.param.toString(), annotation.time.toString());
+    }
+
     public static List findByDateRange(final Class clazz, final Long from, final Long to) {
         return cupboard().withDatabase(db().conn())
                 .query(clazz)

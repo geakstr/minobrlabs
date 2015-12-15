@@ -72,4 +72,9 @@ public class MainWebViewJavascriptInterface {
             }
         });
     }
+
+    @JavascriptInterface
+    public void removeAnnotation(final String chartName, final long experiment, final long time) {
+        Dao.deleteAnnotation(new Annotation(experiment, SensorTypes.byName(chartName).id, time, null));
+    }
 }

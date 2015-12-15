@@ -108,9 +108,9 @@ charts = {
       width: function(val) {
         return Math.min(Math.abs(val * 100.0 / charts.gyro.opts.max), 100.0);
       },
-      min: -7,
-      max: 7,
-      valueRange : [-10, 10],
+      min: -10,
+      max: 10,
+      valueRange : [-15, 15],
     },
     state : {
       curIndex : 1,
@@ -510,6 +510,37 @@ function createDygraph() {
         stats.data[stats.currentChart],
         opts
     );    
+
+    stats.chart.updateOptions({
+      annotationClickHandler: (function() {
+        var latestAnn, latestTime, i, l, search;
+        return function(ann, point, dg, event) {
+          var now = new Date().getTime();
+          if (latestAnn
+            && ann.x === latestAnn.x
+            && ann.series === latestAnn.series
+            && now - latestTime <= 250) {
+            latestAnn = null;
+            latestTime = now;
+
+            for (i = 0, l = stats.annotations[ann.chart].length; i < l; i++) {
+              if (stats.annotations[ann.chart][i].x === ann.x) {                
+                stats.annotations[ann.chart].splice(i, 1);
+                if (os === "android") {
+                  Android.removeAnnotation(stats.currentChart, stats.experiment, ann.x);
+                }
+                break;
+              }
+            }
+            stats.chart.setAnnotations(stats.annotations[ann.chart]);
+          } else {
+            latestAnn = ann;
+            latestTime = now;
+          }
+        };
+      })()
+    });
+
     if (stats.annotations[stats.currentChart]) {
       stats.chart.setAnnotations(stats.annotations[stats.currentChart]);
     }    
@@ -533,7 +564,8 @@ function setAnnotation(chartName, time, text, series) {
     text: text,
     tickHeight: 33,
     attachAtBottom: false,
-    cssClass: 'stats-annotation'
+    cssClass: 'stats-annotation',
+    chart: chartName
   });
 
   if (stats.currentChart === chartName) {
