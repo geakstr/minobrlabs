@@ -1,6 +1,5 @@
 package ru.edu.asu.minobrlabs;
 
-import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,22 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.karumi.dexter.Dexter;
-import com.karumi.dexter.listener.multi.DialogOnAnyDeniedMultiplePermissionsListener;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
-import ru.edu.asu.minobrlabs.db.dao.Dao;
-import ru.edu.asu.minobrlabs.db.entities.Experiment;
-import ru.edu.asu.minobrlabs.db.entities.params.Accel;
-import ru.edu.asu.minobrlabs.db.entities.params.AtmoPressure;
-import ru.edu.asu.minobrlabs.db.entities.params.AirTemperature;
-import ru.edu.asu.minobrlabs.db.entities.params.Amperage;
-import ru.edu.asu.minobrlabs.db.entities.params.Gyro;
-import ru.edu.asu.minobrlabs.db.entities.params.Humidity;
-import ru.edu.asu.minobrlabs.db.entities.params.Light;
-import ru.edu.asu.minobrlabs.db.entities.params.Microphone;
-import ru.edu.asu.minobrlabs.db.entities.params.Ph;
-import ru.edu.asu.minobrlabs.db.entities.params.SoluteTemperature;
-import ru.edu.asu.minobrlabs.db.entities.params.Voltage;
 import ru.edu.asu.minobrlabs.webview.MainWebViewState;
 
 public class App extends Application {

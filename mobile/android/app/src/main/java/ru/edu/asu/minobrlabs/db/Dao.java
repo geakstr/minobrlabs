@@ -1,5 +1,6 @@
-package ru.edu.asu.minobrlabs.db.dao;
+package ru.edu.asu.minobrlabs.db;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.db.Database;
+import ru.edu.asu.minobrlabs.db.entities.Annotation;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 import ru.edu.asu.minobrlabs.sensors.SensorTypes;
@@ -30,20 +32,29 @@ public class Dao {
                 .query().list();
     }
 
-    public static Map<String, List<Object>> findByExperiment(final Experiment experiment) {
+    public static Map<String, List> findStatsByExperiment(final Experiment experiment) {
         final String id = experiment._id.toString();
 
-        final Map<String, List<Object>> map = new HashMap<>();
+        final Map<String, List> map = new HashMap<>();
         for (final SensorTypes.Type sensorType : SensorTypes.values) {
             final String name = sensorType.name;
             final Class clazz = sensorType.clazz;
 
             map.put(name, cupboard().withDatabase(db().conn())
                     .query(clazz)
-                    .withSelection("experimentId = ?", id)
+                    .withSelection("experiment = ?", id)
                     .query().list());
         }
         return map;
+    }
+
+    public static List<Annotation> findAnnotationsByExperiment(final Experiment experiment) {
+        final String id = experiment._id.toString();
+
+        return cupboard().withDatabase(db().conn())
+                .query(Annotation.class)
+                .withSelection("experiment = ?", id)
+                .query().list();
     }
 
     public static List findByDateRange(final Class clazz, final Long from, final Long to) {
@@ -74,7 +85,7 @@ public class Dao {
     }
 
     public static void deleteByExperimentId(final Class clazz, final Experiment experiment) {
-        cupboard().withDatabase(db().conn()).delete(clazz, "experimentId = ?", experiment._id.toString());
+        cupboard().withDatabase(db().conn()).delete(clazz, "experiment = ?", experiment._id.toString());
     }
 
     public static void deleteAll(final Class clazz) {

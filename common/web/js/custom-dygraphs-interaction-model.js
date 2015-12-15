@@ -138,7 +138,7 @@ CustomDygraphsInteractionModel = {
       } else {
         var now = new Date().getTime();
         if (now - start.time >= 500 && Math.abs(c_now.pageX - start.x) <= 30) {
-          Android.setAnnotation(this.currentChart, start.point.xval, start.point.name);
+          Android.setAnnotation(this.currentChart, this.experiment, start.point.xval, start.point.name);
 
           context.startObjForAnnotation = null;
         }

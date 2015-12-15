@@ -60,6 +60,35 @@ public class SensorTypes {
         }
     }
 
+    public static Type byName(final String name) {
+        switch (name) {
+            case "humidity":
+                return HUMIDITY;
+            case "airTemperature":
+                return AIR_TEMPERATURE;
+            case "light":
+                return LIGHT;
+            case "gyro":
+                return GYRO;
+            case "accel":
+                return ACCEL;
+            case "atmoPressure":
+                return ATMO_PRESSURE;
+            case "amperage":
+                return AMPERAGE;
+            case "ph":
+                return PH;
+            case "soluteTemperature":
+                return SOLUTE_TEMPERATURE;
+            case "voltage":
+                return VOLTAGE;
+            case "microphone":
+                return MICROPHONE_DB;
+            default:
+                return null;
+        }
+    }
+
     public static Type byChar(final char id) {
         switch (id) {
             case 'h':

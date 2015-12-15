@@ -3,8 +3,6 @@ package ru.edu.asu.minobrlabs.db;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import ru.edu.asu.minobrlabs.App;
-import ru.edu.asu.minobrlabs.db.dao.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.db.entities.GenericParam;
 

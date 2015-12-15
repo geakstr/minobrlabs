@@ -21,7 +21,7 @@ import java.util.List;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
-import ru.edu.asu.minobrlabs.db.dao.Dao;
+import ru.edu.asu.minobrlabs.db.Dao;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
 import ru.edu.asu.minobrlabs.sensors.AppSensorsWorker;
 import ru.edu.asu.minobrlabs.sensors.bluetooth.BluetoothSensorsManager;
@@ -235,9 +235,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 final Experiment experiment = (Experiment) adapter.getItem(which);
 
-                final String stats = new Gson().toJson(Dao.findByExperiment(experiment));
+                final String stats = new Gson().toJson(Dao.findStatsByExperiment(experiment));
+                final String annotations = new Gson().toJson(Dao.findAnnotationsByExperiment(experiment));
 
-                App.state.webView.loadUrl(String.format("javascript:loadExperiment('%s', %s)", experiment.name, stats));
+                App.state.webView.loadUrl(String.format("javascript:loadExperiment(%s, %s, %s)", experiment._id, stats, annotations));
 
                 App.state.menu.findItem(R.id.action_to_main).setVisible(true);
                 App.state.menu.findItem(R.id.action_repeat).setVisible(true);

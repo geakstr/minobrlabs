@@ -3,9 +3,10 @@ package ru.edu.asu.minobrlabs.db.entities;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Experiment implements Serializable {
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.US);
 
     public Long _id;
 
@@ -22,14 +23,5 @@ public class Experiment implements Serializable {
     @Override
     public String toString() {
         return String.format("%s [%s]", name, dateFormat.format(new Date(date)));
-    }
-
-    public String fullToString() {
-        return String.format(
-                "Experiment : [\n  _id : %s\n  name : %s\n  date : %s\n]",
-                _id,
-                name,
-                new Date(date).toString()
-        );
     }
 }

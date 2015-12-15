@@ -21,16 +21,14 @@ public class GenericParam implements Serializable {
 
     public String vals;
     public Long date;
-    public Long experimentId;
-    public String annotation;
+    public Long experiment;
 
     public GenericParam() {}
 
-    public GenericParam(final long date, final String vals, final long experimentId) {
+    public GenericParam(final long date, final String vals, final long experiment) {
         this.vals = vals;
         this.date = date;
-        this.experimentId = experimentId;
-        this.annotation = null;
+        this.experiment = experiment;
     }
 
     public static GenericParam createById(final int id, final long date, final String val, final long experimentId) {
@@ -69,12 +67,11 @@ public class GenericParam implements Serializable {
         final String tag = clazz != null ? clazz.getName() : getClass().getName();
 
         return String.format(
-                tag + " : [\n  _id : %s\n  vals : %s\n  date : %s\n  experimentId : %s\n  annotation: %s\n]",
+                tag + " : [\n  _id : %s\n  vals : %s\n  date : %s\n  experiment : %s\n]",
                 _id,
                 vals,
                 new Date(date).toString(),
-                experimentId,
-                annotation
+                experiment
         );
     }
 }

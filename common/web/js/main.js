@@ -9,9 +9,8 @@
 // state = 4 - horizontal bar
 // state = 5 - vertical bar
 
-var pages, charts, updates, annotations, charts_ids, chartsOrder, stats, xyzAxises, utils, os;
+var pages, charts, updates, charts_ids, chartsOrder, stats, xyzAxises, utils, os;
 
-annotations = {};
 updates = {};
 
 xyzAxises = ['x', 'y', 'z'];
@@ -342,6 +341,8 @@ stats = {
   currentChart: null,
   recording: false,
   mode: 'realtime', // "realtime" or "experiment"
+  experiment: -1,
+  annotations: {},
   plotter : null,
   wasInteract: false,
   window: [20000, 4000],
@@ -509,8 +510,8 @@ function createDygraph() {
         stats.data[stats.currentChart],
         opts
     );    
-    if (annotations[stats.currentChart]) {
-      stats.chart.setAnnotations(annotations[stats.currentChart]);
+    if (stats.annotations[stats.currentChart]) {
+      stats.chart.setAnnotations(stats.annotations[stats.currentChart]);
     }    
   } else {
     stats.chart = null;
@@ -519,11 +520,11 @@ function createDygraph() {
 }
 
 function setAnnotation(chartName, time, text, series) {
-  if (!annotations[chartName]) {
-    annotations[chartName] = [];
+  if (!stats.annotations[chartName]) {
+    stats.annotations[chartName] = [];
   }
 
-  annotations[chartName].push({
+  stats.annotations[chartName].push({
     series: series,
     width: text.length * 9,
     height: 16,
@@ -535,7 +536,9 @@ function setAnnotation(chartName, time, text, series) {
     cssClass: 'stats-annotation'
   });
 
-  stats.chart.setAnnotations(annotations[chartName]);
+  if (stats.currentChart === chartName) {
+    stats.chart.setAnnotations(stats.annotations[chartName]);
+  }  
 }
 
 function getStatsChartDateWindow(chart) {
@@ -865,10 +868,12 @@ function loadCurrentChartState(name, data) {
   }
 }
 
-function loadExperiment(name, data) {
-  var stat;
+function loadExperiment(id, data, annotations) {
+  var stat, i, l, ann, name;
 
   stats.mode = 'experiment';
+  stats.experiment = id;
+  stats.annotations = {};
   showStatsPage();
 
   for (stat in data) {
@@ -877,6 +882,12 @@ function loadExperiment(name, data) {
         return [new Date(a.date)].concat(JSON.parse(a.vals));
       });
     }
+  }
+
+  for (i = 0, l = annotations.length; i < l; i++) {
+    ann = annotations[i];
+    name = charts_ids[ann.param];
+    setAnnotation(name, ann.time, ann.text, stats.opts[name].labels[1]);
   }
 
   stats.chart.updateOptions({

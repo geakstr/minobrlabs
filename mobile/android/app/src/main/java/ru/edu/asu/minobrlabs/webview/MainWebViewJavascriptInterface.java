@@ -8,7 +8,10 @@ import android.widget.EditText;
 
 import ru.edu.asu.minobrlabs.App;
 import ru.edu.asu.minobrlabs.R;
+import ru.edu.asu.minobrlabs.db.Dao;
+import ru.edu.asu.minobrlabs.db.entities.Annotation;
 import ru.edu.asu.minobrlabs.db.entities.Experiment;
+import ru.edu.asu.minobrlabs.sensors.SensorTypes;
 
 public class MainWebViewJavascriptInterface {
     @JavascriptInterface
@@ -33,7 +36,7 @@ public class MainWebViewJavascriptInterface {
     }
 
     @JavascriptInterface
-    public void setAnnotation(final String chartName, final long time, final String series) {
+    public void setAnnotation(final String chartName, final long experiment, final long time, final String series) {
         App.state.activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -45,12 +48,17 @@ public class MainWebViewJavascriptInterface {
                 dialog.setPositiveButton(App.state.activity.getString(R.string.save), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        final String text = input.getText().toString().trim();
+
                         App.state.webView.loadUrl(
                                 String.format("javascript:setAnnotation('%s', %s, '%s', '%s')",
                                         chartName,
                                         time,
-                                        input.getText().toString().trim(),
+                                        text,
                                         series));
+
+                        final Annotation annotation = new Annotation(experiment, SensorTypes.byName(chartName).id, time, text);
+                        Dao.put(annotation);
                     }
                 });
                 dialog.setNegativeButton(App.state.activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
